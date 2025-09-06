@@ -1,0 +1,44 @@
+[
+  {
+    "title": "4DigitalSignage Proxy",
+    "description": "MiniProxy for showtimes content.",
+    "url": "https://www.4digitalsignage.com/content/showtimes/beltway/miniProxy.php",
+    "game_image_icon": "https://via.placeholder.com/150"
+  },
+  {
+    "title": "Carrot2 Search",
+    "description": "Search proxy with Carrot2.",
+    "url": "https://search.carrot2.org/#/search/web",
+    "game_image_icon": "https://via.placeholder.com/150"
+  },
+  {
+    "title": "Itstimefor Discussion",
+    "description": "Proxy for discussion networks.",
+    "url": "https://www.itstimefor.mydiscussion.net/",
+    "game_image_icon": "https://via.placeholder.com/150"
+  },
+  {
+    "title": "Freeflow Marlin Club",
+    "description": "Neocities-hosted proxy.",
+    "url": "https://freeflowoldsouthmarlinclub.neocities.org/",
+    "game_image_icon": "https://via.placeholder.com/150"
+  },
+  {
+    "title": "Windows96",
+    "description": "Retro-style proxy interface.",
+    "url": "https://windows96.net/",
+    "game_image_icon": "https://via.placeholder.com/150"
+  },
+  {
+    "title": "Disconnect Search",
+    "description": "Privacy-focused search proxy.",
+    "url": "https://search.disconnect.me/",
+    "game_image_icon": "https://via.placeholder.com/150"
+  },
+  {
+    "title": "Blockifscared Proxy",
+    "description": "Neocities proxy service.",
+    "url": "https://blockifscared.neocities.org/",
+    "game_image_icon": "https://via.placeholder.com/150"
+  }
+]
