@@ -1,580 +1,614 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sign In</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    /* Frosted glass for headers and cards */
-    .header-frosted {
-      background: rgba(120, 140, 172, 0.3);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 0 12px rgba(255,255,255,0.6);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 0.75rem;
-    }
-    /* Particles background fixed behind all content */
-    #particles-js {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
-    body {
-      margin: 0;
-      padding-left: 200px;
-      box-sizing: border-box;
-      transition: background-color 0.3s, color 0.3s;
-      background-image: linear-gradient(to right, #4B5563, #1F2937);
-      color: #788cac;
-    }
-    /* Sidebar fixed on left, above particles, below overlays */
-    #sidebar {
-      position: fixed;
-      top: 0; left: 0;
-      width: 200px;
-      height: 100vh;
-      background: rgba(120, 140, 172, 0.2);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 0 12px rgba(255,255,255,0.6);
-      border-right: 1px solid rgba(255,255,255,0.3);
-      z-index: 10;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #sidebar .logo {
-      height: 3rem;
-      max-width: 180px;
-      margin-top: 20px;
-    }
-    #sidebar li {
-      width: 100%;
-      text-align: center;
-      margin-bottom: 0.75rem;
-    }
-    /* Glowing white text */
-    .glow {
-      text-shadow: 0 0 8px #fff, 0 0 12px #fff, 0 0 16px #fff;
-    }
-    /* Content wrapper to be more rectangular */
-    .content {
-      position: relative;
-      z-index: 20;
-    }
-    /* Sections - padding for spacing */
-    section {
-      padding: 3rem 1rem;
-    }
-    /* Inner container for sections */
-    .section-container {
-      margin: 0 auto;
-      max-width: 1000px;
-    }
-    /* Frosted-glass for headers and cards */
-    .frosted-glass {
-      background: rgba(120, 140, 172, 0.2);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 0 12px rgba(255,255,255,0.6);
-      border: 1px solid rgba(255,255,255,0.3);
-      width: 100%;
-      max-width: 700px;
-      margin: 0 auto;
-      transition: transform 0.2s ease;
-    }
-    /* Header style with frosted effect */
-    .header-frosted {
-      background: rgba(120, 140, 172, 0.3);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 0 12px rgba(255,255,255,0.6);
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 0.75rem;
-    }
-    /* Announcement text size */
-    .announcement-text {
-      font-size: 1.75rem;
-    }
-    /* Hide fullscreen buttons by default */
-    .fullscreen-btn,
-    .exit-fullscreen-btn {
-      display: none;
-    }
-    /* Overlay for embedded games */
-    .game-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    .game-overlay-content {
-      position: relative;
-      width: 90%;
-      height: 80%;
-      display: flex;
-      flex-direction: column;
-    }
-    .iframe-container {
-      flex: 1;
-      position: relative;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    /* Buttons inside overlay */
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #fff;
-      color: #000;
-      border: none;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      border-radius: 4px;
-      font-weight: bold;
-      z-index: 10;
-    }
-    .fullscreen-btn,
-    .exit-fullscreen-btn {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: rgba(255,255,255,0.8);
-      border: none;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      border-radius: 4px;
-      font-weight: bold;
-    }
-    .exit-fullscreen-btn {
-      display: none;
-    }
-    /* Specific styles for icon grid in "Games" section */
-    #games-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      justify-items: center;
-    }
-    /* Style for game icons */
-    .game-icon {
-      width: 100px; /* adjust as needed */
-      aspect-ratio: 1/1;
-      border-radius: calc(100px * 0.225); /* 22.5% of size for Apple curvature */
-      overflow: hidden;
-      position: relative;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .game-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    /* Centered game name inside icon, no background */
-    .icon-label {
-      position: absolute;
-      bottom: 4px;
-      width: 100%;
-      text-align: center;
-      font-weight: bold;
-      font-size: 0.9rem;
-      color: #000;
-      padding: 2px 4px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign In</title>
+<link rel="icon" href="/icon.png" type="image/png" />
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* Frosted glass for headers and cards */
+  .header-frosted {
+    background: rgba(120, 140, 172, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 0.75rem;
+  }
+
+  /* Particles background fixed behind all content */
+  #particles-js {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+
+  body {
+    margin: 0;
+    padding-left: 200px;
+    box-sizing: border-box;
+    transition: background-color 0.3s, color 0.3s;
+    background-image: linear-gradient(to right, #4B5563, #1F2937);
+    color: #788cac;
+  }
+
+  /* Sidebar styles */
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 200px;
+    height: 100vh;
+    background: rgba(120, 140, 172, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    border-right: 1px solid rgba(255,255,255,0.3);
+    z-index: 10;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #sidebar .logo {
+    height: 3rem;
+    max-width: 180px;
+    margin-top: 20px;
+  }
+
+  #sidebar li {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Glowing white text */
+  .glow {
+    text-shadow: 0 0 8px #fff, 0 0 12px #fff, 0 0 16px #fff;
+  }
+
+  /* Content wrapper to be more rectangular */
+  .content {
+    position: relative;
+    z-index: 20;
+  }
+
+  /* Sections - padding for spacing */
+  section {
+    padding: 3rem 1rem;
+  }
+
+  /* Inner container for sections */
+  .section-container {
+    margin: 0 auto;
+    max-width: 1000px;
+  }
+
+  /* Frosted-glass for headers and cards */
+  .frosted-glass {
+    background: rgba(120, 140, 172, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.3);
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    transition: transform 0.2s ease;
+  }
+
+  /* Header style with frosted effect */
+  .header-frosted {
+    background: rgba(120, 140, 172, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 0.75rem;
+  }
+
+  /* Announcement text size */
+  .announcement-text {
+    font-size: 1.75rem;
+  }
+
+  /* Hide fullscreen buttons by default */
+  .fullscreen-btn,
+  .exit-fullscreen-btn {
+    display: none;
+  }
+
+  /* Overlay for embedded games */
+  .game-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .game-overlay-content {
+    position: relative;
+    width: 90%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+  }
+  .iframe-container {
+    flex: 1;
+    width: 100%;
+    position: relative;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  /* Buttons inside overlay */
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 10;
+  }
+  .fullscreen-btn,
+  .exit-fullscreen-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.8);
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  .exit-fullscreen-btn {
+    display: none;
+  }
+
+  /* Style for game icons in grid - 5 columns for 5x4 layout */
+  #games-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, auto);
+    gap: 20px;
+    justify-items: center;
+  }
+
+  /* Style for game icons */
+  .game-icon {
+    width: 100px; /* adjust as needed */
+    aspect-ratio: 1/1;
+    border-radius: calc(100px * 0.225);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  .game-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Label positioned ABOVE the icon, centered, with glow, layered properly */
+  .icon-label {
+    position: absolute;
+    bottom: 100%; /* position above icon */
+    margin-bottom: 4px;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #fff;
+    text-shadow: 0 0 2px #fff;
+  }
+
+  /* 2x2 grid for forms, slightly scaled down to prevent overlap */
+  #forms-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-items: center;
+  }
+  .form-card {
+    width: 95%; /* 95% of the grid cell, slightly smaller to avoid overlap */
+    aspect-ratio: 4/3;
+    border-radius: calc(100px * 0.225);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  .form-iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+  }
+
+  /* Resize section header images to appropriate size */
+  /* For all sections headers, e.g., #forms, #games, etc. */
+  .section-header-img {
+    height: 8rem; /* scaled down from 12rem to prevent oversize images */
+  }
+</style>
 </head>
 <body class="bg-gradient-to-r from-[#4B5563] to-[#1F2937]">
 
-  <!-- Particles -->
-  <div id="particles-js"></div>
+<!-- Particles -->
+<div id="particles-js"></div>
 
-  <!-- Sidebar -->
-  <nav id="sidebar" class="flex flex-col items-center">
-    <a href="#home" style="margin-top: 20px;">
-      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Deblocked%20483201143155958.png" alt="Deblocked Logo" class="logo" style="height: 3rem; max-width: 180px; margin-top: 20px;" />
-    </a>
-    <ul class="flex flex-col space-y-2 w-full px-2">
-      <li><a href="#home" class="block py-2 font-bold glow text-white hover:underline">Home</a></li>
-      <li><a href="#games" class="block py-2 font-bold glow text-white hover:underline">Games</a></li>
-      <li><a href="#game-links" class="block py-2 font-bold glow text-white hover:underline">Game Links</a></li>
-      <li><a href="#proxies" class="block py-2 font-bold glow text-white hover:underline">Proxies</a></li>
-      <li><a href="#hacks" class="block py-2 font-bold glow text-white hover:underline">Hacks</a></li>
-      <li><a href="#more" class="block py-2 font-bold glow text-white hover:underline">More</a></li>
-    </ul>
-  </nav>
+<!-- Sidebar -->
+<nav id="sidebar" class="flex flex-col items-center">
+  <a href="#home" style="margin-top:20px;">
+    <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Deblocked%20483201143155958.png" alt="Deblocked Logo" class="logo" style="height:3rem; max-width:180px; margin-top:20px;" />
+  </a>
+  <ul class="flex flex-col space-y-2 w-full px-2">
+    <li><a href="#home" class="block py-2 font-bold glow text-white hover:underline">Home</a></li>
+    <li><a href="#games" class="block py-2 font-bold glow text-white hover:underline">Games</a></li>
+    <li><a href="#game-links" class="block py-2 font-bold glow text-white hover:underline">Game Links</a></li>
+    <li><a href="#proxies" class="block py-2 font-bold glow text-white hover:underline">Proxies</a></li>
+    <li><a href="#hacks" class="block py-2 font-bold glow text-white hover:underline">Hacks</a></li>
+    <li><a href="#more" class="block py-2 font-bold glow text-white hover:underline">More</a></li>
+    <li><a href="#forms" class="block py-2 font-bold glow text-white hover:underline">Forms</a></li>
+  </ul>
+</nav>
 
-  <!-- Main content -->
-  <div class="content">
+<!-- Main Content -->
+<div class="content">
 
-    <!-- NEW: "Announcements" section first -->
-    <section id="home">
-      <div class="section-container">
-        <div class="frosted-glass rounded-xl p-6 mx-auto shadow-lg max-w-3xl">
-          <h1 class="text-3xl font-bold mb-4 text-center text-white glow announcement-text">Announcements</h1>
-          <p class="text-lg text-center">example</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- NEW: "Games" section below Announcements -->
-    <section id="games">
-      <div class="section-container">
-        <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
-          <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Games%20483200995420439.png?updatedAt=1748118733460" alt="Games" class="h-12" />
-        </div>
-        <div id="games-grid"></div>
-      </div>
-    </section>
-
-    <!-- Rest of your sections -->
-    <section id="game-links">
-      <div class="section-container">
-        <div class="header-frosted p-2 mb-4 flex items-center justify-center space-x-2 rounded-lg mx-auto max-w-3xl">
-          <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Game%20Links%20483201030081785.png" alt="Game Links" class="h-12" />
-        </div>
-        <div id="game-links-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-      </div>
-    </section>
-
-    <section id="proxies">
-      <div class="section-container">
-        <div class="header-frosted p-2 mb-4 flex items-center justify-center space-x-2 rounded-lg mx-auto max-w-3xl">
-          <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Proxies%20483201036052784.png" alt="Proxies" class="h-12" />
-        </div>
-        <div class="max-w-3xl mx-auto mb-4"></div>
-      </div>
-    </section>
-
-    <section id="hacks">
-      <div class="section-container">
-        <div class="header-frosted p-2 mb-4 flex items-center justify-center space-x-2 rounded-lg mx-auto max-w-3xl">
-          <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Hacks%20483206932003080.png" alt="Hacks" class="h-6" />
-        </div>
-        <div id="hacks-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-      </div>
-    </section>
-
-    <section id="more">
-      <div class="section-container">
-        <div class="header-frosted p-2 mb-4 flex items-center justify-center space-x-2 rounded-lg mx-auto max-w-3xl">
-          <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Settings%20490279507430613.png" alt="Settings" class="h-12" />
-          <h2 class="text-2xl font-bold text-white">More</h2>
-        </div>
-        <p class="mb-4">Toggle Dark Mode:</p>
-        <div class="flex justify-center">
-          <input type="checkbox" id="darkModeToggle" class="mr-2" />
-          <span class="slider"></span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gradient-to-r py-4">
-      <div class="mx-auto max-w-5xl text-center">
-        <p>© <script>document.write(new Date().getFullYear())</script> @Smoreh All rights reserved.</p>
-      </div>
-    </footer>
+<!-- Announcements -->
+<section id="home">
+  <div class="section-container">
+    <div class="frosted-glass rounded-xl p-6 mx-auto shadow-lg max-w-3xl">
+      <h1 class="text-3xl font-bold mb-4 text-center text-white glow announcement-text">Announcements</h1>
+      <p class="text-lg text-center text-white">updated site a bit, check canva version for backup links, proxies and hacks are missing idk why, but prolly going to main on the backups to have a better chat</p>
+    </div>
   </div>
+</section>
 
-  <!-- Overlay for embedded games -->
-  <div class="game-overlay"></div>
+<!-- FORMS -->
+<section id="forms">
+  <div class="section-container">
+    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
+      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Forms%20490421769719423.png" class="section-header-img" alt="Forms" />
+    </div>
+    <div id="forms-grid"></div>
+  </div>
+</section>
 
-  <!-- Scripts -->
-  <script src="https://deadsimplechat.com/js/embed.js" type="text/javascript"></script>
-  <script>
-    window.DeadSimpleChat.initBubble({
-      location: "https://deadsimplechat.com",
-      size: "small",
-      roomId: "p7xtNDbpo",
-      open: "false"
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script>
-    const DEFAULT_IMAGE = 'https://assets.justinmind.com/wp-content/uploads/2025/02/game-ui-design-768x492.png';
+<!-- GAMES -->
+<section id="games">
+  <div class="section-container">
+    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
+      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Games%20483200995420439.png?updatedAt=1748118733460" class="section-header-img" alt="Games" />
+    </div>
+    <div id="games-grid"></div>
+  </div>
+</section>
 
-    const overlay = document.querySelector('.game-overlay');
+<!-- Game Links -->
+<section id="game-links">
+  <div class="section-container">
+    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
+      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Game%20Links%20483201030081785.png" class="section-header-img" alt="Game Links" />
+    </div>
+    <div id="game-links-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+  </div>
+</section>
 
-    function initParticles() {
-      if (window.pJSDom && window.pJSDom.length > 0) return;
-      particlesJS("particles-js", {
-        "particles": {
-          "number": { "value": 400, "density": { "enable": true, "value_area": 800 } },
-          "color": { "value": "#fff" },
-          "shape": {
-            "type": "circle",
-            "stroke": { "width": 0, "color": "#000" },
-            "polygon": { "nb_sides": 5 },
-            "image": { "src": "img/github.svg", "width": 100, "height": 100 }
-          },
-          "opacity": {
-            "value": 0.5,
-            "random": true,
-            "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false }
-          },
-          "size": {
-            "value": 10,
-            "random": true,
-            "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false }
-          },
-          "line_linked": { "enable": false, "distance": 500, "color": "#ffffff", "opacity": 0.4, "width": 2 },
-          "move": {
-            "enable": true,
-            "speed": 6,
-            "direction": "bottom",
-            "random": false,
-            "straight": false,
-            "out_mode": "out",
-            "bounce": false,
-            "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
-          }
+<!-- PROXIES -->
+<section id="proxies">
+  <div class="section-container">
+    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
+      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Proxies%20483201036052784.png" class="section-header-img" alt="Proxies" />
+    </div>
+    <div class="max-w-3xl mx-auto mb-4">
+      <!-- Proxy content here -->
+    </div>
+  </div>
+</section>
+
+<!-- HACKS -->
+<section id="hacks">
+  <div class="section-container">
+    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
+      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Hacks%20483206932003080.png" class="section-header-img" alt="Hacks" />
+    </div>
+    <div class="max-w-3xl mx-auto mb-4">
+      <!-- Hacks content here -->
+    </div>
+  </div>
+</section>
+
+<!-- MORE -->
+<section id="more">
+  <div class="section-container">
+    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
+      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Settings%20490279507430613.png" class="section-header-img" alt="Settings" />
+      <h2 class="text-2xl font-bold text-white">More</h2>
+    </div>
+    <p class="mb-4">Toggle Dark Mode:</p>
+    <div class="flex justify-center">
+      <input type="checkbox" id="darkModeToggle" class="mr-2" />
+      <span class="slider"></span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-gradient-to-r py-4">
+  <div class="mx-auto max-w-5xl text-center">
+    <p>© <script>document.write(new Date().getFullYear())</script> @Smoreh All rights reserved.</p>
+  </div>
+</footer>
+
+</div> <!-- end content -->
+
+<!-- overlay for games -->
+<div class="game-overlay"></div>
+
+<!-- scripts -->
+<script src="https://deadsimplechat.com/js/embed.js" type="text/javascript"></script>
+<script>
+  window.DeadSimpleChat.initBubble({
+    location: "https://deadsimplechat.com",
+    size: "small",
+    roomId: "p7xtNDbpo",
+    open: "false"
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  const DEFAULT_IMAGE='https://assets.justinmind.com/wp-content/uploads/2025/02/game-ui-design-768x492.png';
+
+  const overlay=document.querySelector('.game-overlay');
+
+  function initParticles() {
+    if (window.pJSDom && window.pJSDom.length > 0) return;
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 400, "density": { "enable": true, "value_area": 800 }},
+        "color": { "value": "#fff" },
+        "shape": {
+          "type": "circle",
+          "stroke": { "width": 0, "color": "#000" },
+          "polygon": { "nb_sides": 5 },
+          "image": { "src": "img/github.svg", "width": 100, "height": 100 }
         },
-        "interactivity": {
-          "detect_on": "canvas",
-          "events": {
-            "onhover": { "enable": false, "mode": "repulse" },
-            "onclick": { "enable": false, "mode": "repulse" },
-            "resize": true
-          },
-          "modes": {
-            "grab": { "distance": 400, "line_linked": { "opacity": 0.5 } },
-            "bubble": { "distance": 400, "size": 4, "duration": 0.3, "opacity": 1, "speed": 3 },
-            "repulse": { "distance": 200, "duration": 0.4 },
-            "push": { "particles_nb": 4 },
-            "remove": { "particles_nb": 2 }
-          }
+        "opacity": {
+          "value": 0.5,
+          "random": true,
+          "anim": { "enable": false, "speed": 1, "opacity_min": 0.1, "sync": false }
         },
-        "retina_detect": true
-      });
-    }
-
-    async function fetchGameLinks() {
-      try {
-        const response = await fetch(`games.json?t=${Date.now()}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status} - URL: ${response.url}`);
-        const jsonGames = await response.json();
-        populateGameLinks(jsonGames);
-      } catch (error) {
-        console.error('Error loading game links:', error.message, error.stack);
-        document.getElementById('game-links-grid').innerHTML = '<p class="text-center text-gray-200">Error loading game links.</p>';
-      }
-    }
-
-    function populateGameLinks(jsonGames) {
-      const grid = document.getElementById('game-links-grid');
-      grid.innerHTML = '';
-      if (!jsonGames || jsonGames.length === 0) {
-        grid.innerHTML = '<p class="text-center text-gray-200">No game links available.</p>';
-        return;
-      }
-
-      jsonGames.forEach((game, index) => {
-        // Regular link, open in new tab
-        const a = document.createElement('a');
-        a.href = game.url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'frosted-glass rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105';
-
-        const imageSrc = isValidUrl(game.game_image_icon) ? game.game_image_icon : DEFAULT_IMAGE;
-        cardDiv.innerHTML = `
-          <div class="thumbnail-container">
-            <img src="${imageSrc}" alt="${game.title}" class="w-full h-48 object-cover no-drag" />
-          </div>
-          <div class="p-4">
-            <h3 class="text-xl font-bold text-white">${game.title}</h3>
-          </div>`;
-        a.appendChild(cardDiv);
-        addTiltEffect(a);
-        document.getElementById('game-links-grid').appendChild(a);
-      });
-    }
-
-    // Fetch embedded games
-    async function fetchEmbeddedGames() {
-      try {
-        const response = await fetch(`embeddedgames.json?t=${Date.now()}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status} - URL: ${response.url}`);
-        const embeddedGames = await response.json();
-        populateEmbeddedGames(embeddedGames);
-      } catch (error) {
-        console.error('Error loading embedded games:', error.message);
-        document.getElementById('games-grid').innerHTML = '<p class="text-center text-gray-200">Error loading embedded games.</p>';
-      }
-    }
-
-    function populateEmbeddedGames(games) {
-      const grid = document.getElementById('games-grid');
-      grid.innerHTML = '';
-
-      if (!games || games.length === 0) {
-        grid.innerHTML = '<p class="text-center text-gray-200">No embedded games available.</p>';
-        return;
-      }
-
-      games.forEach((game, index) => {
-        const iconSize = 100; // px
-        const cornerRadius = iconSize * 0.225; // Apple-like curvature
-        const iconDiv = document.createElement('div');
-        iconDiv.className = 'game-icon';
-        iconDiv.style.borderRadius = cornerRadius + 'px';
-
-        iconDiv.innerHTML = `
-          <img src="${isValidUrl(game.game_image_icon) ? game.game_image_icon : DEFAULT_IMAGE}" alt="${game.title}" />
-          <div class="icon-label">${game.title}</div>
-        `;
-
-        // Load in overlay on click
-        iconDiv.addEventListener('click', () => {
-          showGameOverlay(game.url, `embeddedgame-${index}`, game.title);
-        });
-
-        document.getElementById('games-grid').appendChild(iconDiv);
-      });
-    }
-
-    // Show overlay
-    function showGameOverlay(url, iframeId, title) {
-      overlay.innerHTML = `
-        <div class="game-overlay-content">
-          <button class="close-btn" onclick="hideGameOverlay()">Close</button>
-          <div class="iframe-container loading">
-            <iframe id="${iframeId}" src="${url}" title="${title}" allowfullscreen></iframe>
-            <button class="fullscreen-btn" onclick="attemptFullscreen('${iframeId}')">Fullscreen</button>
-            <button class="exit-fullscreen-btn" onclick="exitFullscreen('${iframeId}')">Exit Fullscreen</button>
-          </div>
-        </div>`;
-      document.querySelector('.fullscreen-btn').style.display = 'block';
-      document.querySelector('.exit-fullscreen-btn').style.display = 'none';
-      overlay.style.display = 'flex'; // show overlay
-    }
-
-    function hideGameOverlay() {
-      overlay.innerHTML = '';
-      overlay.style.display = 'none'; // hide overlay
-      document.querySelector('.fullscreen-btn').style.display = 'none';
-      document.querySelector('.exit-fullscreen-btn').style.display = 'none';
-    }
-
-    function attemptFullscreen(iframeId) {
-      const iframe = document.getElementById(iframeId);
-      const fsBtn = document.querySelector('.fullscreen-btn');
-      const exitBtn = document.querySelector('.exit-fullscreen-btn');
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-        return;
-      }
-      iframe.requestFullscreen().then(() => {
-        fsBtn.style.display = 'none';
-        exitBtn.style.display = 'block';
-      }).catch(console.error);
-    }
-
-    function exitFullscreen(iframeId) {
-      const iframe = document.getElementById(iframeId);
-      const fsBtn = document.querySelector('.fullscreen-btn');
-      const exitBtn = document.querySelector('.exit-fullscreen-btn');
-      if (document.fullscreenElement) {
-        document.exitFullscreen().then(() => {
-          fsBtn.style.display = 'block';
-          exitBtn.style.display = 'none';
-        }).catch(console.error);
-      }
-    }
-
-    function isValidUrl(string) {
-      try {
-        new URL(string);
-        return true;
-      } catch (_) {
-        return false;
-      }
-    }
-
-    // Tilt effect
-    function addTiltEffect(element) {
-      const handleMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const padding = 20;
-        const xMin = rect.left - padding;
-        const xMax = rect.right + padding;
-        const yMin = rect.top - padding;
-        const yMax = rect.bottom + padding;
-
-        const x = e.clientX;
-        const y = e.clientY;
-
-        const clampedX = Math.min(Math.max(x, xMin), xMax);
-        const clampedY = Math.min(Math.max(y, yMin), yMax);
-
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const deltaX = clampedX - centerX;
-        const deltaY = clampedY - centerY;
-
-        const maxTilt = 20;
-        const percentX = deltaX / (rect.width / 2);
-        const percentY = deltaY / (rect.height / 2);
-
-        const rotateY = -maxTilt * percentX;
-        const rotateX = maxTilt * percentY;
-
-        e.currentTarget.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      };
-
-      const handleMouseEnter = () => {
-        element.addEventListener('mousemove', handleMouseMove);
-      };
-      const handleMouseLeave = () => {
-        element.removeEventListener('mousemove', handleMouseMove);
-        element.style.transform = 'rotateX(0deg) rotateY(0deg)';
-      };
-
-      element.addEventListener('mouseenter', handleMouseEnter);
-      element.addEventListener('mouseleave', handleMouseLeave);
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchGameLinks(); // external links
-      fetchEmbeddedGames(); // icon-style icons
-      initParticles();
-
-      // Dark mode toggle
-      const darkModeToggle = document.getElementById('darkModeToggle');
-      const savedDarkMode = localStorage.getItem('darkMode');
-      if (savedDarkMode === 'true') {
-        document.body.classList.add('dark');
-        darkModeToggle.checked = true;
-      }
-      darkModeToggle.addEventListener('change', (e) => {
-        if (e.target.checked) {
-          document.body.classList.add('dark');
-          localStorage.setItem('darkMode', 'true');
-        } else {
-          document.body.classList.remove('dark');
-          localStorage.setItem('darkMode', 'false');
+        "size": {
+          "value": 10,
+          "random": true,
+          "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false }
+        },
+        "line_linked": { "enable": false, "distance": 500, "color": "#ffffff", "opacity": 0.4, "width": 2 },
+        "move": {
+          "enable": true,
+          "speed": 6,
+          "direction": "bottom",
+          "random": false,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
         }
-      });
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": false, "mode": "repulse" },
+          "onclick": { "enable": false, "mode": "repulse" },
+          "resize": true
+        },
+        "modes": {
+          "grab": { "distance": 400, "line_linked": { "opacity": 0.5 } },
+          "bubble": { "distance": 400, "size": 4, "duration": 0.3, "opacity": 1, "speed": 3 },
+          "repulse": { "distance": 200, "duration": 0.4 },
+          "push": { "particles_nb": 4 },
+          "remove": { "particles_nb": 2 }
+        }
+      },
+      "retina_detect": true
     });
-  </script>
+  }
+
+  async function fetchGameLinks() {
+    try {
+      const response = await fetch(`games.json?t=${Date.now()}`);
+      if (!response.ok) throw new Error(`HTTP error!`);
+      const jsonGames = await response.json();
+      populateGameLinks(jsonGames);
+    } catch (error) {
+      document.getElementById('game-links-grid').innerHTML='<p class="text-white text-center">Error loading game links.</p>';
+    }
+  }
+
+  function populateGameLinks(games) {
+    const grid=document.getElementById('game-links-grid');
+    grid.innerHTML='';
+    if (!games || games.length===0) {
+      grid.innerHTML='<p class="text-white text-center">No game links.</p>';
+      return;
+    }
+    games.forEach((game, index) => {
+      const a=document.createElement('a');
+      a.href=game.url; a.target='_blank'; a.rel='noopener noreferrer';
+      const card=document.createElement('div');
+      card.className='frosted-glass rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105';
+      const imgSrc=isValidUrl(game.game_image_icon)?game.game_image_icon:DEFAULT_IMAGE;
+      card.innerHTML=`<div class="thumbnail-container">
+          <img src="${imgSrc}" alt="${game.title}" class="w-full h-48 object-cover no-drag"/>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold text-white">${game.title}</h3>
+        </div>`;
+      a.appendChild(card);
+      addTiltEffect(a);
+      document.getElementById('game-links-grid').appendChild(a);
+    });
+  }
+
+  async function fetchEmbeddedGames() {
+    try {
+      const response=await fetch(`embeddedgames.json?t=${Date.now()}`);
+      if (!response.ok) throw new Error(`HTTP error!`);
+      const games=await response.json();
+      populateEmbeddedGames(games);
+    } catch (error) {
+      document.getElementById('games-grid').innerHTML='<p class="text-white text-center">Error loading embedded games.</p>';
+    }
+  }
+
+  function populateEmbeddedGames(games) {
+    const grid=document.getElementById('games-grid');
+    grid.innerHTML='';
+    if (!games || games.length===0) {
+      grid.innerHTML='<p class="text-white text-center">No embedded games.</p>';
+      return;
+    }
+    games.forEach((game, index) => {
+      const iconSize=100;
+      const borderRadius=iconSize*0.225;
+      const div=document.createElement('div');
+      div.className='game-icon';
+      div.style.borderRadius=borderRadius+'px';
+      div.innerHTML=`<img src="${isValidUrl(game.game_image_icon)?game.game_image_icon:DEFAULT_IMAGE}" alt="${game.title}"/>
+        <div class="icon-label">${game.title}</div>`;
+      div.addEventListener('click', ()=>showGameOverlay(game.url,`embeddedgame-${index}`,game.title));
+      document.getElementById('games-grid').appendChild(div);
+    });
+  }
+
+  function showGameOverlay(url,iframeId,title) {
+    document.querySelector('.game-overlay').innerHTML=`
+      <div class="game-overlay-content">
+        <button class="close-btn" onclick="hideGameOverlay()">Close</button>
+        <div class="iframe-container loading">
+          <iframe id="${iframeId}" src="${url}" title="${title}" allowfullscreen></iframe>
+          <button class="fullscreen-btn" onclick="attemptFullscreen('${iframeId}')">Fullscreen</button>
+          <button class="exit-fullscreen-btn" onclick="exitFullscreen('${iframeId}')">Exit Fullscreen</button>
+        </div>
+      </div>`;
+    document.querySelector('.fullscreen-btn').style.display='block';
+    document.querySelector('.exit-fullscreen-btn').style.display='none';
+    document.querySelector('.game-overlay').style.display='flex';
+  }
+
+  function hideGameOverlay() {
+    document.querySelector('.game-overlay').innerHTML='';
+    document.querySelector('.game-overlay').style.display='none';
+    document.querySelector('.fullscreen-btn').style.display='none';
+    document.querySelector('.exit-fullscreen-btn').style.display='none';
+  }
+
+  function attemptFullscreen(iframeId) {
+    const iframe=document.getElementById(iframeId);
+    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    iframe.requestFullscreen().then(()=> {
+      document.querySelector('.fullscreen-btn').style.display='none';
+      document.querySelector('.exit-fullscreen-btn').style.display='block';
+    }).catch(()=>{});
+  }
+  function exitFullscreen(iframeId) {
+    if (document.fullscreenElement){ document.exitFullscreen().then(()=> {
+      document.querySelector('.fullscreen-btn').style.display='block';
+      document.querySelector('.exit-fullscreen-btn').style.display='none';
+    });}
+  }
+
+  function isValidUrl(string) {
+    try { new URL(string); return true; } catch (_) { return false; }
+  }
+
+  function addTiltEffect(element) {
+    const handleMouseMove=(e)=>{
+      const rect=e.currentTarget.getBoundingClientRect();
+      const padding=20;
+      const xMin=rect.left-padding; const xMax=rect.right+padding;
+      const yMin=rect.top-padding; const yMax=rect.bottom+padding;
+      const x=e.clientX; const y=e.clientY;
+      const clampedX=Math.min(Math.max(x,xMin),xMax);
+      const clampedY=Math.min(Math.max(y,yMin),yMax);
+      const centerX=rect.left+rect.width/2;
+      const centerY=rect.top+rect.height/2;
+      const deltaX=clampedX-centerX;
+      const deltaY=clampedY-centerY;
+      const maxTilt=20;
+      const percentX=deltaX/(rect.width/2);
+      const percentY=deltaY/(rect.height/2);
+      const rotateY=-maxTilt*percentX;
+      const rotateX=maxTilt*percentY;
+      e.currentTarget.style.transform=`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+    const handleMouseEnter=()=>{e.currentTarget.addEventListener('mousemove', handleMouseMove);}
+    const handleMouseLeave=()=>{e.currentTarget.removeEventListener('mousemove', handleMouseMove); e.currentTarget.style.transform='rotateX(0deg) rotateY(0deg)';}
+    element.addEventListener('mouseenter', handleMouseEnter);
+    element.addEventListener('mouseleave', handleMouseLeave);
+  }
+
+  // Fetch and populate forms
+  async function fetchForms() {
+    try {
+      const response=await fetch('forms.json');
+      if (!response.ok) throw new Error('Failed to load forms.json');
+      const forms=await response.json();
+      populateForms(forms);
+    } catch(e) {
+      document.getElementById('forms-grid').innerHTML='<p class="text-white text-center">Error loading forms</p>';
+    }
+  }
+  function populateForms(forms) {
+    const grid=document.getElementById('forms-grid');
+    grid.innerHTML='';
+    if (!forms || forms.length===0) {
+      grid.innerHTML='<p class="text-white text-center">No forms available.</p>';
+      return;
+    }
+    forms.forEach(form => {
+      const card=document.createElement('div');
+      card.className='form-card';
+      card.innerHTML=`<iframe src="${form.url}" class="form-iframe" allowfullscreen></iframe>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchGameLinks();
+    fetchEmbeddedGames();
+    fetchForms();
+    initParticles();
+    // dark mode toggle
+    const darkToggle=document.getElementById('darkModeToggle');
+    const savedDark=localStorage.getItem('darkMode');
+    if (savedDark==='true'){ document.body.classList.add('dark'); darkToggle.checked=true; }
+    darkToggle.addEventListener('change', ()=> {
+      if (darkToggle.checked){ document.body.classList.add('dark'); localStorage.setItem('darkMode','true'); }
+      else{ document.body.classList.remove('dark'); localStorage.setItem('darkMode','false'); }
+    });
+  });
+</script>
 </body>
 </html>
