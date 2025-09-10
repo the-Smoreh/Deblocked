@@ -7,35 +7,69 @@
 <link rel="icon" href="/icon.png" type="image/png" />
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  /* Frosted glass for headers and cards */
-  .header-frosted {
-    background: rgba(120, 140, 172, 0.3);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 0 12px rgba(255,255,255,0.6);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 0.75rem;
+  :root {
+    --bg-gradient-start: #4B5563;
+    --bg-gradient-end: #1F2937;
   }
 
-  /* Particles background fixed behind all content */
-  #particles-js {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
+  /* Theme-specific overlay backgrounds and contrast text for overlay content */
+  body.theme-default {
+    --overlay-bg: rgba(255, 255, 255, 0.2);
+    --overlay-text-color: #000;
+  }
+  body.theme-dark {
+    --overlay-bg: rgba(255, 255, 255, 0.5);
+    --overlay-text-color: #fff;
+  }
+  body.theme-classic {
+    --overlay-bg: rgba(255, 255, 255, 0.1);
+    --overlay-text-color: #000;
   }
 
   body {
     margin: 0;
     padding-left: 200px;
     box-sizing: border-box;
-    transition: background-color 0.3s, color 0.3s;
-    background-image: linear-gradient(to right, #4B5563, #1F2937);
-    color: #788cac;
+    transition: background 0.3s, color 0.3s;
+    font-family: system-ui, sans-serif;
+    background: linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end));
+    background-repeat: no-repeat;
+    background-size: 200% 100%;
+    background-position: center;
+    background-attachment: scroll; /* default, overridden in JS for fixed background */
+    color: var(--text-color);
   }
 
-  /* Sidebar styles */
+  /* Dark Mode Styles */
+  body.theme-dark {
+    --bg-gradient-start: #000;
+    --bg-gradient-end: #000;
+    background: linear-gradient(to right, #000, #000);
+  }
+
+  /* Classic Mode Styles */
+  body.theme-classic {
+    --bg-gradient-start: #cdffd8;
+    --bg-gradient-end: #94b9ff;
+    background: linear-gradient(to right, #cdffd8 0%, #94b9ff 100%);
+  }
+
+  /* Frosted glass styles (common) */
+  .header-frosted {
+    background: rgba(120, 140, 172, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  #particles-js {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+
   #sidebar {
     position: fixed;
     top: 0; left: 0;
@@ -52,42 +86,43 @@
     flex-direction: column;
     align-items: center;
   }
-
   #sidebar .logo {
     height: 3rem;
     max-width: 180px;
     margin-top: 20px;
   }
-
+  #sidebar .logo-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  #sidebar ul {
+    width: 100%;
+  }
   #sidebar li {
     width: 100%;
     text-align: center;
     margin-bottom: 0.75rem;
   }
 
-  /* Glowing white text */
   .glow {
     text-shadow: 0 0 8px #fff, 0 0 12px #fff, 0 0 16px #fff;
   }
 
-  /* Content wrapper to be more rectangular */
   .content {
     position: relative;
     z-index: 20;
   }
 
-  /* Sections - padding for spacing */
   section {
     padding: 3rem 1rem;
   }
-
-  /* Inner container for sections */
   .section-container {
     margin: 0 auto;
     max-width: 1000px;
   }
 
-  /* Frosted-glass for headers and cards */
   .frosted-glass {
     background: rgba(120, 140, 172, 0.2);
     backdrop-filter: blur(8px);
@@ -100,7 +135,6 @@
     transition: transform 0.2s ease;
   }
 
-  /* Header style with frosted effect */
   .header-frosted {
     background: rgba(120, 140, 172, 0.3);
     backdrop-filter: blur(8px);
@@ -110,18 +144,17 @@
     border-radius: 0.75rem;
   }
 
-  /* Announcement text size */
   .announcement-text {
     font-size: 1.75rem;
   }
 
-  /* Hide fullscreen buttons by default */
+  /* hide/show fullscreen buttons */
   .fullscreen-btn,
   .exit-fullscreen-btn {
     display: none;
   }
 
-  /* Overlay for embedded games */
+  /* Game overlay styles */
   .game-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -149,7 +182,6 @@
     height: 100%;
     border: none;
   }
-  /* Buttons inside overlay */
   .close-btn {
     position: absolute;
     top: 10px;
@@ -179,7 +211,7 @@
     display: none;
   }
 
-  /* Style for game icons in grid - 5 columns for 5x4 layout */
+  /* Game icons grid */
   #games-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -187,10 +219,8 @@
     gap: 20px;
     justify-items: center;
   }
-
-  /* Style for game icons */
   .game-icon {
-    width: 100px; /* adjust as needed */
+    width: 100px;
     aspect-ratio: 1/1;
     border-radius: calc(100px * 0.225);
     overflow: hidden;
@@ -206,10 +236,9 @@
     height: 100%;
     object-fit: cover;
   }
-  /* Label positioned ABOVE the icon, centered, with glow, layered properly */
   .icon-label {
     position: absolute;
-    bottom: 100%; /* position above icon */
+    bottom: 100%;
     margin-bottom: 4px;
     width: 100%;
     text-align: center;
@@ -219,7 +248,7 @@
     text-shadow: 0 0 2px #fff;
   }
 
-  /* 2x2 grid for forms, slightly scaled down to prevent overlap */
+  /* Forms grid styles */
   #forms-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -227,7 +256,7 @@
     justify-items: center;
   }
   .form-card {
-    width: 95%; /* 95% of the grid cell, slightly smaller to avoid overlap */
+    width: 95%;
     aspect-ratio: 4/3;
     border-radius: calc(100px * 0.225);
     overflow: hidden;
@@ -243,32 +272,129 @@
     border: none;
   }
 
-  /* Resize section header images to appropriate size */
-  /* For all sections headers, e.g., #forms, #games, etc. */
+  /* Section header images */
   .section-header-img {
-    height: 8rem; /* scaled down from 12rem to prevent oversize images */
+    height: 8rem;
+  }
+
+  /* Frosted background for sidebar links */
+  .bg-frosted {
+    background: rgba(120, 140, 172, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Cogwheel icon glow and position */
+  .cog-icon {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    fill: #fff;
+    transition: fill 0.2s;
+    filter: drop-shadow(0 0 4px #fff);
+  }
+  .cog-icon:hover {
+    fill: #ccc;
+  }
+
+  /* Theme toggle buttons */
+  .theme-toggle-group {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+  }
+  .theme-button {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .theme-button:hover {
+    background: rgba(255,255,255,0.2);
+  }
+  .theme-button.active {
+    background: #fff;
+    color: #000;
+  }
+
+  /* Back button inside overlay */
+  .back-button {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,255,255,0.5);
+    font-size: 0.8rem;
+  }
+  .back-button:hover {
+    background: rgba(255,255,255,0.3);
+    box-shadow: 0 0 12px rgba(255,255,255,0.8);
+  }
+
+  /* Settings overlay styles with larger height & custom background support */
+  .settings-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 500px;
+    max-height: 90%;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 10px;
+    display: none; /* hidden by default, shown with 'show' class */
+    flex-direction: column;
+    padding: 1rem;
+    z-index: 9999;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    overflow: hidden;
+    color: var(--overlay-text-color);
+  }
+  .settings-overlay.show {
+    display: flex;
   }
 </style>
 </head>
-<body class="bg-gradient-to-r from-[#4B5563] to-[#1F2937]">
+<body>
 
 <!-- Particles -->
 <div id="particles-js"></div>
 
 <!-- Sidebar -->
 <nav id="sidebar" class="flex flex-col items-center">
-  <a href="#home" style="margin-top:20px;">
-    <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Deblocked%20483201143155958.png" alt="Deblocked Logo" class="logo" style="height:3rem; max-width:180px; margin-top:20px;" />
-  </a>
+  <!-- Logo at top -->
+  <div class="logo-container">
+    <a href="#home" style="margin-top:20px;">
+      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Deblocked%20483201143155958.png" alt="Deblocked Logo" class="logo" style="height:3rem; max-width:180px;"/>
+    </a>
+  </div>
+  <!-- Navigation links -->
   <ul class="flex flex-col space-y-2 w-full px-2">
-    <li><a href="#home" class="block py-2 font-bold glow text-white hover:underline">Home</a></li>
-    <li><a href="#games" class="block py-2 font-bold glow text-white hover:underline">Games</a></li>
-    <li><a href="#game-links" class="block py-2 font-bold glow text-white hover:underline">Game Links</a></li>
-    <li><a href="#proxies" class="block py-2 font-bold glow text-white hover:underline">Proxies</a></li>
-    <li><a href="#hacks" class="block py-2 font-bold glow text-white hover:underline">Hacks</a></li>
-    <li><a href="#more" class="block py-2 font-bold glow text-white hover:underline">More</a></li>
-    <li><a href="#forms" class="block py-2 font-bold glow text-white hover:underline">Forms</a></li>
+    <li><a href="#home" class="block py-2 font-bold glow text-white hover:no-underline bg-frosted px-2 py-1 rounded">Home</a></li>
+    <li><a href="#games" class="block py-2 font-bold glow text-white hover:no-underline bg-frosted px-2 py-1 rounded">Games</a></li>
+    <li><a href="#game-links" class="block py-2 font-bold glow text-white hover:no-underline bg-frosted px-2 py-1 rounded">Game Links</a></li>
+    <li><a href="#proxies" class="block py-2 font-bold glow text-white hover:no-underline bg-frosted px-2 py-1 rounded">Proxies</a></li>
+    <li><a href="#hacks" class="block py-2 font-bold glow text-white hover:no-underline bg-frosted px-2 py-1 rounded">Hacks</a></li>
+    <li><a href="#forms" class="block py-2 font-bold glow text-white hover:no-underline bg-frosted px-2 py-1 rounded">Forms</a></li>
   </ul>
+  <!-- Settings cogwheel -->
+  <svg id="settings-icon" class="cog-icon cursor-pointer" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Settings" role="button" tabindex="0" title="Settings" style="filter:drop-shadow(0 0 4px #fff);">
+    <path fill="currentColor" d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.07-.98l2.11-1.65a.5.5 0 00.12-.66l-2-3.46a.5.5 0 00-.61-.21l-2.49 1a6.98 6.98 0 00-1.71-.98l-.38-2.65A.5.5 0 0014 2h-4a.5.5 0 00-.5.43l-.38 2.65c-.63.23-1.21.52-1.71.98l-2.49-1a.5.5 0 00-.61.21l-2 3.46a.5.5 0 00.12.66l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65a.5.5 0 00-.12.66l2 3.46c.15.26.43.34.66.21l2.49-1c.5.46 1.08.75 1.71.98l.38 2.65c.05.33.33.57.66.43h4c.33.14.61-.1.66-.43l.38-2.65c.63-.23 1.21-.52 1.71-.98l2.49 1c.23.13.51.05.66-.21l2-3.46a.5.5 0 00-.12-.66z"/>
+  </svg>
 </nav>
 
 <!-- Main Content -->
@@ -279,7 +405,7 @@
   <div class="section-container">
     <div class="frosted-glass rounded-xl p-6 mx-auto shadow-lg max-w-3xl">
       <h1 class="text-3xl font-bold mb-4 text-center text-white glow announcement-text">Announcements</h1>
-      <p class="text-lg text-center text-white">updated site a bit, check canva version for backup links, proxies and hacks are missing idk why, but prolly going to main on the backups to have a better chat</p>
+      <p class="text-lg text-center text-white">whats up 🖐️</p>
     </div>
   </div>
 </section>
@@ -287,8 +413,10 @@
 <!-- FORMS -->
 <section id="forms">
   <div class="section-container">
-    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
+    <div class="header-frosted p-2 mb-4 flex flex-col items-center justify-center rounded-lg mx-auto max-w-3xl">
       <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Forms%20490421769719423.png" class="section-header-img" alt="Forms" />
+      <!-- Space for custom text -->
+      <div style="margin-top:10px; text-align:center; font-size:1rem; color:#fff;">Let me know in the Chat if you want to Promote your Hustle here</div>
     </div>
     <div id="forms-grid"></div>
   </div>
@@ -338,21 +466,6 @@
   </div>
 </section>
 
-<!-- MORE -->
-<section id="more">
-  <div class="section-container">
-    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
-      <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Settings%20490279507430613.png" class="section-header-img" alt="Settings" />
-      <h2 class="text-2xl font-bold text-white">More</h2>
-    </div>
-    <p class="mb-4">Toggle Dark Mode:</p>
-    <div class="flex justify-center">
-      <input type="checkbox" id="darkModeToggle" class="mr-2" />
-      <span class="slider"></span>
-    </div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer class="bg-gradient-to-r py-4">
   <div class="mx-auto max-w-5xl text-center">
@@ -365,9 +478,44 @@
 <!-- overlay for games -->
 <div class="game-overlay"></div>
 
-<!-- scripts -->
+<!-- Settings modal with larger height & custom background support -->
+<div class="settings-overlay" id="settingsOverlay">
+  <!-- Header Image -->
+  <div class="settings-header" style="display:flex; justify-content:center; align-items:center;">
+    <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Settings%20490740257480553.png" alt="Settings" style="max-width:100%; height:auto;">
+  </div>
+  
+  <!-- Mode/Theme toggles and Custom Background Button -->
+  <div style="margin-top:1rem; display:flex; flex-direction:column; align-items:center; gap:0.75rem;">
+    <div class="theme-toggle-group" style="display:flex; gap:0.5rem;">
+      <button class="theme-button active" data-theme="default" onclick="setTheme('default')">Default</button>
+      <button class="theme-button" data-theme="dark" onclick="setTheme('dark')">Dark Mode</button>
+      <button class="theme-button" data-theme="classic" onclick="setTheme('classic')">Classic</button>
+    </div>
+    <button class="theme-button" onclick="toggleCustomBg()">Custom Background</button>
+  </div>
+  
+  <!-- Custom Background Upload & URL input -->
+  <div id="customBgContainer" style="display:none; margin-top:1rem; width:100%; text-align:center;">
+    <input type="file" id="backgroundUpload" accept="image/*" style="display:none" onchange="applyUploadedBackground()">
+    <button style="margin-top:0.5rem; padding:0.5rem 1rem; border-radius:4px; border:none; background:#4cd964; color:#fff; cursor:pointer;" onclick="document.getElementById('backgroundUpload').click()">Upload Image</button>
+    <button style="margin-top:0.5rem; margin-left:0.5rem; padding:0.5rem 1rem; border-radius:4px; border:none; background:#ccc; color:#000; cursor:pointer;" onclick="removeCustomBackground()">Remove</button>
+  </div>
+  <!-- Optional: Input for URL -->
+  <div id="customUrlBgContainer" style="display:none; margin-top:1rem; width:100%; text-align:center;">
+    <input type="text" id="bgImageUrl" placeholder="Enter image URL" style="width:80%; padding:0.5rem; border-radius:4px; border:1px solid #ccc;">
+    <button style="margin-left:0.5rem; padding:0.5rem 1rem; border-radius:4px; border:none; background:#4cd964; color:#fff; cursor:pointer;" onclick="applyCustomBackgroundUrl()">Set Background</button>
+    <button style="margin-left:0.5rem; padding:0.5rem 1rem; border-radius:4px; border:none; background:#ccc; color:#000; cursor:pointer;" onclick="removeCustomBackground()">Remove</button>
+  </div>
+  
+  <!-- Back Button -->
+  <button class="back-button" onclick="closeSettings()">Back</button>
+</div>
+
+<!-- Scripts -->
 <script src="https://deadsimplechat.com/js/embed.js" type="text/javascript"></script>
 <script>
+  // Initialize chat
   window.DeadSimpleChat.initBubble({
     location: "https://deadsimplechat.com",
     size: "small",
@@ -377,10 +525,7 @@
 </script>
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script>
-  const DEFAULT_IMAGE='https://assets.justinmind.com/wp-content/uploads/2025/02/game-ui-design-768x492.png';
-
-  const overlay=document.querySelector('.game-overlay');
-
+  // Initialize particles
   function initParticles() {
     if (window.pJSDom && window.pJSDom.length > 0) return;
     particlesJS("particles-js", {
@@ -434,42 +579,44 @@
     });
   }
 
+  // Fetch and populate game links
   async function fetchGameLinks() {
     try {
-      const response = await fetch(`games.json?t=${Date.now()}`);
-      if (!response.ok) throw new Error(`HTTP error!`);
-      const jsonGames = await response.json();
-      populateGameLinks(jsonGames);
-    } catch (error) {
+      const response = await fetch('games.json');
+      if (!response.ok) throw new Error('Failed to load');
+      const games = await response.json();
+      populateGameLinks(games);
+    } catch (e) {
       document.getElementById('game-links-grid').innerHTML='<p class="text-white text-center">Error loading game links.</p>';
     }
   }
 
   function populateGameLinks(games) {
-    const grid=document.getElementById('game-links-grid');
-    grid.innerHTML='';
-    if (!games || games.length===0) {
-      grid.innerHTML='<p class="text-white text-center">No game links.</p>';
+    const grid = document.getElementById('game-links-grid');
+    grid.innerHTML = '';
+    if (!games || games.length === 0) {
+      grid.innerHTML = '<p class="text-white text-center">No game links.</p>';
       return;
     }
     games.forEach((game, index) => {
-      const a=document.createElement('a');
-      a.href=game.url; a.target='_blank'; a.rel='noopener noreferrer';
-      const card=document.createElement('div');
+      const a = document.createElement('a');
+      a.href = game.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      const card = document.createElement('div');
       card.className='frosted-glass rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105';
-      const imgSrc=isValidUrl(game.game_image_icon)?game.game_image_icon:DEFAULT_IMAGE;
-      card.innerHTML=`<div class="thumbnail-container">
-          <img src="${imgSrc}" alt="${game.title}" class="w-full h-48 object-cover no-drag"/>
-        </div>
-        <div class="p-4">
-          <h3 class="text-xl font-bold text-white">${game.title}</h3>
-        </div>`;
+      const imgSrc = isValidUrl(game.game_image_icon) ? game.game_image_icon : 'https://via.placeholder.com/150';
+      card.innerHTML = `<div class="thumbnail-container">
+        <img src="${imgSrc}" alt="${game.title}" class="w-full h-48 object-cover no-drag"/>
+      </div>
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-white">${game.title}</h3>
+      </div>`;
       a.appendChild(card);
       addTiltEffect(a);
       document.getElementById('game-links-grid').appendChild(a);
     });
   }
 
+  // Fetch embedded games
   async function fetchEmbeddedGames() {
     try {
       const response=await fetch(`embeddedgames.json?t=${Date.now()}`);
@@ -531,6 +678,7 @@
       document.querySelector('.exit-fullscreen-btn').style.display='block';
     }).catch(()=>{});
   }
+
   function exitFullscreen(iframeId) {
     if (document.fullscreenElement){ document.exitFullscreen().then(()=> {
       document.querySelector('.fullscreen-btn').style.display='block';
@@ -562,8 +710,8 @@
       const rotateX=maxTilt*percentY;
       e.currentTarget.style.transform=`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     }
-    const handleMouseEnter=()=>{e.currentTarget.addEventListener('mousemove', handleMouseMove);}
-    const handleMouseLeave=()=>{e.currentTarget.removeEventListener('mousemove', handleMouseMove); e.currentTarget.style.transform='rotateX(0deg) rotateY(0deg)';}
+    const handleMouseEnter = (e) => { e.currentTarget.addEventListener('mousemove', handleMouseMove); }
+    const handleMouseLeave = (e) => { e.currentTarget.removeEventListener('mousemove', handleMouseMove); e.currentTarget.style.transform='rotateX(0deg) rotateY(0deg)';}
     element.addEventListener('mouseenter', handleMouseEnter);
     element.addEventListener('mouseleave', handleMouseLeave);
   }
@@ -594,21 +742,121 @@
     });
   }
 
-  // Initialize
+  // Theme switching with persistence
+  function setTheme(theme) {
+    document.body.classList.remove('theme-default', 'theme-dark', 'theme-classic');
+    if (theme === 'dark') {
+      document.body.classList.add('theme-dark');
+    } else if (theme === 'classic') {
+      document.body.classList.add('theme-classic');
+    } else {
+      document.body.classList.add('theme-default');
+    }
+    localStorage.setItem('theme', theme);
+    // Update toggle button states
+    document.querySelectorAll('.theme-button').forEach(btn => {
+      if (btn.dataset.theme === theme || (theme==='default' && !btn.dataset.theme)) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  // Toggle overlay visibility
   document.addEventListener('DOMContentLoaded', () => {
-    fetchGameLinks();
+    // Load theme
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    setTheme(savedTheme);
+    // Load custom background if saved
+    const savedBg = localStorage.getItem('customBackgroundDataUrl');
+    if (savedBg) {
+      document.body.style.backgroundImage = `url('${savedBg}')`;
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.body.style.backgroundSize = 'cover'; // ensure full coverage
+    }
     fetchEmbeddedGames();
+    fetchGameLinks();
     fetchForms();
     initParticles();
-    // dark mode toggle
-    const darkToggle=document.getElementById('darkModeToggle');
-    const savedDark=localStorage.getItem('darkMode');
-    if (savedDark==='true'){ document.body.classList.add('dark'); darkToggle.checked=true; }
-    darkToggle.addEventListener('change', ()=> {
-      if (darkToggle.checked){ document.body.classList.add('dark'); localStorage.setItem('darkMode','true'); }
-      else{ document.body.classList.remove('dark'); localStorage.setItem('darkMode','false'); }
+
+    document.getElementById('settings-icon').addEventListener('click', () => {
+      document.getElementById('settingsOverlay').classList.toggle('show');
     });
   });
+
+  function closeSettings() {
+    document.getElementById('settingsOverlay').classList.remove('show');
+  }
+
+  // Custom Background with fixed cover
+  let isCustomBgActive = false;
+
+  function toggleCustomBg() {
+    isCustomBgActive = !isCustomBgActive;
+    document.getElementById('customBgContainer').style.display = isCustomBgActive ? 'block' : 'none';
+
+    if (!isCustomBgActive) {
+      // Revert to default
+      document.body.style.background = "linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end))";
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundRepeat = '';
+      document.body.style.backgroundPosition = '';
+      document.body.style.backgroundAttachment = '';
+      document.body.style.backgroundSize = '';
+      localStorage.removeItem('customBackgroundDataUrl');
+    }
+  }
+
+  function applyUploadedBackground() {
+    const fileInput = document.getElementById('backgroundUpload');
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        // Set background: cover, fixed
+        document.body.style.backgroundImage = `url('${dataUrl}')`;
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundAttachment = 'fixed';
+        localStorage.setItem('customBackgroundDataUrl', dataUrl);
+        isCustomBgActive = true;
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function applyCustomBackgroundUrl() {
+    const url = document.getElementById('bgImageUrl').value.trim();
+    if (url && isValidUrl(url)) {
+      document.body.style.backgroundImage = `url('${url}')`;
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+      localStorage.setItem('customBackgroundDataUrl', url);
+      isCustomBgActive = true;
+    }
+  }
+
+  function removeCustomBackground() {
+    document.body.style.background = "linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end))";
+    document.body.style.backgroundImage = '';
+    document.body.style.backgroundRepeat = '';
+    document.body.style.backgroundPosition = '';
+    document.body.style.backgroundAttachment = '';
+    document.body.style.backgroundSize = '';
+    localStorage.removeItem('customBackgroundDataUrl');
+    isCustomBgActive = false;
+  }
+
+  function isValidUrl(string) {
+    try { new URL(string); return true; } catch (_) { return false; }
+  }
 </script>
 </body>
 </html>
