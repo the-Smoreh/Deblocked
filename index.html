@@ -11,7 +11,6 @@
     --bg-gradient-start: #4B5563;
     --bg-gradient-end: #1F2937;
   }
-
   /* Theme-specific overlay backgrounds and contrast text for overlay content */
   body.theme-default {
     --overlay-bg: rgba(255, 255, 255, 0.2);
@@ -25,7 +24,6 @@
     --overlay-bg: rgba(255, 255, 255, 0.1);
     --overlay-text-color: #000;
   }
-
   body {
     margin: 0;
     padding-left: 200px;
@@ -36,24 +34,21 @@
     background-repeat: no-repeat;
     background-size: 200% 100%;
     background-position: center;
-    background-attachment: scroll; /* default, overridden in JS for fixed background */
+    background-attachment: scroll;
     color: var(--text-color);
   }
-
   /* Dark Mode Styles */
   body.theme-dark {
     --bg-gradient-start: #000;
     --bg-gradient-end: #000;
     background: linear-gradient(to right, #000, #000);
   }
-
   /* Classic Mode Styles */
   body.theme-classic {
     --bg-gradient-start: #cdffd8;
     --bg-gradient-end: #94b9ff;
     background: linear-gradient(to right, #cdffd8 0%, #94b9ff 100%);
   }
-
   /* Frosted glass styles (common) */
   .header-frosted {
     background: rgba(120, 140, 172, 0.3);
@@ -62,14 +57,12 @@
     box-shadow: 0 0 12px rgba(255,255,255,0.6);
     border: 1px solid rgba(255,255,255,0.3);
   }
-
   #particles-js {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: 0;
   }
-
   #sidebar {
     position: fixed;
     top: 0; left: 0;
@@ -105,16 +98,13 @@
     text-align: center;
     margin-bottom: 0.75rem;
   }
-
   .glow {
     text-shadow: 0 0 8px #fff, 0 0 12px #fff, 0 0 16px #fff;
   }
-
   .content {
     position: relative;
     z-index: 20;
   }
-
   section {
     padding: 3rem 1rem;
   }
@@ -122,7 +112,6 @@
     margin: 0 auto;
     max-width: 1000px;
   }
-
   .frosted-glass {
     background: rgba(120, 140, 172, 0.2);
     backdrop-filter: blur(8px);
@@ -134,7 +123,6 @@
     margin: 0 auto;
     transition: transform 0.2s ease;
   }
-
   .header-frosted {
     background: rgba(120, 140, 172, 0.3);
     backdrop-filter: blur(8px);
@@ -143,17 +131,14 @@
     border: 1px solid rgba(255,255,255,0.3);
     border-radius: 0.75rem;
   }
-
   .announcement-text {
     font-size: 1.75rem;
   }
-
   /* hide/show fullscreen buttons */
   .fullscreen-btn,
   .exit-fullscreen-btn {
     display: none;
   }
-
   /* Game overlay styles */
   .game-overlay {
     position: fixed;
@@ -210,7 +195,6 @@
   .exit-fullscreen-btn {
     display: none;
   }
-
   /* Game icons grid */
   #games-grid {
     display: grid;
@@ -247,7 +231,6 @@
     color: #fff;
     text-shadow: 0 0 2px #fff;
   }
-
   /* Forms grid styles */
   #forms-grid {
     display: grid;
@@ -271,19 +254,16 @@
     width: 100%;
     border: none;
   }
-
   /* Section header images */
   .section-header-img {
     height: 8rem;
   }
-
   /* Frosted background for sidebar links */
   .bg-frosted {
     background: rgba(120, 140, 172, 0.3);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
   }
-
   /* Cogwheel icon glow and position */
   .cog-icon {
     position: absolute;
@@ -299,7 +279,6 @@
   .cog-icon:hover {
     fill: #ccc;
   }
-
   /* Theme toggle buttons */
   .theme-toggle-group {
     display: flex;
@@ -322,7 +301,6 @@
     background: #fff;
     color: #000;
   }
-
   /* Back button inside overlay */
   .back-button {
     position: absolute;
@@ -342,7 +320,6 @@
     background: rgba(255,255,255,0.3);
     box-shadow: 0 0 12px rgba(255,255,255,0.8);
   }
-
   /* Settings overlay styles with larger height & custom background support */
   .settings-overlay {
     position: fixed;
@@ -356,7 +333,7 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-radius: 10px;
-    display: none; /* hidden by default, shown with 'show' class */
+    display: none;
     flex-direction: column;
     padding: 1rem;
     z-index: 9999;
@@ -405,7 +382,7 @@
   <div class="section-container">
     <div class="frosted-glass rounded-xl p-6 mx-auto shadow-lg max-w-3xl">
       <h1 class="text-3xl font-bold mb-4 text-center text-white glow announcement-text">Announcements</h1>
-      <p class="text-lg text-center text-white">whats up 🖐️</p>
+      <p class="text-lg text-center text-white">New UI, Added 500+ Games, Added 16 New Proxies</p>
     </div>
   </div>
 </section>
@@ -416,7 +393,7 @@
     <div class="header-frosted p-2 mb-4 flex flex-col items-center justify-center rounded-lg mx-auto max-w-3xl">
       <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Forms%20490421769719423.png" class="section-header-img" alt="Forms" />
       <!-- Space for custom text -->
-      <div style="margin-top:10px; text-align:center; font-size:1rem; color:#fff;">Let me know in the Chat if you want to Promote your Hustle here</div>
+      <div style="margin-top:10px; text-align:center; font-size:1rem; color:#fff;">Let me know in the Chat if you want to Promote your Side Hustle here</div>
     </div>
     <div id="forms-grid"></div>
   </div>
@@ -448,8 +425,8 @@
     <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
       <img src="https://ik.imagekit.io/yyjyznrctj/Cool%20Text%20-%20Proxies%20483201036052784.png" class="section-header-img" alt="Proxies" />
     </div>
-    <div class="max-w-3xl mx-auto mb-4">
-      <!-- Proxy content here -->
+    <div class="max-w-3xl mx-auto mb-4" id="proxies-container">
+      <!-- Proxy cards will be inserted here dynamically -->
     </div>
   </div>
 </section>
@@ -780,6 +757,7 @@
     fetchEmbeddedGames();
     fetchGameLinks();
     fetchForms();
+    fetchProxies(); // <-- Added here to fetch proxies
     initParticles();
 
     document.getElementById('settings-icon').addEventListener('click', () => {
@@ -856,6 +834,62 @@
 
   function isValidUrl(string) {
     try { new URL(string); return true; } catch (_) { return false; }
+  }
+
+  // Fetch and populate proxies (with cache-busting)
+  async function fetchProxies() {
+    try {
+      // 👇 Add ?t=timestamp to prevent cache
+      const response = await fetch(`proxies.json?t=${Date.now()}`);
+      if (!response.ok) throw new Error('Failed to load proxies.json');
+      const proxies = await response.json();
+      populateProxies(proxies);
+    } catch(e) {
+      document.getElementById('proxies-container').innerHTML =
+        '<p class="text-white text-center">Error loading proxies.</p>';
+    }
+  }
+
+  function populateProxies(proxies) {
+    const container = document.getElementById('proxies-container');
+    container.innerHTML = '';
+
+    if (!proxies || proxies.length === 0) {
+      container.innerHTML = '<p class="text-white text-center">No proxies available.</p>';
+      return;
+    }
+
+    proxies.forEach(proxy => {
+      console.log("Proxy object loaded:", proxy); // 👈 Debug
+
+      const a = document.createElement('a');
+      a.href = proxy.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+
+      const card = document.createElement('div');
+      card.className =
+        'frosted-glass rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 mb-4';
+
+      // ✅ Trust the JSON field, fallback if missing
+      const imgSrc =
+        proxy.game_image_icon && proxy.game_image_icon.trim() !== ""
+          ? proxy.game_image_icon
+          : 'https://via.placeholder.com/150';
+
+      card.innerHTML = `
+        <div class="thumbnail-container">
+          <img src="${imgSrc}" alt="${proxy.title}" class="w-full h-48 object-cover no-drag"/>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold text-white">${proxy.title}</h3>
+          <p class="text-white mb-2">${proxy.description}</p>
+        </div>
+      `;
+
+      a.appendChild(card);
+      container.appendChild(a);
+    });
   }
 </script>
 </body>
