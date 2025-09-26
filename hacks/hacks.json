@@ -1,0 +1,50 @@
+[
+  {
+    "filename": "quizalize.js",
+    "title": "Quizalize Hacks",
+    "description": "Put your URL to the Hacks",
+    "icon": "https://i1.sndcdn.com/avatars-6mJAxyIY1K0UySsI-0rpEfw-t1080x1080.jpg",
+    "preview": "https://blog.quizalize.com/wp-content/uploads/2015/11/quizalize-590x634.png",
+    "type": "bookmarklet"
+  },
+  {
+    "filename": "blooket.js",
+    "title": "Blooket Hacks",
+    "description": "Found V4, Updated it a bit better",
+    "icon": "https://static.wikia.nocookie.net/98217e06-a25a-4c38-abbd-c5189e86906b/scale-to-width/755",
+    "preview": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-25%20004905.png",
+    "type": "console"
+  },
+  {
+    "filename": "quizezz.js",
+    "title": "Quizezz",
+    "description": "Testing(only Math works for now)",
+    "icon": "https://play-lh.googleusercontent.com/Mzw4WeBg1z0Q7tw4vK3771kVE5vRsjJcAyAPQFsFdC3ylhXYy0Z_7LFGPTE6zYcjSStY",
+    "preview": "https://cdn6.aptoide.com/imgs/b/a/a/baa3d8dc0c090af7ace09db11e983106_fgraphic.png",
+    "type": "console"
+  },
+  {
+    "filename": "edpuzzle.js",
+    "title": "Edpuzzle Hacks",
+    "description": "Drag to Bookmarks",
+    "icon": "https://play-lh.googleusercontent.com/ynn7fpccSz1uAmUKOGqOkkmPFw8_UsBX8aXPgNbcW6_BNpwbPp_2qfM_aOqV4aZ0WZ8=w240-h480-rw",
+    "preview": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-25%20072039.png",
+    "type": "bookmarklet"
+  },
+  {
+    "filename": "nitro.js",
+    "title": "Nitro Type Hacks",
+    "description": "Any key will Register as correct",
+    "icon": "https://cdn2.steamgriddb.com/icon/7c250678f61f49092fa0d4040e5e54e9.ico",
+    "preview": "https://us1.discourse-cdn.com/flex016/uploads/codecombat/original/3X/0/a/0a86aa50bd20c612bb55488d655a12710e2002f0.jpeg",
+    "type": "bookmarklet"
+  },
+  {
+    "filename": "prodigy.js",
+    "title": "Prodigy Hacks",
+    "description": "Opens Hack Panel",
+    "icon": "https://play-lh.googleusercontent.com/9JDxAo3MvXqJPfKuM0OLpshV7GPD5KoQVwlm_RaKSrae83U1AtEo2UDbDXzazt1UCtA=w240-h480-rw",
+    "preview": "https://upload.wikimedia.org/wikipedia/en/9/92/Prodigy_Math_Game_Loading_Screen.png",
+    "type": "console"
+  }
+]
