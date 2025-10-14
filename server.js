@@ -6,27 +6,33 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
+
+// Allow CORS for both local testing and Railway deployment
 const io = socketIo(server, {
   cors: {
-    origin: '*', // Replace with your domain in production
-    methods: ['GET', 'POST']
+    origin: [
+      'http://localhost:3000',
+      'https://localhost:3000',
+      'https://deblocked-production.up.railway.app'
+    ],
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
-// Serve static files (optional)
+// Serve static files (optional, if you have frontend in /public)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// File to store messages
 const MESSAGES_FILE = path.join(__dirname, 'messages.json');
 
-// Load messages from file
+// Load previous messages
 let messages = [];
 (async () => {
   try {
     const data = await fs.readFile(MESSAGES_FILE, 'utf8');
     messages = JSON.parse(data);
     console.log(`Loaded ${messages.length} messages.`);
-  } catch (error) {
+  } catch {
     console.warn('No existing messages file found. Starting fresh.');
     messages = [];
   }
@@ -45,7 +51,6 @@ async function saveMessages() {
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  // Send history
   socket.emit('message history', messages);
 
   socket.on('request history', () => {
@@ -71,14 +76,15 @@ io.on('connection', (socket) => {
   });
 });
 
-// Keep connections alive
+// Keep clients alive
 setInterval(() => {
   io.emit('ping');
 }, 30000);
 
-// PORT handling for local and Railway
+// Use Railway's port and host properly
 const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
+
 server.listen(PORT, HOST, () => {
   console.log(`Chat server running on http://${HOST}:${PORT}`);
 });
