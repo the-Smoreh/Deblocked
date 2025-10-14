@@ -1,7 +1,7 @@
 {
   "name": "chat-server",
   "version": "1.0.0",
-  "description": "Express + Socket.io chat server for Railway",
+  "description": "Express + Socket.io chat server for Railway deployment.",
   "main": "server.js",
   "type": "module",
   "scripts": {
