@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>What??</title>
+
+<!-- 🌈 Font & Accent -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --accent1: #00d0ff;
+  --accent2: #a040ff;
+  --bg: #0b0e13;
+  --fg: #e9efff;
+  --glass: rgba(255,255,255,0.05);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: "Fredoka", "Outfit", "Inter", sans-serif;
+  background: radial-gradient(circle at 50% 40%, #0e1220 0%, #06080d 100%);
+  color: var(--fg);
+  overflow: hidden;
+}
+
+/* ✨ Star background */
+canvas#bg-stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+/* 🌌 Center container */
+.main {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* 💫 404 text */
+h1 {
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -2px;
+}
+
+/* Subtitle */
+h2 {
+  font-size: 1.4rem;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+/* 🧊 Glassy buttons */
+a.button {
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--fg);
+  padding: 10px 22px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
+}
+
+a.button:hover {
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* 🌀 Subtle glow */
+.glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0,208,255,0.08), rgba(0,0,0,0) 60%);
+  filter: blur(80px);
+  z-index: 1;
+  pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+<canvas id="bg-stars"></canvas>
+<div class="glow"></div>
+
+<div class="main">
+  <h1>Error 404</h1>
+  <h2>This Page doesnt exist <span style="color:var(--accent1)">Exist</span> If your here for a Early Acces game, it will drop SOON</h2>
+  <a href="/" class="button">⬅ Return to Home</a>
+</div>
+
+<script>
+/* 🌠 Simple animated stars background */
+const canvas = document.getElementById('bg-stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  stars = Array.from({length: 150}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 1.8 + 0.3,
+    speed: Math.random() * 0.2 + 0.05,
+  }));
+}
+resize();
+window.addEventListener('resize', resize);
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "#fff";
+  for (const s of stars) {
+    ctx.globalAlpha = Math.random() * 0.9;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
+    ctx.fill();
+    s.y += s.speed;
+    if (s.y > canvas.height) s.y = 0;
+  }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>
