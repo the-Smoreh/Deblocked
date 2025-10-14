@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign In</title>
+<link rel="icon" href="/icon.png" type="image/png" />
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+     :root {
+  --bg-gradient-start: #4B5563;
+  --bg-gradient-end: #1F2937;
+
+  --topbar-h: 60px;   /* height of your top bar */
+}
+
+html {
+  scroll-behavior: smooth;  /* makes sidebar links scroll smoothly */
+}
+
+section {
+  scroll-margin-top: var(--topbar-h);  
+  /* ensures sections aren't hidden under the top bar */
+}
+  /* Theme-specific overlay backgrounds and contrast text for overlay content */
+ body.theme-default {
+  --overlay-bg: rgba(255, 255, 255, 0.2);
+  --overlay-text-color: #000;
+  background: linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end));
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* 👈 ensures it covers full page */
+  background-size: cover;
+}
+  body.theme-dark {
+    --overlay-bg: rgba(255, 255, 255, 0.5);
+    --overlay-text-color: #fff;
+  }
+  body.theme-classic {
+    --overlay-bg: rgba(255, 255, 255, 0.1);
+    --overlay-text-color: #000;
+  }
+  body {
+    margin: 0;
+    padding-left: 200px;
+    box-sizing: border-box;
+    transition: background 0.3s, color 0.3s;
+    font-family: system-ui, sans-serif;
+    background: linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end));
+    background-repeat: no-repeat;
+    background-size: 200% 100%;
+    background-position: center;
+    background-attachment: scroll;
+    color: var(--text-color);
+  }
+  /* Dark Mode Styles */
+  body.theme-dark {
+    --bg-gradient-start: #000;
+    --bg-gradient-end: #000;
+    background: linear-gradient(to right, #000, #000);
+  }
+  /* Classic Mode Styles */
+  body.theme-classic {
+    --bg-gradient-start: #cdffd8;
+    --bg-gradient-end: #94b9ff;
+    background: linear-gradient(to right, #cdffd8 0%, #94b9ff 100%);
+  }
+  /* Frosted glass styles (common) */
+  .header-frosted {
+    background: rgba(120, 140, 172, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  #particles-js {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+ #sidebar {
+  position: fixed;
+  top: 60px;                        /* push down so it starts below top bar */
+  left: 0;
+  width: 200px;
+  height: calc(100vh - 60px);       /* shrink height so it stops above bottom */
+  background: rgba(120, 140, 172, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-right: 1px solid rgba(255,255,255,0.2);
+  z-index: 10;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* pushes bottom group down */
+  align-items: center;
+  box-shadow: none !important;
+}
+
+  .glow {
+    text-shadow: 0 0 8px #fff, 0 0 12px #fff, 0 0 16px #fff;
+  }
+  .content {
+    position: relative;
+    z-index: 20;
+  }
+ section {
+  padding: 3rem 1rem;
+  opacity: 0;                /* start invisible */
+  visibility: hidden;        /* not focusable/clickable */
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  position: absolute;        /* stack sections on top of each other */
+  top: 0; left: 100px;       /* offset for sidebar */
+  width: calc(100% - 200px); /* prevent overlap */
+}
+
+section.active {
+  opacity: 1;
+  visibility: visible;
+  position: relative;        /* take normal space when active */
+}
+
+.section-container {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+  .frosted-glass {
+    background: rgba(120, 140, 172, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.3);
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    transition: transform 0.2s ease;
+  }
+  .announcement-text {
+    font-size: 1.75rem;
+  }
+  /* hide/show fullscreen buttons */
+  .fullscreen-btn,
+  .exit-fullscreen-btn {
+    display: none;
+  }
+  /* Game overlay styles */
+  .game-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  .game-overlay-content {
+    position: relative;
+    width: 100%;
+    height: 87%;
+    display: flex;
+    flex-direction: column;
+  }
+  .iframe-container {
+    flex: 1;
+    width: 100%;
+    position: relative;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 10;
+  }
+  .fullscreen-btn,
+  .exit-fullscreen-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.8);
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  .exit-fullscreen-btn {
+    display: none;
+  }
+  /* Game icons grid */
+  #games-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(4, auto);
+    gap: 20px;
+    justify-items: center;
+  }
+  .game-icon {
+    width: 100px;
+    aspect-ratio: 1/1;
+    border-radius: calc(100px * 0.225);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  .game-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .icon-label {
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: 4px;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #fff;
+    text-shadow: 0 0 2px #fff;
+  }
+  /* Forms grid styles */
+  #forms-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-items: center;
+  }
+  .form-card {
+    width: 95%;
+    aspect-ratio: 4/3;
+    border-radius: calc(100px * 0.225);
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 0 12px rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+  }
+  .form-iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+  }
+  /* Section header images */
+  .section-header-img {
+    height: 8rem;
+  }
+  /* Frosted background for sidebar links */
+  .bg-frosted {
+    background: rgba(120, 140, 172, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  /* Cogwheel icon glow and position */
+  .cog-icon {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    fill: #fff;
+    transition: fill 0.2s;
+  }
+  .cog-icon:hover {
+    fill: #ccc;
+  }
+  /* Theme toggle buttons */
+  .theme-toggle-group {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+  }
+  .theme-button {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid #fff;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+  }
+  .theme-button:hover {
+    background: rgba(255,255,255,0.2);
+  }
+  .theme-button.active {
+    background: #fff;
+    color: #000;
+  }
+  /* Back button inside overlay */
+  .back-button {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(255,255,255,0.5);
+    font-size: 0.8rem;
+  }
+  .back-button:hover {
+    background: rgba(255,255,255,0.3);
+    box-shadow: 0 0 12px rgba(255,255,255,0.8);
+  }
+  /* Settings overlay styles with larger height & custom background support */
+  .settings-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 500px;
+    max-height: 90%;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    padding: 1rem;
+    z-index: 9999;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    overflow: hidden;
+    color: var(--overlay-text-color);
+  }
+  .settings-overlay.show {
+    display: flex;
+  }
+  /* === Game card with frosted title bar === */
+.game-card {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;          /* keep this the same everywhere */
+  overflow: hidden;             /* clips children to rounded card */
+  cursor: pointer;
+  transition: transform 0.5s ease;
+  background: rgba(255,255,255,0.05);
+  position: relative;
+}
+.game-card:hover {
+  transform: scale(1.2);
+}
+.game-thumb {
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+}
+.game-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.game-title-bar {
+  background: transparent;       /* remove frosted glass */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.75rem;            /* keep smaller text */
+  line-height: 1.1;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 0;                /* small vertical spacing */
+  border-top: none;              /* remove dividing line */
+}
+
+/* Progressive blur-up effect */
+  .game-img {
+    filter: blur(10px);
+    transform: scale(1.05); /* prevents edges showing gaps */
+    transition: filter 0.4s ease-out, transform 0.4s ease-out;
+  }
+  .game-img.loaded {
+    filter: blur(0);
+    transform: scale(1);
+  }
+  #topbar {
+  position: fixed;
+  top: 0;
+  left: 0;     /* starts at very left */
+  right: 0;    /* stretches across full width */
+  height: 60px;
+  background: rgba(120, 140, 172, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  z-index: 10000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+
+.topbar-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto;  /* left / center / right */
+  align-items: center;
+  width: 100%;
+}
+
+#topbar .site-title {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.topbar-nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 1rem;
+  font-weight: 500;
+}
+
+.topbar-nav a:hover {
+  text-decoration: underline;
+}
+
+.site-title {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none; /* remove underline */
+}
+
+.site-title:hover {
+  text-decoration: underline; /* add subtle hover */
+}
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;   /* 👈 vertically centers inside the grid cell */
+  height: 100%;          /* 👈 match full height of top bar */
+}
+
+#search-bar {
+  width: 100%;
+  max-width: 500px;            /* keeps it from being too wide */
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+#search-bar::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+#search-bar:focus {
+  background: rgba(255,255,255,0.3);
+  box-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+
+#sidebar ul li a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;                
+  font-size: 1.1rem;        /* text a bit bigger */
+  font-weight: normal;      
+  color: #fff;
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  transition: background 0.3s ease;  /* 👈 smooth fade */
+  position: relative;          /* needed for pseudo-element */
+  overflow: hidden;            /* keep highlight inside */
+}
+
+/* Icon size */
+.sidebar-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+/* Highlight effect using pseudo-element */
+#sidebar ul li a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;                 /* start completely to the left */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0, 255, 255, 0.5) 0%,   /* stronger on left */
+    rgba(0, 255, 255, 0.2) 100%  /* lighter on right */
+  );
+  transition: left 0.4s ease;   /* swipe in */
+  z-index: 0;                   /* sit behind text/icon */
+}
+
+/* On hover: swipe in */
+#sidebar ul li a:hover::before {
+  left: 0;
+}
+
+/* Text + icon glow on hover */
+#sidebar ul li a:hover {
+  color: #fff;
+  text-shadow: 0 0 6px cyan;
+}
+
+#sidebar ul li a:hover .sidebar-icon {
+  filter: drop-shadow(0 0 6px cyan);
+}
+
+/* Keep text & icon above the highlight */
+#sidebar ul li a * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Default + Dark mode → white icons */
+body.theme-default .sidebar-icon,
+body.theme-dark .sidebar-icon {
+  filter: brightness(0) invert(1);
+}
+
+/* Classic mode → black icons */
+body.theme-classic .sidebar-icon {
+  filter: brightness(0);
+}
+
+.topbar-settings {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.settings-icon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  filter: brightness(0) invert(1);  /* white by default */
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.settings-icon:hover {
+  transform: rotate(90deg);
+  filter: drop-shadow(0 0 6px cyan);
+}
+
+/* Classic theme → black icon */
+body.theme-classic .settings-icon {
+  filter: brightness(0);
+}
+
+#sidebar ul {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#sidebar .sidebar-bottom {
+  margin-top: auto; /* forces this group to bottom */
+}
+
+.sidebar-divider {
+  border-top: 1px solid rgba(255,255,255,0.3); /* frosted line */
+  margin: 0.75rem 0; /* spacing around the line */
+  list-style: none;  /* removes bullet */
+}
+
+/* Game card hover overlay */
+.hover-overlay {
+  position: absolute;
+  inset: 0;                 /* top:0 right:0 bottom:0 left:0 */
+  z-index: 5;               /* make sure it’s above the image */
+  display: flex;
+  align-items: flex-end;    /* title sits in lower half */
+  justify-content: center;
+  padding: 10px;
+  box-sizing: border-box;
+
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.75) 10%,
+    rgba(0,0,0,0.0) 100%
+  );
+
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;     /* clicks go through to the card */
+  border-radius: 22px;
+}
+
+/* Reveal on hover */
+.game-card:hover .hover-overlay {
+  opacity: 1;
+}
+
+/* Optional: truncate long titles nicely */
+.hover-overlay .title {
+  font-size: 0.45rem;   /* ~40% smaller than default */
+  max-width: 90%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Smooth horizontal scroll */
+@keyframes scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+.featured-card {
+  flex: 0 0 auto; /* don’t shrink */
+  width: 160px;
+  height: 200px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 1rem;
+  text-align: center;
+  padding: 12px;
+  transition: transform 0.3s;
+}
+.featured-card img {
+  width: 100%;
+  height: 140px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+}
+.featured-card:hover {
+  transform: scale(1.1);
+}
+
+.featured-card {
+  flex: 0 0 auto;
+  width: 180px;
+  height: 220px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 1rem;
+  text-align: center;
+  padding: 12px;
+  transition: transform 0.3s;
+  cursor: pointer;
+  text-decoration: none; /* remove underline */
+}
+.featured-card img {
+  width: 100%;
+  height: 150px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+.featured-card p {
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.featured-card:hover {
+  transform: scale(1.05);
+}
+
+.featured-card {
+  flex: 0 0 auto;
+  width: 180px;
+  height: 220px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 1rem;
+  text-align: center;
+  padding: 12px;
+  transition: transform 0.3s;
+  cursor: pointer;
+  text-decoration: none;   /* remove underline */
+  color: inherit;          /* keep text color */
+  display: inline-block;   /* ensure <a> acts like a block */
+  position: relative;      /* avoids overlap issues */
+  z-index: 10;             /* put above animation layer */
+}
+
+#featured-carousel {
+  display: flex;
+  width: max-content;
+}
+
+/* Smooth horizontal scroll */
+@keyframes scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+}
+
+/* Featured Cards */
+.featured-card {
+  flex: 0 0 auto;
+  width: 180px;
+  height: 220px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 1rem;
+  text-align: center;
+  padding: 12px;
+  transition: transform 0.3s, background 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+.featured-card img {
+  width: 100%;
+  height: 150px;
+  border-radius: 0.75rem;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+.featured-card p {
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.featured-card:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.15);
+}
+  .cat-toggle:hover { background: rgba(255,255,255,.15); }
+.rotate-180 { transform: rotate(180deg); }
+}
+
+.frosted-glass:hover {
+  box-shadow: 0 0 20px rgba(0,255,255,0.5);
+  transform: translateY(-4px);
+}
+
+/* ===== CATEGORY ROWS ===== */
+.cat-section        { margin-bottom: 2rem; }
+.cat-header         { display: flex; align-items: center; gap: 0.5rem;
+                      margin-bottom: 0.75rem; padding: 0.4rem 0.8rem;
+                      background: rgba(120,140,172,0.25);
+                      border-radius: 0.5rem; width: fit-content; }
+.cat-header h3      { color: #fff; font-weight: 600; font-size: 1.1rem;
+                      text-transform: capitalize; }
+.cat-row            { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+.site-title {
+  text-decoration: none;          /* no underline normally */
+}
+.site-title:hover {
+  text-decoration: none;          /* no underline on hover */
+}
+
+/* For Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* For IE/Edge Legacy */
+body {
+  -ms-overflow-style: none;
+}
+
+/* Accent per theme */
+:root { --accent: #00f5ff; --accent-glow: rgba(0,245,255,.6); }
+body.theme-dark    { --accent: #00f5ff; --accent-glow: rgba(0,245,255,.6); }
+body.theme-default { --accent: #00f5ff; --accent-glow: rgba(0,245,255,.6); }
+body.theme-classic { --accent: #7c3aed; --accent-glow: rgba(124,58,237,.6); } /* purple in classic */
+
+.holo-button{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 12px 32px;
+  font-weight: 800;
+  font-size: 1.125rem; /* ~text-lg */
+  line-height: 1;
+  color: var(--accent);
+  background: transparent;              /* no fill */
+  border: 2px solid var(--accent);      /* keep the box */
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease, text-shadow .2s ease, border-color .2s ease;
+}
+
+/* subtle ring/glow on hover */
+.holo-button:hover{
+  transform: scale(1.05);
+  box-shadow: 0 0 22px var(--accent-glow);
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* keyboard focus */
+.holo-button:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); /* safe fallback next */
+}
+@supports not (color-mix(in srgb, white, black)) {
+  .holo-button:focus-visible{ box-shadow: 0 0 0 3px var(--accent-glow); }
+}
+
+
+.holo-button {
+  position: relative;
+  display: inline-block;
+  padding: 14px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #0ff; /* keep cyan text */
+  background: transparent; /* no background */
+  border: 2px solid #0ff; /* keep outline */
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  z-index: 1;
+}
+
+.holo-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255,255,255); /* glow on hover */
+}
+
+
+.holo-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    0deg,
+    transparent,
+    transparent 40%,
+    rgba(0,255,255,0.4)
+  );
+  transform: rotate(-45deg);
+  transition: all 0.5s ease;
+  opacity: 0;
+  z-index: 0;
+}
+
+.holo-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0,255,255,0.6);
+}
+
+.holo-button:hover::before {
+  opacity: 1;
+  transform: rotate(-45deg) translateY(100%);
+}
+
+/* Backdrop */
+.settings-scrim{
+  position: fixed; inset: 0;
+  background: rgba(3, 8, 23, .55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0; pointer-events: none;
+  z-index: 9998; transition: opacity .25s ease;
+}
+.settings-scrim.show{ opacity: 1; pointer-events: auto; }
+
+/* Slide-in panel */
+.settings-panel{
+  position: fixed; top: 0; right: 0;
+  height: 100vh; width: min(420px, 92vw);
+  display: flex; flex-direction: column;
+  background: rgba(120,140,172,.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-left: 1px solid rgba(255,255,255,.18);
+  box-shadow: -20px 0 60px rgba(0,0,0,.35);
+  z-index: 9999;
+  transform: translateX(100%); opacity: 0;
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
+}
+.settings-panel.show{ transform: translateX(0); opacity: 1; }
+.settings-panel::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(0,255,255,.25);
+}
+
+/* Header */
+.panel-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px; border-bottom:1px solid rgba(255,255,255,.12);
+}
+.panel-header h2{
+  margin:0; font-weight:800; color:#e6fbff;
+  text-shadow:0 0 14px rgba(0,255,255,.25);
+}
+.icon-btn{
+  appearance:none; border:0; background:transparent; color:#e8faff;
+  font-size:18px; line-height:1; padding:6px 8px; border-radius:10px; cursor:pointer;
+  transition: background .15s, transform .08s;
+}
+.icon-btn:hover{ background:rgba(255,255,255,.12); }
+.icon-btn:active{ transform:translateY(1px); }
+
+/* Body + controls */
+.panel-body{ padding:16px 18px; overflow:auto; }
+.theme-toggle-group{
+  display:flex; gap:.5rem; flex-wrap:wrap;
+  background:rgba(255,255,255,.08); padding:.45rem;
+  border-radius:.8rem; border:1px solid rgba(255,255,255,.15);
+}
+.theme-chip{
+  appearance:none; border:0; cursor:pointer;
+  color:#e6f7ff; background:transparent;
+  padding:.55rem .9rem; border-radius:.6rem; font-weight:700;
+  transition: background .2s, color .2s, box-shadow .2s, transform .08s;
+}
+.theme-chip:hover{ background:rgba(255,255,255,.14); }
+.theme-chip:active{ transform:translateY(1px); }
+.theme-chip.active{
+  color:#0ff; background:rgba(0,255,255,.12);
+  box-shadow: inset 0 0 0 2px rgba(0,255,255,.35);
+}
+
+/* Buttons */
+.cta-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  padding:.75rem 1rem; background:linear-gradient(135deg, rgba(0,255,255,.25), rgba(0,160,255,.25));
+  color:#eaffff; border:1px solid rgba(0,255,255,.45);
+  border-radius:.8rem; font-weight:800; cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  transition: transform .12s, box-shadow .2s, filter .2s;
+}
+.cta-btn:hover{ transform:translateY(-1px); box-shadow:0 14px 36px rgba(0,0,0,.42); filter:brightness(1.05); }
+
+.subtle-btn{
+  margin-left:.6rem; appearance:none; border-radius:.7rem;
+  padding:.7rem .9rem; border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08); color:#e7f7ff; font-weight:700; cursor:pointer;
+  transition: background .2s, transform .08s, box-shadow .2s;
+}
+.subtle-btn:hover{ background:rgba(255,255,255,.12); box-shadow:0 6px 20px rgba(0,0,0,.25); }
+.subtle-btn:active{ transform:translateY(1px); }
+
+.url-input{
+  width:80%; padding:.6rem .75rem; border-radius:.6rem; border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.08); color:#fff; outline:none;
+}
+.mt-4{ margin-top:1rem; }
+
+@media (prefers-reduced-motion: reduce){
+  .settings-panel, .settings-scrim { transition:none !important; }
+}
+
+/* Backdrop */
+.settings-scrim{
+  position: fixed; inset: 0;
+  background: rgba(3, 8, 23, .55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0; pointer-events: none; z-index: 9998;
+  transition: opacity .25s ease;
+}
+.settings-scrim.show{ opacity: 1; pointer-events: auto; }
+
+/* Settings overlay styles with larger height & custom background support */
+.settings-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 500px;
+  max-height: 90%;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 10px;
+  display: none;              /* ← THIS is killing the panel */
+  flex-direction: column;
+  padding: 1rem;
+  z-index: 9999;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  overflow: hidden;
+  color: var(--overlay-text-color);
+}
+.settings-overlay.show {
+  display: flex;
+}
+
+
+/* FINAL settings panel override */
+.settings-overlay{
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  left: auto !important;
+  height: 100vh !important;
+  width: min(420px, 92vw) !important;
+  display: flex !important;
+  flex-direction: column;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-left: 1px solid rgba(255,255,255,.18);
+  box-shadow: -20px 0 60px rgba(0,0,0,.35);
+  transform: translateX(100%) !important;  /* start off-screen */
+  opacity: 0;
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), opacity .22s ease;
+}
+.settings-overlay.show{
+  transform: translateX(0) !important;
+  opacity: 1;
+}
+
+.settings-scrim{
+  position: fixed; inset: 0;
+  background: rgba(3, 8, 23, .55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0; pointer-events: none; z-index: 9998;
+  transition: opacity .25s ease;
+}
+.settings-scrim.show{ opacity: 1; pointer-events: auto; }
+
+/* --- Settings panel visual polish --- */
+
+/* Make the sheet more solid and readable */
+.settings-overlay{
+  background: rgba(20, 26, 38, 0.78) !important;   /* darker, less see-through */
+  backdrop-filter: blur(10px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
+  border-left: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: -28px 0 60px rgba(0,0,0,.5) !important;
+}
+
+/* Inner layout */
+.settings-overlay .panel-body{
+  padding: 18px 18px 24px;
+  display: grid;
+  gap: 16px;
+}
+
+/* Top header bar */
+.panel-header{
+  position: sticky; top: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  z-index: 1;
+}
+.panel-header h2{
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+  color: #EAFBFF;
+  text-shadow: 0 0 12px rgba(0,255,255,.18);
+}
+
+/* Theme chips row */
+.theme-toggle-group{
+  display: flex;
+  gap: .5rem;
+  padding: .45rem;
+  border-radius: .9rem;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+}
+.theme-chip{
+  appearance: none;
+  border: 0;
+  padding: .6rem 1rem;
+  border-radius: .7rem;
+  font-weight: 800;
+  color: #EAF6FF;
+  background: transparent;
+  transition: background .2s, color .2s, box-shadow .2s, transform .06s;
+  cursor: pointer;
+}
+.theme-chip:hover{ background: rgba(255,255,255,.10); }
+.theme-chip:active{ transform: translateY(1px); }
+.theme-chip.active{
+  color: #00F5FF;
+  background: rgba(0,255,255,.14);
+  box-shadow: inset 0 0 0 2px rgba(0,255,255,.35);
+}
+
+/* CTA + secondary buttons */
+.cta-btn{
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: .5rem;
+  padding: .8rem 1rem;
+  border-radius: .9rem;
+  font-weight: 800;
+  color: #eaffff;
+  background: linear-gradient(135deg, rgba(0,255,255,.28), rgba(0,160,255,.28));
+  border: 1px solid rgba(0,255,255,.45);
+  box-shadow: 0 10px 28px rgba(0,0,0,.35);
+  transition: transform .1s, box-shadow .2s, filter .2s, background .2s;
+}
+.cta-b
+
+/* ===== Make the panel look intentional ===== */
+.settings-overlay{
+  background: rgba(18, 24, 35, .85) !important;   /* darker, cleaner */
+  backdrop-filter: blur(10px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
+  border-left: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: -28px 0 60px rgba(0,0,0,.55) !important;
+  padding: 0 !important;
+}
+
+.panel-header{
+  position: sticky; top: 0; z-index: 2;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0));
+}
+.panel-header h2{
+  margin:0; font-weight:800; letter-spacing:.2px;
+  color:#EAFBFF; text-shadow:0 0 10px rgba(0,255,255,.18);
+}
+
+.panel-body{
+  padding: 16px; 
+  display: grid; 
+  gap: 16px;
+}
+
+/* Theme chip group */
+.theme-toggle-group{
+  display:flex; gap:.5rem; flex-wrap:wrap;
+  margin: 4px 0 8px;
+  padding:.45rem;
+  border-radius:.9rem;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+}
+.theme-chip{
+  appearance:none; border:0; cursor:pointer;
+  padding:.6rem 1rem; border-radius:.7rem;
+  font-weight:800; color:#EAF6FF; background:transparent;
+  transition: background .2s, color .2s, box-shadow .2s, transform .06s;
+}
+.theme-chip:hover{ background:rgba(255,255,255,.10); }
+.theme-chip:active{ transform:translateY(1px); }
+.theme-chip.active{
+  color:#00F5FF; background:rgba(0,255,255,.14);
+  box-shadow: inset 0 0 0 2px rgba(0,255,255,.35);
+}
+
+/* Action buttons row */
+.mt-4{ display:flex; gap:.6rem; margin-top:.5rem !important; }
+
+.cta-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  padding:.8rem 1rem; border-radius:.9rem; font-weight:800;
+  color:#eaffff;
+  background: linear-gradient(135deg, rgba(0,255,255,.28), rgba(0,160,255,.28));
+  border:1px solid rgba(0,255,255,.45);
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
+  transition: transform .1s, box-shadow .2s, filter .2s;
+}
+.cta-btn:hover{ transform:translateY(-1px); filter:brightness(1.05); box-shadow:0 14px 36px rgba(0,0,0,.45); }
+
+.subtle-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:.8rem 1rem; border-radius:.9rem; font-weight:700;
+  color:#e7f7ff; background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.18);
+  transition: background .2s, transform .06s, box-shadow .2s;
+}
+.subtle-btn:hover{ background:rgba(255,255,255,.16); box-shadow:0 8px 24px rgba(0,0,0,.32); }
+.subtle-btn:active{ transform:translateY(1px); }
+
+/* Style the upload/remove section (override inline with !important) */
+#customBgContainer{ 
+  margin-top: 10px !important; 
+  text-align: left !important; 
+}
+#customBgContainer button{
+  all: unset; display:inline-flex; align-items:center; justify-content:center;
+  padding:.75rem 1rem; border-radius:.9rem; font-weight:800; cursor:pointer;
+  box-shadow:0 8px 24px rgba(0,0,0,.28); margin-right:.5rem;
+}
+#customBgContainer button:first-of-type{
+  color:#fff; background:#22c55e !important; border:1px solid rgba(255,255,255,.12);
+}
+#customBgContainer button:last-of-type{
+  color:#e7f7ff; background:rgba(255,255,255,.10) !important; border:1px solid rgba(255,255,255,.18);
+}
+
+/* URL input section styling */
+#customUrlBgContainer{
+  text-align:left !important;
+}
+#customUrlBgContainer input{
+  width:100% !important;
+  border-radius:.9rem !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  background:rgba(255,255,255,.08) !important;
+  color:#fff !important;
+  padding:.7rem .9rem !important;
+}
+#customUrlBgContainer button{
+  all: unset; display:inline-flex; align-items:center; justify-content:center;
+  padding:.75rem 1rem; border-radius:.9rem; font-weight:800; cursor:pointer;
+  margin-top:.6rem; margin-right:.5rem;
+  color:#fff; background:#22c55e; border:1px solid rgba(255,255,255,.12);
+}
+
+/* Theme chips base */
+.theme-chip{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.06);
+  color:#e6f7ff;
+  padding:.9rem 1.25rem;
+  border-radius: .95rem;
+  font-weight:800;
+  cursor:pointer;
+  transition: background .2s, box-shadow .2s, transform .08s, border-color .2s;
+}
+.theme-chip:hover{ background: rgba(255,255,255,.1); }
+.theme-chip:active{ transform: translateY(1px); }
+
+/* Active = same vibe as your cyan box */
+.theme-chip.active{
+  color:#eaffff;
+  border-color: rgba(0,255,255,.55);
+  background:
+    radial-gradient(120% 140% at 30% -10%, rgba(0,255,255,.30), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+  box-shadow:
+    0 10px 30px rgba(0,255,255,.25),
+    inset 0 0 0 1px rgba(255,255,255,.35);
+}
+
+
+/* Scrim a bit darker so panel pops */
+.settings-scrim{ background: rgba(8,12,20,.64) !important; }
+
+/* Make the settings panel sit above the top bar */
+.settings-overlay,
+.settings-scrim {
+  z-index: 11000 !important;  /* higher than #topbar (10000) */
+}
+
+/* (optional) if you want to be extra safe, you can also lower the topbar) */
+/* #topbar { z-index: 9000; } */
+
+.settings-overlay{
+  top: 20px !important;               /* space below top bar */
+  height: calc(100vh - 70px) !important; /* 20px top + 20px bottom */
+  /* optional if you want a bottom gap too: */
+  bottom: 70px !important;            /* instead of using calc */
+}
+
+/* ===== Classic theme: unify all text to #5D7493 ===== */
+:root { --classic-fg: #5D7493; }
+
+/* Base text */
+body.theme-classic {
+  --text-color: var(--classic-fg);
+  color: var(--classic-fg) !important;
+}
+
+/* Common text-bearing elements */
+body.theme-classic :where(
+  p, h1, h2, h3, h4, h5, h6,
+  span, a, li, label, small, strong, em,
+  button, .button, .theme-button, .theme-chip, .cta-btn, .subtle-btn,
+  input, textarea, select,
+  .site-title, .topbar-nav a,
+  #sidebar ul li a,
+  .featured-card p,
+  .hover-overlay, .hover-overlay .title
+){
+  color: var(--classic-fg) !important;
+}
+
+/* Inputs / text fields placeholders */
+body.theme-classic ::placeholder { color: color-mix(in srgb, var(--classic-fg) 80%, transparent) !important; }
+
+/* Make sure links don’t turn white on hover in classic */
+body.theme-classic a:hover { color: var(--classic-fg) !important; }
+
+/* Full-area chat panel */
+#chat{
+  position: fixed !important;   /* beat section.active */
+  top: 60px;                    /* top bar height */
+  left: 200px;                  /* sidebar width */
+  right: 0;
+  bottom: 0;
+  padding: 0 !important;        /* kill default section padding */
+  border-radius: 12px;          /* optional */
+  z-index: 9000;                /* above content */
+  background: #0f172a;          /* your chat bg */
+}
+
+/* Mobile: no sidebar offset */
+@media (max-width: 768px){
+  #chat{ left: 0; border-radius: 0; }
+}
+
+/* Ensure iframe fills the panel */
+#chat iframe{
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<header id="topbar">
+  <div class="topbar-content">
+    <!-- Left -->
+    <a href="https://deblocked.neocities.org/#home" class="site-title">Deblocked For ContentKeeper</a>
+
+    <!-- Center -->
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="🔎 Search...Eaglercraft, Slope, Mario, Sonic, IO, .lol , duck life" />
+    </div>
+
+    <!-- Right -->
+    <div class="topbar-settings">
+      <img 
+        id="settings-icon"
+        src="https://cdn-icons-png.flaticon.com/128/16298/16298217.png" 
+        alt="Settings" 
+        class="settings-icon cursor-pointer"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+  </div>
+</header>
+
+<!-- Particles -->
+<div id="particles-js"></div>
+
+<!-- Sidebar -->
+<nav id="sidebar" class="flex flex-col items-center">
+  <!-- Logo at top -->
+  <div class="logo-container">
+    <a href="#home" style="margin-top:20px;">
+    </a>
+  </div>
+  <!-- Navigation links -->
+<ul>
+  <li>
+    <a href="#games">
+      <img src="https://cdn-icons-png.flaticon.com/128/17390/17390446.png" class="sidebar-icon" alt="Games Icon">
+      Games
+    </a>
+  </li>
+  <li>
+    <a href="#game-links">
+      <img src="https://cdn-icons-png.flaticon.com/128/18636/18636997.png" class="sidebar-icon" alt="Game Links Icon">
+      Game Links
+    </a>
+  </li>
+  <li>
+    <a href="#proxies">
+      <img src="https://cdn-icons-png.flaticon.com/128/19000/19000454.png" class="sidebar-icon" alt="Proxies Icon">
+      Proxies
+    </a>
+  </li>
+  <li>
+    <a href="#hacks">
+      <img src="https://cdn-icons-png.flaticon.com/128/19029/19029457.png" class="sidebar-icon" alt="Hacks Icon">
+      Hacks
+    </a>
+  </li>
+  <li>
+    <a href="#chat">
+      <img src="https://cdn-icons-png.flaticon.com/128/3114/3114553.png" class="sidebar-icon" alt="Chat Icon">
+      Chat
+    </a>
+  </li>
+
+  <!-- Divider below hacks -->
+  <li class="sidebar-divider"></li>
+
+  <!-- (future middle section goes here) -->
+
+  <!-- Divider above bookmarklets -->
+  <li class="sidebar-divider"></li>
+
+  <!-- Bottom group -->
+  <div class="sidebar-bottom">
+    <li>
+      <a href="#bookmarklets">
+        <img src="https://cdn-icons-png.flaticon.com/128/18620/18620819.png" class="sidebar-icon" alt="Bookmarklets Icon">
+        Bookmarklets
+      </a>
+    </li>
+    <li>
+      <a href="#forms">
+        <img src="https://cdn-icons-png.flaticon.com/128/19020/19020718.png" class="sidebar-icon" alt="Forms Icon">
+        Forms
+      </a>
+    </li>
+  </div>
+</ul>
+</nav>
+
+
+<!-- Main Content -->
+<div class="content">
+
+<!-- HOMEPAGE -->
+<section id="home">
+  <!-- HERO -->
+  <div class="flex justify-center items-center py-20">
+    <div class="frosted-glass rounded-3xl p-16 max-w-full shadow-2xl min-h-[600px] relative flex">
+      
+      <!-- LEFT: Updates floating box -->
+     <div class="absolute left-8 top-1/2 transform -translate-y-1/2 
+            w-80 min-h-[500px] p-6 
+            bg-black/30 rounded-2xl text-gray-200 text-sm leading-relaxed shadow-lg flex flex-col justify-start">
+  <h2 class="text-lg font-semibold text-white mb-4">🔔 Latest Updates</h2>
+  <p>🛠CHAT is fixed, Games are not working for some people, will fix that</p>
+  <p>👑 Clash Royale SOON 👀</p>
+  <p>🎮 SZ games is getting Deblocked SOON!</p>
+  <p>👾 Hacks Just got Added</p>
+  <p>🔓 adding some Exlusive Deblocked games</p>
+</div>
+
+
+
+      <!-- CENTER: Deblocked stuff -->
+      <div class="flex flex-col items-center justify-center text-center w-full">
+        <h1 class="text-6xl font-extrabold text-white mb-6">Deblocked</h1>
+        <p id="typewriter" class="text-xl text-gray-200 h-8 mb-6"></p>
+     <a href="#games" class="holo-button mt-4">🎮 Browse Games</a>
+
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Chat Section -->
+<section id="chat" 
+  class="fixed top-14 left-3 right-4 bottom-4 z-10 bg-[#0f172a] rounded-lg overflow-hidden shadow-lg">
+  <iframe 
+  src="https://deblocked-chat-production.up.railway.app/"
+  class="w-full h-full block"
+  style="border:none;">
+</iframe>
+</section>
+
+
+<!-- FORMS -->
+<section id="forms">
+  <div class="section-container">
+      <!-- Space for custom text -->
+      <div style="margin-top:10px; text-align:center; font-size:1rem; color:#fff;">Let me know in the Chat if you want to Promote your Side Hustle here</div>
+    </div>
+    <div id="forms-grid"></div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="section-container">
+    </div>
+    <div id="games-grid"></div>
+  </div>
+</section>
+
+<!-- Game Links -->
+<section id="game-links">
+  <div class="section-container">
+    </div>
+    <div id="game-links-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+  </div>
+</section>
+
+<!-- PROXIES -->
+<section id="proxies">
+  <div class="section-container">
+    </div>
+    <div class="max-w-3xl mx-auto mb-4" id="proxies-container">
+      <!-- Proxy cards will be inserted here dynamically -->
+    </div>
+  </div>
+</section>
+
+<!-- HACKS -->
+<section id="hacks">
+  <div class="section-container">
+    <!-- Grid container -->
+   <div id="hacks-list" class="flex flex-col gap-6"></div>
+  </div>
+</section>
+
+
+<!-- BOOKMARKLETS -->
+<section id="bookmarklets">
+  <div class="section-container">
+    <div class="header-frosted p-2 mb-4 flex items-center justify-center rounded-lg mx-auto max-w-3xl">
+      <h2 class="text-2xl font-bold text-white">Bookmarklets</h2>
+    </div>
+    <div class="max-w-3xl mx-auto mb-4">
+      <!-- Content for bookmarklets goes here -->
+      <p class="text-white text-center">Bookmarklets will be added here soon!</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-gradient-to-r py-4">
+  <div class="mx-auto max-w-5xl text-center">
+  </div>
+</footer>
+
+</div> <!-- end content -->
+
+<!-- overlay for games -->
+<div class="game-overlay"></div>
+
+<!-- Scrim -->
+<div id="settingsScrim" class="settings-scrim"></div>
+
+
+<!-- Settings modal with larger height & custom background support -->
+<div class="settings-overlay" id="settingsOverlay">
+<!-- Panel header (text + close) -->
+<div class="panel-header">
+  <h2>Settings</h2>
+  <button class="icon-btn" onclick="closeSettings()" aria-label="Close">✕</button>
+</div>
+
+<!-- Nicer controls -->
+<div class="panel-body">
+  <!-- Theme chips -->
+  <div class="theme-toggle-group">
+    <button class="theme-chip" data-theme="default" onclick="setTheme('default')">Default</button>
+    <button class="theme-chip" data-theme="dark" onclick="setTheme('dark')">Dark</button>
+    <button class="theme-chip" data-theme="classic" onclick="setTheme('classic')">Classic</button>
+  </div>
+
+  <!-- Actions (only two buttons) -->
+<div class="mt-4">
+  <button class="cta-btn" onclick="toggleCustomBg()">Custom Background</button>
+  <button class="subtle-btn" onclick="removeCustomBackground()">Remove Background</button>
+</div>
+
+<!-- Hidden file input (kept) -->
+<input type="file" id="backgroundUpload" accept="image/*"
+       style="display:none" onchange="applyUploadedBackground()">
+
+  
+  <!-- Back Button -->
+  <button class="back-button" onclick="closeSettings()">Back</button>
+</div>
+
+<!-- Embedded Games -->
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  // Initialize particles
+  function initParticles() {
+    if (window.pJSDom && window.pJSDom.length > 0) return;
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 10, "density": { "enable": true, "value_area": 800 }},
+        "color": { "value": "#fff" },
+        "shape": {
+          "type": "circle",
+          "stroke": { "width": 0, "color": "#000" },
+          "polygon": { "nb_sides": 5 },
+          "image": { "src": "img/github.svg", "width": 100, "height": 100 }
+        },
+        "opacity": {
+          "value": 0.5,
+          "random": true,
+          "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false }
+        },
+        "size": {
+          "value": 4,
+          "random": true,
+          "anim": { "enable": false, "speed": 40, "size_min": 0.1, "sync": false }
+        },
+        "line_linked": { "enable": false, "distance": 500, "color": "#ffffff", "opacity": 0.4, "width": 2 },
+        "move": {
+          "enable": true,
+          "speed": 6,
+          "direction": "top",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "repulse" },
+          "onclick": { "enable": false, "mode": "repulse" },
+          "resize": true
+        },
+        "modes": {
+          "grab": { "distance": 400, "line_linked": { "opacity": 0.5 } },
+          "bubble": { "distance": 400, "size": 4, "duration": 0.3, "opacity": 1, "speed": 3 },
+          "repulse": { "distance": 200, "duration": 0.4 },
+          "push": { "particles_nb": 4 },
+          "remove": { "particles_nb": 2 }
+        }
+      },
+      "retina_detect": true
+    });
+  }
+
+/* ===== AUTO HORIZONTAL-CATEGORY WRAPPER ===== */
+(function(){
+  const grid   = document.getElementById('games-grid');
+  const cards  = [...grid.querySelectorAll('.game-card')];
+  if (!cards.length) return;
+
+  const CAT_MAP = {
+    minecraft: ['minecraft','eaglercraft','craft'],
+    racing:    ['race','racing','car','drift','drive'],
+    fnaf:      ['fnaf','freddy'],
+    sonic:     ['sonic','tails'],
+    mario:     ['mario','luigi'],
+    io:        ['.io'],
+    retro:     ['retro','arcade'],
+    fps:       ['fps','shooter'],
+    puzzle:    ['puzzle','2048','tetris'],
+    casual:    ['idle','clicker']
+  };
+  const CAT_ORDER = ['minecraft','racing','fnaf','sonic','mario','io','fps','retro','puzzle','casual','other'];
+  const buckets = Object.fromEntries(CAT_ORDER.map(c=>[c,[]]));
+  buckets.other = [];
+
+  /* bucket cards */
+  cards.forEach(card=>{
+    const txt = card.innerText.toLowerCase();
+    let placed = false;
+    for (const [cat,words] of Object.entries(CAT_MAP)){
+      if (words.some(w=>txt.includes(w))){ buckets[cat].push(card); placed=true; break; }
+    }
+    if (!placed) buckets.other.push(card);
+  });
+
+  /* rebuild grid */
+  grid.innerHTML = '';
+  CAT_ORDER.concat('other').forEach(cat=>{
+    const arr = buckets[cat];
+    if (!arr.length) return;
+    const sec = document.createElement('div');
+    sec.className = 'cat-section';
+    sec.innerHTML = `
+      <div class="cat-header">
+        <h3>${cat}</h3>
+      </div>
+      <div class="cat-row"></div>
+    `;
+    arr.forEach(card=>sec.querySelector('.cat-row').appendChild(card));
+    grid.appendChild(sec);
+  });
+})();
+
+  // Fetch and populate game links
+  async function fetchGameLinks() {
+    try {
+      const response = await fetch('games.json');
+      if (!response.ok) throw new Error('Failed to load');
+      const games = await response.json();
+      populateGameLinks(games);
+    } catch (e) {
+      document.getElementById('game-links-grid').innerHTML='<p class="text-white text-center">Error loading game links.</p>';
+    }
+  }
+
+  function populateGameLinks(games) {
+    const grid = document.getElementById('game-links-grid');
+    grid.innerHTML = '';
+    if (!games || games.length === 0) {
+      grid.innerHTML = '<p class="text-white text-center">No game links.</p>';
+      return;
+    }
+    games.forEach((game, index) => {
+      const a = document.createElement('a');
+      a.href = game.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      const card = document.createElement('div');
+      card.className='frosted-glass rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105';
+      const imgSrc = isValidUrl(game.game_image_icon) ? game.game_image_icon : 'https://via.placeholder.com/150';
+      card.innerHTML = `<div class="thumbnail-container">
+        <img src="${imgSrc}" alt="${game.title}" class="w-full h-48 object-cover no-drag"/>
+      </div>
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-white">${game.title}</h3>
+      </div>`;
+      a.appendChild(card);
+      addTiltEffect(a);
+      document.getElementById('game-links-grid').appendChild(a);
+    });
+  }
+
+ // Fetch embedded games from external JSON file
+async function fetchEmbeddedGames() {
+  try {
+    const response = await fetch(`embeddedgames.json?t=${Date.now()}`); 
+    // 👆 cache-busting so you always get the latest version
+    if (!response.ok) throw new Error('Failed to load embeddedgames.json');
+    const games = await response.json();
+    populateEmbeddedGames(games);
+  } catch (error) {
+    document.getElementById('games-grid').innerHTML =
+      '<p class="text-white text-center">Error loading embedded games.</p>';
+  }
+}
+
+
+  function populateEmbeddedGames(games, batchSize = 30) {
+  const grid = document.getElementById('games-grid');
+  grid.innerHTML = '';
+
+  if (!Array.isArray(games) || games.length === 0) {
+    grid.innerHTML = '<p class="text-white text-center">No embedded games.</p>';
+    return;
+  }
+
+  let index = 0;
+  let isRendering = false;
+
+  // Sentinel the observer watches
+  const sentinel = document.createElement('div');
+  sentinel.id = 'games-sentinel';
+  sentinel.style.cssText = 'height:1px;width:100%;pointer-events:none;';
+  grid.appendChild(sentinel);
+
+  function renderBatch() {
+    if (isRendering) return;
+    isRendering = true;
+
+    const fragment = document.createDocumentFragment();
+    let count = 0;
+
+    while (count < batchSize && index < games.length) {
+      const game = games[index++];
+      const card = document.createElement('div');
+      card.className = 'game-card';
+      card.onclick = () => showGameOverlay(game.url, `embeddedgame-${index - 1}`, game.title);
+
+      // Thumb
+      const thumb = document.createElement('div');
+thumb.className = 'game-thumb';
+
+const img = document.createElement('img');
+img.src = isValidUrl(game.game_image_icon) ? game.game_image_icon : DEFAULT_IMAGE;
+img.alt = game.title;
+img.className = 'game-img';
+img.loading = 'lazy';
+img.addEventListener('load', () => img.classList.add('loaded'));
+thumb.appendChild(img);
+
+// Hover overlay (gradient + title)
+const hoverOverlay = document.createElement('div');
+hoverOverlay.className = 'hover-overlay';
+
+const titleSpan = document.createElement('span');
+titleSpan.className = 'title';
+titleSpan.textContent = game.title;
+
+hoverOverlay.appendChild(titleSpan);
+
+// Append in correct order: thumb, then overlay
+card.appendChild(thumb);
+card.appendChild(hoverOverlay);
+
+fragment.appendChild(card);
+count++;
+    }
+
+    // Keep sentinel at the end
+    grid.insertBefore(fragment, sentinel);
+    isRendering = false;
+
+    // Done? clean up
+    if (index >= games.length) {
+      if (observer) observer.disconnect();
+      sentinel.remove();
+    }
+
+    // After paint, ensure we have enough content to allow scrolling
+    setTimeout(fillViewport, 0);
+  }
+
+  // Keep adding batches until the grid extends past the viewport a bit.
+  function fillViewport() {
+    let safety = 0;
+    while (
+      index < games.length &&
+      grid.getBoundingClientRect().bottom < window.innerHeight + 150 &&
+      safety < 10
+    ) {
+      renderBatch();
+      safety++;
+    }
+  }
+
+  // First render + make sure there's enough to scroll
+  renderBatch();
+
+  // IntersectionObserver for more batches (use viewport as root)
+  let observer = null;
+  if ('IntersectionObserver' in window) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) renderBatch();
+        });
+      },
+      {
+        root: null,              // viewport (since the page itself scrolls)
+        rootMargin: '600px 0px', // start loading well before the bottom
+        threshold: 0
+      }
+    );
+    observer.observe(sentinel);
+  } else {
+    // Fallback
+    const onScroll = () => {
+      const rect = sentinel.getBoundingClientRect();
+      if (rect.top - window.innerHeight < 600) {
+        renderBatch();
+        if (index >= games.length) window.removeEventListener('scroll', onScroll);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  // Optional nudge hook when switching sections
+  window._nudgeGames = fillViewport;
+}
+
+
+
+
+  function showGameOverlay(url,iframeId,title) {
+    document.querySelector('.game-overlay').innerHTML=`
+      <div class="game-overlay-content">
+        <button class="close-btn" onclick="hideGameOverlay()">Close</button>
+        <div class="iframe-container loading">
+          <iframe id="${iframeId}" src="${url}" title="${title}" allowfullscreen></iframe>
+          <button class="fullscreen-btn" onclick="attemptFullscreen('${iframeId}')">Fullscreen</button>
+          <button class="exit-fullscreen-btn" onclick="exitFullscreen('${iframeId}')">Exit Fullscreen</button>
+        </div>
+      </div>`;
+    document.querySelector('.fullscreen-btn').style.display='block';
+    document.querySelector('.exit-fullscreen-btn').style.display='none';
+    document.querySelector('.game-overlay').style.display='flex';
+  }
+
+  function hideGameOverlay() {
+    document.querySelector('.game-overlay').innerHTML='';
+    document.querySelector('.game-overlay').style.display='none';
+    document.querySelector('.fullscreen-btn').style.display='none';
+    document.querySelector('.exit-fullscreen-btn').style.display='none';
+  }
+
+  function attemptFullscreen(iframeId) {
+    const iframe=document.getElementById(iframeId);
+    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    iframe.requestFullscreen().then(()=> {
+      document.querySelector('.fullscreen-btn').style.display='none';
+      document.querySelector('.exit-fullscreen-btn').style.display='block';
+    }).catch(()=>{});
+  }
+
+  function exitFullscreen(iframeId) {
+    if (document.fullscreenElement){ document.exitFullscreen().then(()=> {
+      document.querySelector('.fullscreen-btn').style.display='block';
+      document.querySelector('.exit-fullscreen-btn').style.display='none';
+    });}
+  }
+
+  function isValidUrl(string) {
+    try { new URL(string); return true; } catch (_) { return false; }
+  }
+
+  function addTiltEffect(element) {
+    const handleMouseMove=(e)=>{
+      const rect=e.currentTarget.getBoundingClientRect();
+      const padding=20;
+      const xMin=rect.left-padding; const xMax=rect.right+padding;
+      const yMin=rect.top-padding; const yMax=rect.bottom+padding;
+      const x=e.clientX; const y=e.clientY;
+      const clampedX=Math.min(Math.max(x,xMin),xMax);
+      const clampedY=Math.min(Math.max(y,yMin),yMax);
+      const centerX=rect.left+rect.width/2;
+      const centerY=rect.top+rect.height/2;
+      const deltaX=clampedX-centerX;
+      const deltaY=clampedY-centerY;
+      const maxTilt=20;
+      const percentX=deltaX/(rect.width/2);
+      const percentY=deltaY/(rect.height/2);
+      const rotateY=-maxTilt*percentX;
+      const rotateX=maxTilt*percentY;
+      e.currentTarget.style.transform=`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    }
+    const handleMouseEnter = (e) => { e.currentTarget.addEventListener('mousemove', handleMouseMove); }
+    const handleMouseLeave = (e) => { e.currentTarget.removeEventListener('mousemove', handleMouseMove); e.currentTarget.style.transform='rotateX(0deg) rotateY(0deg)';}
+    element.addEventListener('mouseenter', handleMouseEnter);
+    element.addEventListener('mouseleave', handleMouseLeave);
+  }
+
+  // Fetch and populate forms
+  async function fetchForms() {
+    try {
+      const response=await fetch('forms.json');
+      if (!response.ok) throw new Error('Failed to load forms.json');
+      const forms=await response.json();
+      populateForms(forms);
+    } catch(e) {
+      document.getElementById('forms-grid').innerHTML='<p class="text-white text-center">Error loading forms</p>';
+    }
+  }
+  function populateForms(forms) {
+    const grid=document.getElementById('forms-grid');
+    grid.innerHTML='';
+    if (!forms || forms.length===0) {
+      grid.innerHTML='<p class="text-white text-center">No forms available.</p>';
+      return;
+    }
+    forms.forEach(form => {
+      const card=document.createElement('div');
+      card.className='form-card';
+      card.innerHTML=`<iframe src="${form.url}" class="form-iframe" allowfullscreen></iframe>`;
+      grid.appendChild(card);
+    });
+  }
+
+  // Theme switching with persistence
+  function setTheme(theme) {
+    document.body.classList.remove('theme-default', 'theme-dark', 'theme-classic');
+    if (theme === 'dark') {
+      document.body.classList.add('theme-dark');
+    } else if (theme === 'classic') {
+      document.body.classList.add('theme-classic');
+    } else {
+      document.body.classList.add('theme-default');
+    }
+    localStorage.setItem('theme', theme);
+    // Update toggle button states
+    document.querySelectorAll('.theme-button').forEach(btn => {
+      if (btn.dataset.theme === theme || (theme==='default' && !btn.dataset.theme)) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  // Toggle overlay visibility
+  document.addEventListener('DOMContentLoaded', () => {
+    // Load theme
+    const savedTheme = localStorage.getItem('theme') || 'default';
+    setTheme(savedTheme);
+    // Load custom background if saved
+    const savedBg = localStorage.getItem('customBackgroundDataUrl');
+    if (savedBg) {
+      document.body.style.backgroundImage = `url('${savedBg}')`;
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.body.style.backgroundSize = 'cover'; // ensure full coverage
+    }
+    fetchEmbeddedGames();
+    fetchGameLinks();
+    fetchForms();
+    fetchProxies(); // <-- Added here to fetch proxies
+    initParticles();
+
+    document.getElementById('settings-icon').addEventListener('click', () => {
+      document.getElementById('settingsOverlay').classList.toggle('show');
+    });
+  });
+
+  function closeSettings() {
+    document.getElementById('settingsOverlay').classList.remove('show');
+  }
+
+  // Custom Background with fixed cover
+  let isCustomBgActive = false;
+
+  function toggleCustomBg() {
+  const input = document.getElementById('backgroundUpload');
+  if (input) input.click();
+}
+
+
+  function applyUploadedBackground() {
+    const fileInput = document.getElementById('backgroundUpload');
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        // Set background: cover, fixed
+        document.body.style.backgroundImage = `url('${dataUrl}')`;
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundAttachment = 'fixed';
+        localStorage.setItem('customBackgroundDataUrl', dataUrl);
+        isCustomBgActive = true;
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function applyCustomBackgroundUrl() {
+    const url = document.getElementById('bgImageUrl').value.trim();
+    if (url && isValidUrl(url)) {
+      document.body.style.backgroundImage = `url('${url}')`;
+      document.body.style.backgroundRepeat = 'no-repeat';
+      document.body.style.backgroundPosition = 'center';
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+      localStorage.setItem('customBackgroundDataUrl', url);
+      isCustomBgActive = true;
+    }
+  }
+
+  function removeCustomBackground() {
+    document.body.style.background = "linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end))";
+    document.body.style.backgroundImage = '';
+    document.body.style.backgroundRepeat = '';
+    document.body.style.backgroundPosition = '';
+    document.body.style.backgroundAttachment = '';
+    document.body.style.backgroundSize = '';
+    localStorage.removeItem('customBackgroundDataUrl');
+    isCustomBgActive = false;
+  }
+
+  function isValidUrl(string) {
+    try { new URL(string); return true; } catch (_) { return false; }
+  }
+  
+  // 1) Helper: mark the active chip
+function markActiveTheme(theme) {
+  document.querySelectorAll('.theme-chip').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === theme);
+  });
+}
+
+// 2) Theme switching with persistence (calls the helper)
+function setTheme(theme) {
+  document.body.classList.remove('theme-default', 'theme-dark', 'theme-classic');
+
+  if (theme === 'dark') {
+    document.body.classList.add('theme-dark');
+  } else if (theme === 'classic') {
+    document.body.classList.add('theme-classic');
+  } else {
+    document.body.classList.add('theme-default');
+  }
+
+  localStorage.setItem('theme', theme);
+  markActiveTheme(theme);   // <-- highlight the correct chip
+}
+
+
+  // Fetch and populate proxies (with cache-busting)
+  async function fetchProxies() {
+    try {
+      // 👇 Add ?t=timestamp to prevent cache
+      const response = await fetch(`proxies.json?t=${Date.now()}`);
+      if (!response.ok) throw new Error('Failed to load proxies.json');
+      const proxies = await response.json();
+      populateProxies(proxies);
+    } catch(e) {
+      document.getElementById('proxies-container').innerHTML =
+        '<p class="text-white text-center">Error loading proxies.</p>';
+    }
+  }
+
+  function populateProxies(proxies) {
+    const container = document.getElementById('proxies-container');
+    container.innerHTML = '';
+
+    if (!proxies || proxies.length === 0) {
+      container.innerHTML = '<p class="text-white text-center">No proxies available.</p>';
+      return;
+    }
+
+    proxies.forEach(proxy => {
+      console.log("Proxy object loaded:", proxy); // 👈 Debug
+
+      const a = document.createElement('a');
+      a.href = proxy.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+
+      const card = document.createElement('div');
+      card.className =
+        'frosted-glass rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 mb-4';
+
+      // ✅ Trust the JSON field, fallback if missing
+      const imgSrc =
+        proxy.game_image_icon && proxy.game_image_icon.trim() !== ""
+          ? proxy.game_image_icon
+          : 'https://via.placeholder.com/150';
+
+      card.innerHTML = `
+        <div class="thumbnail-container">
+          <img src="${imgSrc}" alt="${proxy.title}" class="w-full h-48 object-cover no-drag"/>
+        </div>
+        <div class="p-4">
+          <h3 class="text-xl font-bold text-white">${proxy.title}</h3>
+          <p class="text-white mb-2">${proxy.description}</p>
+        </div>
+      `;
+
+      a.appendChild(card);
+      container.appendChild(a);
+    });
+  }
+</script>
+
+<script>
+  function showSectionFromHash() {
+    const hash = window.location.hash || '#home'; // default section is home
+    const sections = document.querySelectorAll('section');
+
+    sections.forEach(sec => {
+      if ('#' + sec.id === hash) {
+        sec.classList.add('active');   // show matching section
+      } else {
+        sec.classList.remove('active'); // hide all others
+      }
+    });
+  }
+
+  // Redirect to #home if no hash
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.location.hash) {
+      window.location.hash = '#home';
+    }
+    showSectionFromHash();
+  });
+
+  // Run whenever the hash changes
+  window.addEventListener('hashchange', showSectionFromHash);
+</script>
+
+<script>
+document.getElementById('search-bar').addEventListener('input', function() {
+  const query = this.value.toLowerCase();
+  
+  // Detect which section is active
+  const activeSection = document.querySelector('section.active');
+  if (!activeSection) return;
+
+  // Look inside active section for cards
+  const cards = activeSection.querySelectorAll('.game-card, .frosted-glass, .form-card, .proxy-card');
+  
+  cards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+    if (text.includes(query)) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+});
+</script>
+
+<!-- HACKS UI (paste into your hacks container) -->
+<div id="hacks-list" class="space-y-4"></div>
+
+<script>
+// Helper: return a bookmarklet that loads the raw URL via a script tag
+function makeBookmarkletFor(rawUrl) {
+  const encoded = encodeURIComponent(rawUrl);
+  return `javascript:(function(){
+    var s=document.createElement('script');
+    s.src=decodeURIComponent('${encoded}')+'?t='+Date.now();
+    s.crossOrigin='anonymous';
+    document.head.appendChild(s);
+  })();void(0);`;
+}
+
+// Helper: console snippet (paste into DevTools console)
+function makeConsoleSnippet(rawUrl) {
+  return `fetch("${rawUrl}?t=${Date.now()}").then(r=>r.text()).then(code=>(0,eval)(code)).catch(e=>console.error('Failed to load script:',e));`;
+}
+
+// Build hack cards from hacks.json
+async function populateHacksUI() {
+  const container = document.getElementById('hacks-list');
+  container.innerHTML = '<p class="text-white">Loading hacks...</p>';
+
+  try {
+    const res = await fetch('./hacks/hacks.json?t=' + Date.now());
+    if (!res.ok) throw new Error("Failed to fetch hacks.json");
+    const hacks = await res.json();
+
+    container.innerHTML = '';
+
+    hacks.forEach(hack => {
+      const rawUrl = './hacks/' + hack.filename;
+      const bookmarklet = makeBookmarkletFor(rawUrl);
+      const consoleSnippet = makeConsoleSnippet(rawUrl);
+
+      const card = document.createElement('div');
+      card.className = 'frosted-glass rounded-lg p-4 flex items-center justify-between gap-4';
+
+      // Decide which buttons to show
+      let buttonsHTML = '';
+      if (!hack.type || hack.type === "both" || hack.type === "bookmarklet") {
+        buttonsHTML += `
+          <a href="${bookmarklet}" 
+             class="px-4 py-2 bg-cyan-400 text-black font-bold rounded-lg hover:bg-cyan-300 transition"
+             title="Drag this to your bookmarks bar">
+             Drag to Bookmarks Bar
+          </a>
+        `;
+      }
+      if (!hack.type || hack.type === "both" || hack.type === "console") {
+        buttonsHTML += `
+          <button class="copy-console-btn px-4 py-2 bg-indigo-500 text-white font-bold rounded-lg hover:bg-indigo-400 transition">
+            Copy Code to Console
+          </button>
+        `;
+      }
+
+      card.innerHTML = `
+        <div class="flex items-center gap-3">
+          <img src="${hack.icon || 'hacks/default.png'}" alt="${hack.title}" style="width:48px;height:48px;border-radius:8px;object-fit:cover">
+          <div>
+            <span class="text-white font-bold text-lg">${hack.title}</span>
+            ${hack.description ? `<p class="text-sm text-gray-300">${hack.description}</p>` : ''}
+          </div>
+        </div>
+
+        <div class="flex gap-3">${buttonsHTML}</div>
+      `;
+
+      // Wire up copy button if it exists
+      const copyConsoleBtn = card.querySelector('.copy-console-btn');
+      if (copyConsoleBtn) {
+        copyConsoleBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(consoleSnippet);
+            copyConsoleBtn.textContent = 'Copied ✓';
+            setTimeout(()=> copyConsoleBtn.textContent = 'Copy Code to Console', 1500);
+          } catch (e) {
+            copyConsoleBtn.textContent = 'Copy failed';
+          }
+        });
+      }
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = '<p class="text-red-400">Error loading hacks.json</p>';
+  }
+}
+
+// Run when page loads
+populateHacksUI();
+</script>
+
+<script>
+function makeBookmarkletFor(rawUrl) {
+  const encoded = encodeURIComponent(rawUrl);
+  return `javascript:(function(){
+    var s=document.createElement('script');
+    s.src=decodeURIComponent('${encoded}')+'?t='+Date.now();
+    s.crossOrigin='anonymous';
+    document.head.appendChild(s);
+  })();void(0);`;
+}
+
+function makeConsoleSnippet(rawUrl) {
+  return `fetch("${rawUrl}?t=${Date.now()}").then(r=>r.text()).then(code=>(0,eval)(code)).catch(e=>console.error('Failed to load script:',e));`;
+}
+
+const HACKS_BASE_URL = "https://deblocked.neocities.org/hacks/";
+
+async function populateHacksUI() {
+  const container = document.getElementById('hacks-list');
+  container.innerHTML = '<p class="text-white">Loading hacks...</p>';
+
+  try {
+    const res = await fetch(HACKS_BASE_URL + 'hacks.json?t=' + Date.now());
+    const hacks = await res.json();
+    container.innerHTML = '';
+
+    hacks.forEach(hack => {
+      const rawUrl = HACKS_BASE_URL + hack.filename;
+      const bookmarklet = makeBookmarkletFor(rawUrl);
+      const consoleSnippet = makeConsoleSnippet(rawUrl);
+
+     let buttonsHTML = '';
+if (!hack.type || hack.type === "both" || hack.type === "bookmarklet") {
+  buttonsHTML += `
+    <a href="${bookmarklet}" 
+       class="copy-bookmarklet-btn flex items-center gap-2 px-5 py-2 rounded-full bg-cyan-500/80 text-black font-semibold shadow-md backdrop-blur hover:bg-cyan-400 hover:scale-105 hover:shadow-cyan-500/50 transition">
+       📌 <span>Drag to Bookmarks Bar</span>
+    </a>`;
+}
+if (!hack.type || hack.type === "both" || hack.type === "console") {
+  buttonsHTML += `
+    <button 
+       class="copy-console-btn flex items-center gap-2 px-5 py-2 rounded-full bg-purple-500/80 text-white font-semibold shadow-md backdrop-blur hover:bg-purple-400 hover:scale-105 hover:shadow-purple-500/50 transition">
+       📋 <span>Copy Code to Console</span>
+    </button>`;
+}
+
+
+      const card = document.createElement('div');
+card.className = 'frosted-glass rounded-2xl overflow-hidden shadow-lg flex flex-col p-8';
+
+
+
+<script>
+async function loadFeaturedGames() {
+  try {
+    const res = await fetch('./embeddedgames.json?t=' + Date.now());
+    const games = await res.json();
+
+    const carousel = document.getElementById('featured-carousel');
+    if (!carousel) return;
+
+    carousel.innerHTML = '';
+
+    // Pick 12 random games
+    const shuffled = games.sort(() => 0.5 - Math.random()).slice(0, 12);
+    const doubled = [...shuffled, ...shuffled]; // duplicate for smooth loop
+
+    doubled.forEach(game => {
+      const card = document.createElement('a'); // must be <a>
+      card.className = 'featured-card';
+      card.href = game.url || '#';
+      card.target = "_blank";
+      card.rel = "noopener noreferrer"; // security
+
+      card.innerHTML = `
+        <img src="${game.game_image_icon}" alt="${game.title}">
+        <p class="text-white font-semibold mt-2">${game.title}</p>
+      `;
+      carousel.appendChild(card);
+    });
+  } catch (err) {
+    console.error('Error loading featured games:', err);
+  }
+}
+
+loadFeaturedGames();
+</script>
+
+<script>
+const typewriterTexts = [
+  "Play deblocked games",
+  "Explore hacks",
+  "Deblock with Proxies",
+  "Over 600+ games waiting for you",
+
+  // 🎮 Games / Fun
+  "Your favorite classics, deblocked",
+  "Slope, Minecraft, Mario — all here",
+  "Speed through challenges",
+  "Survive the impossible",
+  "Beat your high score",
+  "Try something new today",
+  "Casual, retro, endless fun",
+  "Games that never get old",
+  "Instant play, no downloads",
+  "Arcade vibes, anywhere",
+  "Adventure at your fingertips",
+
+  // 🚀 Freedom / Access
+  "Access games at school or work",
+  "Play without restrictions",
+  "Zero blocks, just fun",
+  "No limits, no filters",
+  "Browse freely, play freely",
+  "Where restrictions end, fun begins",
+  "Your escape from boredom",
+  "Always unblocked, always ready",
+  "Break through barriers",
+  "Fun that can’t be stopped",
+
+  // 🔥 Hype / Community
+  "Join the Deblocked community",
+  "Trending games every day",
+  "Discover hidden gems",
+  "Share with friends",
+  "Hack, mod, and explore",
+  "Built for players, by players",
+  "A place for every gamer",
+  "Always fresh, always updated",
+  "Explore together, win together",
+  "The hub for unblocked fun",
+
+  // 🛠️ Hacks / Tools
+  "Explore hacks like never before",
+  "Bookmarklets at your fingertips",
+  "Console magic, simplified",
+  "Tools to bend the rules",
+  "Mods that change the game",
+  "Enhance your play instantly",
+  "Hacks made easy for everyone",
+  "One-click shortcuts to fun",
+  "Custom tools for custom fun",
+  "Power up your games",
+
+  // ✨ Cool / Catchy Filler Lines
+  "Fun starts here",
+  "Level up your day",
+  "School-proof gaming",
+  "Boredom ends now",
+  "All your games, one hub",
+  "Adventure never ends",
+  "Play smarter, not harder",
+  "New games, every week",
+  "Endless scrolling fun",
+  "It’s game time, always",
+  "Unlock your world of play",
+  "The future of unblocked games"
+];
+
+
+let twIndex = 0, charIndex = 0, deleting = false;
+const twElement = document.getElementById("typewriter");
+
+function typewriter() {
+  const current = typewriterTexts[twIndex];
+  
+  if (!deleting) {
+    twElement.textContent = current.substring(0, charIndex + 1);
+    charIndex++;
+    if (charIndex === current.length) {
+      deleting = true;
+      setTimeout(typewriter, 1500); // pause before deleting
+      return;
+    }
+  } else {
+    twElement.textContent = current.substring(0, charIndex - 1);
+    charIndex--;
+    if (charIndex === 0) {
+      deleting = false;
+      twIndex = (twIndex + 1) % typewriterTexts.length;
+    }
+  }
+  setTimeout(typewriter, deleting ? 50 : 100); // speed
+}
+
+typewriter();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('settingsOverlay');
+  const scrim   = document.getElementById('settingsScrim');
+  const icon    = document.getElementById('settings-icon');
+
+  // safety: remove any older inline handlers
+  icon.onclick = null;
+
+  function openPanel() {
+    overlay.classList.add('show');
+    scrim.classList.add('show');
+  }
+  function closePanel() {
+    overlay.classList.remove('show');
+    scrim.classList.remove('show');
+  }
+
+  icon.addEventListener('click', openPanel);
+  scrim.addEventListener('click', closePanel);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+  // if you have a Close/Back button inside the panel:
+  overlay.querySelector('.back-button, .icon-btn')?.addEventListener('click', closePanel);
+
+  // keep global function working if other code calls it
+  window.closeSettings = closePanel;
+});
+</script>
+
+
+
+
+
+</body>
+</html>
