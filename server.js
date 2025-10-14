@@ -8,12 +8,12 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: '*', // Allow all origins (update to your Neocities domain in production)
+    origin: '*', // Replace with your domain in production
     methods: ['GET', 'POST']
   }
 });
 
-// Serve static files from the 'public' directory if needed (optional for chat server)
+// Serve static files (optional)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // File to store messages
@@ -25,9 +25,9 @@ let messages = [];
   try {
     const data = await fs.readFile(MESSAGES_FILE, 'utf8');
     messages = JSON.parse(data);
-    console.log('Loaded messages:', messages.length);
+    console.log(`Loaded ${messages.length} messages.`);
   } catch (error) {
-    console.error('Error loading messages:', error.message);
+    console.warn('No existing messages file found. Starting fresh.');
     messages = [];
   }
 })();
@@ -36,7 +36,7 @@ let messages = [];
 async function saveMessages() {
   try {
     await fs.writeFile(MESSAGES_FILE, JSON.stringify(messages, null, 2));
-    console.log('Saved messages:', messages.length);
+    console.log(`Saved ${messages.length} messages.`);
   } catch (error) {
     console.error('Error saving messages:', error.message);
   }
@@ -45,7 +45,7 @@ async function saveMessages() {
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  // Send message history to the new client
+  // Send history
   socket.emit('message history', messages);
 
   socket.on('request history', () => {
@@ -53,11 +53,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('chat message', (data) => {
-    console.log('Received message:', data);
     if (data && data.username && data.message) {
       messages.push(data);
-      saveMessages(); // Save to file for persistence
-      io.emit('chat message', data); // Broadcast to all clients
+      saveMessages();
+      io.emit('chat message', data);
     } else {
       console.warn('Invalid message data:', data);
     }
@@ -67,15 +66,18 @@ io.on('connection', (socket) => {
     console.log('User disconnected:', socket.id);
   });
 
-  // Ping-pong for connection keep-alive
   socket.on('pong', () => {
-    console.log('Pong received from', socket.id);
+    console.log('Pong from', socket.id);
   });
 });
 
-// Periodically send ping to clients
+// Keep connections alive
 setInterval(() => {
   io.emit('ping');
 }, 30000);
 
-server.listen(3000, () => console.log('Chat server running on port 3000'));
+// PORT handling for local and Railway
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Chat server running on port ${PORT}`);
+});
