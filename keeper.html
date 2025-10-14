@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Is this Website Blocked?</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #1f2c33, #141b20);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .container {
+      margin: 2rem;
+      padding: 2rem;
+      background: #222e35;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 900px;
+      /* allow inner scrolling if anything tries to overflow */
+      overflow-x: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+    }
+    p {
+      text-align: center;
+      color: #bbb;
+      margin-bottom: 1.5rem;
+    }
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    input {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      background: #2e3c45;
+      color: #fff;
+    }
+    button {
+      background: #1dd1a1;
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #10ac84;
+    }
+    .summary {
+      text-align: center;
+      margin: 1rem 0;
+      font-weight: 600;
+    }
+    /* Fix overflow: prevent table from stretching the layout */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      border-radius: 12px;
+      overflow: hidden;
+      table-layout: fixed; /* important: forces columns to respect width and wrap inside cells */
+      max-width: 100%;
+    }
+    /* ensure each column shares space and long content will wrap */
+    th:first-child, td:first-child { width: 50%; }
+    th:last-child, td:last-child { width: 50%; }
+
+    th, td {
+      padding: 0.8rem;
+      text-align: left;
+      /* break long urls/strings instead of stretching table */
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+    th {
+      background: #2e3c45;
+      font-weight: 600;
+    }
+    tr:nth-child(even) {
+      background: #263238;
+    }
+    .blocked {
+      color: #ff6b6b;
+    }
+    .unblocked {
+      color: #1dd1a1;
+    }
+    .copy-btn {
+      background: none;
+      border: none;
+      color: #bbb;
+      cursor: pointer;
+      margin-left: 8px;
+      font-size: 0.9rem;
+    }
+    .copy-btn:hover {
+      color: #fff;
+    }
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top: 4px solid #1dd1a1;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+      display: none;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 600px) {
+      th, td { font-size: 0.9rem; }
+      h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Is this Website Blocked?</h1>
+    <p>Enter text below. Any <b>https://</b> links will be extracted and checked.<br>
+       Extra text, emojis, or symbols will be ignored.</p>
+
+    <div class="input-row">
+      <input id="linksInput" type="text" placeholder="Paste links or text here...">
+      <button onclick="checkLinks()">Search</button>
+    </div>
+
+    <div class="spinner" id="spinner"></div>
+    <div class="summary" id="summary"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th id="blockedHeader">Blocked</th>
+          <th id="unblockedHeader">Unblocked</th>
+        </tr>
+      </thead>
+      <tbody id="resultsTable"></tbody>
+    </table>
+  </div>
+
+  <script>
+    async function checkLinks() {
+      const input = document.getElementById("linksInput").value;
+      const spinner = document.getElementById("spinner");
+      const resultsTable = document.getElementById("resultsTable");
+      const summary = document.getElementById("summary");
+
+      // Reset
+      resultsTable.innerHTML = "";
+      summary.innerText = "";
+      spinner.style.display = "block";
+
+      // Extract only valid https:// links
+      const urls = [...input.matchAll(/https:\/\/[^\s)]+/g)].map(m => m[0]);
+      if (urls.length === 0) {
+        spinner.style.display = "none";
+        summary.innerText = "No valid links found.";
+        return;
+      }
+
+      let blockedCount = 0;
+      let unblockedCount = 0;
+
+      for (const url of urls) {
+        let isBlocked = false;
+        try {
+          const res = await fetch(url, { method: "HEAD", mode: "no-cors" });
+          // Assume unblocked if fetch succeeds
+        } catch {
+          isBlocked = true;
+        }
+
+        const row = document.createElement("tr");
+        const blockedCell = document.createElement("td");
+        const unblockedCell = document.createElement("td");
+
+        if (isBlocked) {
+          blockedCount++;
+          blockedCell.innerHTML = `<span class="blocked">❌ ${url}</span>
+            <button class="copy-btn" onclick="navigator.clipboard.writeText('${url}')">📋</button>`;
+        } else {
+          unblockedCount++;
+          unblockedCell.innerHTML = `<a class="unblocked" href="${url}" target="_blank">✅ ${url}</a>
+            <button class="copy-btn" onclick="navigator.clipboard.writeText('${url}')">📋</button>`;
+        }
+
+        row.appendChild(blockedCell);
+        row.appendChild(unblockedCell);
+        resultsTable.appendChild(row);
+      }
+
+      spinner.style.display = "none";
+      summary.innerText = `${unblockedCount} out of ${urls.length} links are unblocked`;
+      document.getElementById("blockedHeader").innerText = `Blocked (${blockedCount})`;
+      document.getElementById("unblockedHeader").innerText = `Unblocked (${unblockedCount})`;
+    }
+  </script>
+</body>
+</html>
