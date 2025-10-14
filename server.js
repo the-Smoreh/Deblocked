@@ -7,7 +7,6 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 
-// Allow CORS for both local testing and Railway deployment
 const io = socketIo(server, {
   cors: {
     origin: [
@@ -20,13 +19,18 @@ const io = socketIo(server, {
   }
 });
 
-// Serve static files (optional, if you have frontend in /public)
+// --- Make Railway happy ---
+app.get('/', (req, res) => {
+  res.send('Server is up and running!');
+});
+
+// Serve static files if you’ve got a frontend
 app.use(express.static(path.join(__dirname, 'public')));
 
 const MESSAGES_FILE = path.join(__dirname, 'messages.json');
-
-// Load previous messages
 let messages = [];
+
+// Load messages
 (async () => {
   try {
     const data = await fs.readFile(MESSAGES_FILE, 'utf8');
@@ -38,7 +42,7 @@ let messages = [];
   }
 })();
 
-// Save messages to file
+// Save messages
 async function saveMessages() {
   try {
     await fs.writeFile(MESSAGES_FILE, JSON.stringify(messages, null, 2));
@@ -48,6 +52,7 @@ async function saveMessages() {
   }
 }
 
+// Socket events
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
@@ -76,12 +81,12 @@ io.on('connection', (socket) => {
   });
 });
 
-// Keep clients alive
+// Keep connections alive
 setInterval(() => {
   io.emit('ping');
 }, 30000);
 
-// Use Railway's port and host properly
+// --- Proper Railway setup ---
 const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
 
