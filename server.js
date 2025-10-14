@@ -78,6 +78,7 @@ setInterval(() => {
 
 // PORT handling for local and Railway
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Chat server running on port ${PORT}`);
+const HOST = '0.0.0.0';
+server.listen(PORT, HOST, () => {
+  console.log(`Chat server running on http://${HOST}:${PORT}`);
 });
