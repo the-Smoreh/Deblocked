@@ -1,19 +1,20 @@
-// server.js
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
+import fs from "fs/promises";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors());
-app.use(express.json());
+app.use(cors({ origin: "*" }));
+app.use(express.static(path.join(__dirname, "public")));
 
-// ✅ make sure we use Railway's port or default to 3000
-const PORT = process.env.PORT || 3000;
-
-// ✅ allow any frontend to connect to sockets (for testing)
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -21,23 +22,51 @@ const io = new Server(server, {
   }
 });
 
-// Simple route to test server status
-app.get("/", (req, res) => {
-  res.send("✅ Server is alive on Railway.");
-});
+const MESSAGES_FILE = path.join(__dirname, "messages.json");
+let messages = [];
 
-// Socket handling
+(async () => {
+  try {
+    const data = await fs.readFile(MESSAGES_FILE, "utf8");
+    messages = JSON.parse(data);
+    console.log(`Loaded ${messages.length} messages`);
+  } catch {
+    console.log("No existing messages file found. Starting fresh.");
+    messages = [];
+  }
+})();
+
+async function saveMessages() {
+  try {
+    await fs.writeFile(MESSAGES_FILE, JSON.stringify(messages, null, 2));
+  } catch (err) {
+    console.error("Error saving messages:", err.message);
+  }
+}
+
 io.on("connection", socket => {
-  console.log("A user connected:", socket.id);
+  console.log(`User connected: ${socket.id}`);
+  socket.emit("message history", messages);
 
-  socket.on("chat message", msg => {
-    io.emit("chat message", msg);
+  socket.on("request history", () => socket.emit("message history", messages));
+
+  socket.on("chat message", data => {
+    if (data?.username && data?.message) {
+      messages.push(data);
+      saveMessages();
+      io.emit("chat message", data);
+    } else {
+      console.warn("Invalid message:", data);
+    }
   });
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
+  socket.on("disconnect", () => console.log(`User disconnected: ${socket.id}`));
 });
 
-// Start server
-server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// Ping keepalive
+setInterval(() => io.emit("ping"), 30000);
+
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, "0.0.0.0", () =>
+  console.log(`🚀 Chat server running on port ${PORT}`)
+);
