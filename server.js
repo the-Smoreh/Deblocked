@@ -1,72 +1,47 @@
-import express from "express";
-import http from "http";
-import { Server } from "socket.io";
-import cors from "cors";
-import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// server.js
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
-const server = http.createServer(app);
+const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "*" }));
-app.use(express.static(path.join(__dirname, "public")));
+// Serve all files in the current directory
+app.use(express.static(__dirname));
 
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
+// If someone visits the root, serve index.html
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
-const MESSAGES_FILE = path.join(__dirname, "messages.json");
-let messages = [];
+// Example: serve your JSON files dynamically
+app.get("/:file", (req, res, next) => {
+  const file = req.params.file;
 
-(async () => {
-  try {
-    const data = await fs.readFile(MESSAGES_FILE, "utf8");
-    messages = JSON.parse(data);
-    console.log(`Loaded ${messages.length} messages`);
-  } catch {
-    console.log("No existing messages file found. Starting fresh.");
-    messages = [];
-  }
-})();
-
-async function saveMessages() {
-  try {
-    await fs.writeFile(MESSAGES_FILE, JSON.stringify(messages, null, 2));
-  } catch (err) {
-    console.error("Error saving messages:", err.message);
-  }
-}
-
-io.on("connection", socket => {
-  console.log(`User connected: ${socket.id}`);
-  socket.emit("message history", messages);
-
-  socket.on("request history", () => socket.emit("message history", messages));
-
-  socket.on("chat message", data => {
-    if (data?.username && data?.message) {
-      messages.push(data);
-      saveMessages();
-      io.emit("chat message", data);
+  // If it's a known .json file, serve it properly
+  if (file.endsWith(".json")) {
+    const filePath = path.join(__dirname, file);
+    if (fs.existsSync(filePath)) {
+      res.sendFile(filePath);
     } else {
-      console.warn("Invalid message:", data);
+      res.status(404).send({ error: "JSON file not found" });
     }
-  });
-
-  socket.on("disconnect", () => console.log(`User disconnected: ${socket.id}`));
+  } else {
+    next(); // let express.static handle other files
+  }
 });
 
-// Ping keepalive
-setInterval(() => io.emit("ping"), 30000);
+// Handle 404s (anything not found)
+app.use((req, res) => {
+  const notFoundPage = path.join(__dirname, "not_found.html");
+  if (fs.existsSync(notFoundPage)) {
+    res.status(404).sendFile(notFoundPage);
+  } else {
+    res.status(404).send("404: Not Found");
+  }
+});
 
-const PORT = process.env.PORT || 8080;
-server.listen(PORT, "0.0.0.0", () =>
-  console.log(`🚀 Chat server running on port ${PORT}`)
-);
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
