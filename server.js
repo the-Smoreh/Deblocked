@@ -11,8 +11,13 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-// serve static frontend
-app.use(express.static(path.join(__dirname, "public")));
+// serve static files from root folder (no 'public' directory needed)
+app.use(express.static(__dirname));
+
+// serve index.html explicitly on root
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
 
 io.on("connection", (socket) => {
   console.log("⚡ User connected");
