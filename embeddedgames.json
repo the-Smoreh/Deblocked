@@ -10,7 +10,7 @@
         "url": "https://deblocked-chat-production.up.railway.app/"
     },
     {
-        "title": "Clash Royale",
+        "title": "Clash Royale(SOON)",
         "description": "Il put up the Method on how to play it WITHOUT a proxy, or without waiting a timer SOON",
         "game_image_icon": "https://play-lh.googleusercontent.com/gnSC6s8-6Tjc4uhvDW7nfrSJxpbhllzYhgX8y374N1LYvWBStn2YhozS9XXaz1T_Pi2q",
         "category": "Arcade",
@@ -19,8 +19,17 @@
         "url": "https://deblocked.neocities.org/notoutyet"
     },
     {
+        "title": "Old Deblocked",
+        "description": "the one with proxies and hacks, il add them here soon, just go here for them FOR NOW",
+        "game_image_icon": "https://miro.medium.com/v2/resize:fit:1400/1*dK1wBvp6SsBccdvFtu1tew.png",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://deblocked.netlify.app/old"
+    },
+    {
         "title": "Classic Deblocked",
-        "description": "Navigate a ball through a twisting 3D tunnel, avoiding obstacles in this fast-paced game!",
+        "description": "alot of outdated links, your here for the noglista",
         "game_image_icon": "https://i.fbcd.co/products/resized/resized-750-500/ts-logo-designs-2-6603f6781f57863834bc4d6e773acb063a2b8e87c9b73995f7b9ebc0f11a77bf.jpg",
         "category": "Arcade",
         "tags": [],
@@ -29,7 +38,7 @@
     },
     {
         "title": "V6.Wiki",
-        "description": "Navigate a ball through a twisting 3D tunnel, avoiding obstacles in this fast-paced game!",
+        "description": "the one who survived the game purge!",
         "game_image_icon": "https://avatars.githubusercontent.com/u/124852579?s=280&v=4",
         "category": "Arcade",
         "tags": [],
