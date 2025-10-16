@@ -15,18 +15,26 @@ const io = new Server(server, {
 });
 
 app.use(cors());
-app.use(express.static(__dirname)); // serve all files from project root
 
-// fallback: serve index.html
+// Serve everything (since your HTML files and assets are all in root)
+app.use(express.static(__dirname));
+
+// Fallback: send index.html for root requests
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// Socket.io connection logic
 io.on("connection", (socket) => {
   console.log("⚡ User connected");
   socket.on("chat message", (msg) => io.emit("chat message", msg));
   socket.on("disconnect", () => console.log("🚪 User disconnected"));
 });
 
+// Railway’s dynamic port + host
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, "0.0.0.0", () => console.log(`✅ Server running on port ${PORT}`));
+const HOST = "0.0.0.0";
+
+server.listen(PORT, HOST, () => {
+  console.log(`✅ Server running on http://${HOST}:${PORT}`);
+});
