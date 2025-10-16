@@ -1,37 +1,30 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const cors = require("cors");
-const path = require("path");
+import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: "*", methods: ["GET", "POST"] }
-});
+const server = createServer(app);
+const io = new Server(server);
 
-// Enable CORS and serve all static files (no 'public' folder needed)
-app.use(cors());
+// serve all .json files, icons, html, etc directly from root
 app.use(express.static(__dirname));
 
-// Serve your index.html from root
+// fallback: serve index.html for root requests
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Socket.IO events
 io.on("connection", (socket) => {
   console.log("⚡ User connected");
-
-  socket.on("chat message", (msg) => {
-    io.emit("chat message", msg);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("🚪 User disconnected");
-  });
+  socket.on("chat message", (msg) => io.emit("chat message", msg));
+  socket.on("disconnect", () => console.log("🚪 User disconnected"));
 });
 
-// Start server
+// Railway assigns PORT automatically
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+server.listen(PORT, "0.0.0.0", () => console.log(`✅ Server running on port ${PORT}`));
