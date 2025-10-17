@@ -1,32 +1,37 @@
 [
   {
-    "title": "Hammer Head Proxy",
-    "description": "Proxies are pretty rare, Glad this one was found, Works 100%",
+    "name": "Hammer Head Proxy",
+    "desc": "Proxies are pretty rare — glad this one was found. Works 100%.",
     "url": "https://www.itstimefor.mydiscussion.net/",
-    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-11%20001657.png"
+    "thumb": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-11%20001657.png",
+    "tags": ["iframe-safe", "stable", "verified"]
   },
   {
-    "title": "Hammer Head Proxy",
-    "description": "Proxies are pretty rare, Glad this one was found, Works 100%",
+    "name": "Hammer Head Proxy",
+    "desc": "Proxies are pretty rare — glad this one was found. Works 100%.",
     "url": "https://sleepykirby.ofmdirect.com/",
-    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-11%20001657.png"
+    "thumb": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-11%20001657.png",
+    "tags": ["iframe-safe", "stable"]
   },
   {
-    "title": "Hammer Head Proxy",
-    "description": "Proxies are pretty rare, Glad this one was found, Works 100%",
+    "name": "Hammer Head Proxy",
+    "desc": "Proxies are pretty rare — glad this one was found. Works 100%.",
     "url": "https://inmyfarm321.radiohapure.com/",
-    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-11%20001657.png"
+    "thumb": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-11%20001657.png",
+    "tags": ["iframe-safe", "stable"]
   },
   {
-    "title": "Hammer Head Proxy",
-    "description": "Proxies are pretty rare, Glad this one was found, Works 100%",
+    "name": "Hammer Head Proxy",
+    "desc": "Proxies are pretty rare — glad this one was found. Works 100%.",
     "url": "https://www.jss.alyaf.com/",
-    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-11%20001657.png"
+    "thumb": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-09-11%20001657.png",
+    "tags": ["iframe-safe", "stable"]
   },
   {
-    "title": "Selenite",
-    "description": "Proxies are pretty rare, Glad this one was found, Works 100%",
+    "name": "Selenite Proxy",
+    "desc": "Fast, stealthy, and reliable — one of the best finds. Works 100%.",
     "url": "https://fleshpanopticon.agguiopz.ip-dynamic.org/",
-    "game_image_icon": "https://i.ytimg.com/vi/4kEC_s1ebiw/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEggTShlMA8=&rs=AOn4CLAjmU2Ot0L3M9bP7IcPuVo0JcZaIQ"
+    "thumb": "https://i.ytimg.com/vi/4kEC_s1ebiw/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEggTShlMA8=&rs=AOn4CLAjmU2Ot0L3M9bP7IcPuVo0JcZaIQ",
+    "tags": ["fast", "stealth", "iframe-safe"]
   }
 ]
