@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Clash Intro — Center to Left Animation</title>
+<title>Clash Intro — Locked Version</title>
 <style>
   html, body {
     margin: 0;
@@ -13,6 +13,10 @@
     font-family: Arial, sans-serif;
     height: 100%;
     overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; /* no text/image selection */
   }
 
   #stage {
@@ -24,19 +28,28 @@
     justify-content: center;
   }
 
-  /* Media: fills height, not stretched */
-  video, #clashImg {
+  #mediaZone {
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
     height: 100vh;
     width: auto;
-    object-fit: contain;
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* UI container — starts centered */
+  video, #clashImg {
+    height: 100vh;
+    width: auto;
+    object-fit: contain;
+    display: none;
+    pointer-events: none; /* block drag / right-click interaction */
+    user-drag: none;
+    -webkit-user-drag: none;
+  }
+
   #uiZone {
     position: relative;
     z-index: 10;
@@ -44,10 +57,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: all 1s ease;
+    transition: all 1s cubic-bezier(0.68,-0.55,0.27,1.55);
   }
 
-  /* after animation trigger */
   #uiZone.move-left {
     position: absolute;
     left: 80px;
@@ -91,16 +103,57 @@
     transition: opacity 0.4s ease;
   }
 
-  .hidden { display: none; }
+  #crashOverlay {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100vh;
+    width: auto;
+    aspect-ratio: 9 / 16;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background: rgba(10,10,10,0.95);
+    font-family: monospace;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+    z-index: 200;
+  }
+
+  #crashOverlay.visible {
+    opacity: 1;
+  }
+
+  #crashOverlay h1 {
+    color: #ff3333;
+    font-size: 1.8em;
+    margin-bottom: 10px;
+  }
+
+  #crashOverlay p {
+    color: #ddd;
+    max-width: 500px;
+    font-size: 1em;
+    line-height: 1.4;
+  }
+
+  #crashOverlay span {
+    color: #ff7777;
+  }
 </style>
 </head>
 <body>
   <div id="stage">
-    <video id="introVideo" preload="auto">
-      <source src="https://ik.imagekit.io/yyjyznrctj/clash.mp4" type="video/mp4" />
-    </video>
-
-    <img id="clashImg" src="clashload.jpg" alt="Clash Loading" />
+    <div id="mediaZone">
+      <video id="introVideo" preload="auto">
+        <source src="https://ik.imagekit.io/yyjyznrctj/clash.mp4" type="video/mp4" />
+      </video>
+      <img id="clashImg" src="clashload.jpg" alt="Clash Loading" draggable="false" />
+    </div>
 
     <div id="uiZone">
       <div id="menu">
@@ -114,6 +167,16 @@
       </div>
       <div id="loading">Loading... <span id="progress">0%</span></div>
     </div>
+
+    <div id="crashOverlay">
+      <h1>⚠ Game Error Detected</h1>
+      <p>
+        Unexpected render exception has occurred.<br>
+        Memory allocation halted at <span>0x7F3A2B</span>.<br><br>
+        Progress data could not be saved.<br>
+        <span style="color:#888">Press F5 or Refresh the page to restart.</span>
+      </p>
+    </div>
   </div>
 
   <script>
@@ -124,6 +187,11 @@
     const options = document.querySelectorAll(".option");
     const loading = document.getElementById("loading");
     const progressText = document.getElementById("progress");
+    const crashOverlay = document.getElementById("crashOverlay");
+    const mediaZone = document.getElementById("mediaZone");
+
+    // Disable right-click context menu entirely
+    document.addEventListener("contextmenu", e => e.preventDefault());
 
     let chosen = null;
 
@@ -132,16 +200,16 @@
         if (chosen) return;
         chosen = opt;
 
-        // fade out unchosen
+        // Fade out unchosen
         options.forEach(o => { if (o !== opt) o.style.opacity = 0; });
 
-        // show loading
+        // Show loading text
         loading.style.opacity = 1;
 
-        // move everything to the left
+        // Slide UI left
         setTimeout(() => uiZone.classList.add("move-left"), 300);
 
-        // play video with sound
+        // Play video
         video.currentTime = 0;
         video.muted = false;
         video.style.display = "block";
@@ -150,15 +218,15 @@
           video.play();
         });
 
-        // after 8s -> swap to image + fake load
+        // After 8s → swap to clashload image + fake crash
         setTimeout(() => {
           video.pause();
           video.style.display = "none";
           clashImg.style.display = "block";
 
           simulateLoading(84, () => {
-            document.body.style.pointerEvents = "none";
-            document.body.style.filter = "grayscale(60%) blur(2px)";
+            mediaZone.style.filter = "grayscale(60%) blur(3px)";
+            crashOverlay.classList.add("visible");
           });
         }, 8000);
       });
