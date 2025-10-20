@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Clash Intro — Center to Left Animation</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #stage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Media: fills height, not stretched */
+  video, #clashImg {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100vh;
+    width: auto;
+    object-fit: contain;
+    display: none;
+  }
+
+  /* UI container — starts centered */
+  #uiZone {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 1s ease;
+  }
+
+  /* after animation trigger */
+  #uiZone.move-left {
+    position: absolute;
+    left: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    align-items: flex-start;
+  }
+
+  #menu {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
+    transition: opacity 0.4s ease;
+  }
+
+  .option {
+    background: #111;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 20px 30px;
+    width: 230px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.4s ease, opacity 0.4s ease, background 0.2s ease;
+  }
+
+  .option:hover {
+    background: #222;
+    transform: scale(1.05);
+  }
+
+  .option h2 {
+    margin: 0 0 10px;
+  }
+
+  #loading {
+    margin-top: 25px;
+    font-size: 1.3em;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <video id="introVideo" preload="auto">
+      <source src="https://ik.imagekit.io/yyjyznrctj/clash.mp4" type="video/mp4" />
+    </video>
+
+    <img id="clashImg" src="clashload.jpg" alt="Clash Loading" />
+
+    <div id="uiZone">
+      <div id="menu">
+        <div class="option" id="guest">
+          <h2>Play As a Guest</h2>
+          <p>Your Progress won't be Saved If you Leave</p>
+        </div>
+        <div class="option" id="load">
+          <h2>Load Mobile Saves</h2>
+        </div>
+      </div>
+      <div id="loading">Loading... <span id="progress">0%</span></div>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById("introVideo");
+    const clashImg = document.getElementById("clashImg");
+    const uiZone = document.getElementById("uiZone");
+    const menu = document.getElementById("menu");
+    const options = document.querySelectorAll(".option");
+    const loading = document.getElementById("loading");
+    const progressText = document.getElementById("progress");
+
+    let chosen = null;
+
+    options.forEach(opt => {
+      opt.addEventListener("click", () => {
+        if (chosen) return;
+        chosen = opt;
+
+        // fade out unchosen
+        options.forEach(o => { if (o !== opt) o.style.opacity = 0; });
+
+        // show loading
+        loading.style.opacity = 1;
+
+        // move everything to the left
+        setTimeout(() => uiZone.classList.add("move-left"), 300);
+
+        // play video with sound
+        video.currentTime = 0;
+        video.muted = false;
+        video.style.display = "block";
+        video.play().catch(() => {
+          video.muted = true;
+          video.play();
+        });
+
+        // after 8s -> swap to image + fake load
+        setTimeout(() => {
+          video.pause();
+          video.style.display = "none";
+          clashImg.style.display = "block";
+
+          simulateLoading(84, () => {
+            document.body.style.pointerEvents = "none";
+            document.body.style.filter = "grayscale(60%) blur(2px)";
+          });
+        }, 8000);
+      });
+    });
+
+    function simulateLoading(stopAt, callback) {
+      let progress = 0;
+      const interval = setInterval(() => {
+        if (progress < stopAt) {
+          progress++;
+          progressText.textContent = progress + "%";
+        } else {
+          clearInterval(interval);
+          if (callback) callback();
+        }
+      }, 40);
+    }
+  </script>
+</body>
+</html>
