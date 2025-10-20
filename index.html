@@ -1726,6 +1726,28 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
   src: local('Fredoka'), url('https://fonts.gstatic.com/s/fredoka/v15/7DCIuTj4k5f0O7lFVFs.woff2') format('woff2');
 }
 
+/* ✅ Fix hero hover bug: stop unwanted grow/dim */
+#hero:hover,
+.hero:hover {
+  transform: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* 🧊 Stop hero dimming or brightness changes on hover */
+#hero:hover,
+.hero:hover,
+#hero:hover * {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+#catDock button.active {
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: white;
+  box-shadow: 0 0 10px var(--glow);
+}
+
 </style>
 
 </head>
@@ -1759,19 +1781,12 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
   </svg>
   <span>Proxies</span>
 </a>
-
-      <a href="#new" data-filter="new">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10H3v2h8v8h2v-8h8v-2h-8z"/></svg>
-        <span>New</span>
-      </a>
-      <a href="#favorites" data-filter="favorites">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41.81 4.5 2.09A6 6 0 0 1 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        <span>Favorites</span>
-      </a>
+ <a href="#" data-filter="hacks"><i class="icon">⚙️</i> Hacks(doesnt work rn)</a>
+      
+     
       <div class="sep"></div>
-      <a href="#categories"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h8v8H3V5zm10 0h8v5h-8V5zM3 15h5v5H3v-5zm7 0h11v8H10v-8z"/></svg><span>Categories</span></a>
       <a href="#links"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 13.41a1.98 1.98 0 0 1 0-2.82l2-2a2 2 0 1 1 2.82 2.83l-1.17 1.17 1.41 1.41 1.17-1.17a4 4 0 0 0-5.66-5.66l-2 2a4 4 0 0 0 0 5.66l.61.61 1.41-1.41-.59-.62zM7 17l2-2 2 2-2 2-2-2z"/></svg><span>Links</span></a>
-      <a href="#" data-filter="hacks"><i class="icon">⚙️</i> Hacks</a>
+     
 
     </nav>
   </aside>
@@ -1833,7 +1848,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
       <span>🎉 New Website Design! • 🧪 Realtime chat beta rolling out • 🕹️ Deblocked exclusives arriving next week • 💫May have bugssssss!</span>
     </div>
     <div class="stats">
-      <b>400+</b> games • <b>11.3k</b> plays • <span id="statUpdated">updated recently</span>
+      <b>400+</b> games • <b>15.3k</b> plays • <span id="statUpdated">updated recently</span>
     </div>
   </div>
 </div>
@@ -1890,6 +1905,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
 
       <!-- Category dock -->
       <div class="cat-dock" id="catDock">
+      <button data-cat="all" class="cat-btn active">All</button>
         <button data-cat="action">🎯 Action</button>
         <button data-cat="puzzle">🧩 Puzzle</button>
         <button data-cat="racing">🚗 Racing</button>
@@ -1971,7 +1987,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
      
 
       <footer class="footer" id="siteFooter">
-  © 2025 Deblocked — Break limits. Play freely (If you dont see games, refresh!)
+  © 2025 Deblocked — Break limits. Play freely.
 </footer>
 
     </div>
@@ -1997,7 +2013,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
         <b>Theme</b>
         <div class="inline">
           <button class="control-btn" data-theme="dark">Dark</button>
-          <button class="control-btn" data-theme="light">Light</button>
+          <button class="control-btn" data-theme="light">Dont click this used to be Light Mode </button>
         </div>
         <span class="soft small">Light mode is fully functional(Or is it? Might Absolutly not work)</span>
       </div>
@@ -2117,6 +2133,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
   </div>
 </div>
 
+<div id="heroTracker" style="display:none;"></div>
 
 
 
@@ -2169,15 +2186,15 @@ fetch('embeddedgames.json')
 
     // Render everything else first
     renderAll();
+    
+    
 
-    // ✅ Then apply hero rotation AFTER rendering
-    heroList = featuredGames;
-    if (heroList.length > 0) {
-      mountHero(0);
-      startHeroRotation();
-    } else {
-      console.warn("⚠️ No featured games found! Check your embeddedgames.json file.");
-    }
+// ✅ Apply hero rotation AFTER rendering — with small delay to ensure DOM ready
+setTimeout(() => {
+  initHeroRotation();
+}, 500);
+
+
   })
   .catch(err => {
     console.error("❌ Error loading embeddedgames.json:", err);
@@ -2212,62 +2229,133 @@ let continueGames = JSON.parse(localStorage.getItem(continueKey) || "[]");
 function addContinueGame(gameId) {
   if (!gameId) return;
 
-  // Normalize ID (case + spacing)
+  // Normalize ID
   const id = gameId.trim().toLowerCase();
 
   // Get existing list from localStorage
   let list = JSON.parse(localStorage.getItem("deblocked:continue") || "[]");
 
-  // Remove duplicates (if the game already exists)
+  // Remove duplicates
   list = list.filter(x => x.toLowerCase() !== id);
 
-  // Add to front
+  // Add newest game first
   list.unshift(id);
 
-  // Cap list length
+  // Keep only the latest 10
   if (list.length > 10) list = list.slice(0, 10);
 
-  // Save back
+  // Save it
   localStorage.setItem("deblocked:continue", JSON.stringify(list));
 
-  // Update the global continueGames variable if it exists
-  if (typeof continueGames !== "undefined") {
-    continueGames = list;
-  }
+  // Update global variable
+  if (typeof continueGames !== "undefined") continueGames = list;
 
   console.log("✅ Updated Continue Playing:", list);
+
+  // 🟢 NEW: Instantly refresh the visible grid
+  if (typeof renderContinue === "function") renderContinue();
 }
+
 
 
 
 /* ---------- Hero rotation ---------- */
-let heroIndex=0;
-let heroList=[];
-function heroAnimate(){const hero=$("#hero");hero.classList.remove("animating");void hero.offsetWidth;hero.classList.add("animating");}
-function mountHero(i){
-  if(!GAMES.length)return;
-  heroList=GAMES.filter(g=>g.featured);
-  if(!heroList.length)return;
-  const g=heroList[i%heroList.length];
-  setText("#heroTitle",g.name);
-  setText("#heroDesc",g.desc);
-  setText("#heroTags",(g.tags.slice(0,2).map(t=>t[0].toUpperCase()+t.slice(1)).join(" · "))||"Featured");
-  $("#heroPreview").style.backgroundImage=`url('${g.cover}')`;
-  const hv=$("#heroVideo");
-  if(g.vid){hv.src=g.vid;hv.style.opacity=.28}else{hv.removeAttribute("src");hv.load?.();}
-  $("#heroPlay").onclick=()=>window.open(g.url,"_blank");
-  $("#heroDetails").onclick=()=>alert(`${g.name}\n\n${g.desc}`);
-  const dots=$("#heroDots");
-  dots.innerHTML=heroList.map((_,idx)=>`<button class="${idx===i?'active':''}" data-idx="${idx}"></button>`).join("");
-  heroAnimate();
+let heroIndex = 0;
+let heroList = [];
+
+function heroAnimate() {
+  const hero = $("#hero");
+  hero.classList.remove("animating");
+  void hero.offsetWidth;
+  hero.classList.add("animating");
 }
-function startHeroRotation(){setInterval(()=>{heroIndex=(heroIndex+1)%heroList.length;mountHero(heroIndex)},8000);}
-$("#heroDots")?.addEventListener("click",e=>{
-  const b=e.target.closest("button[data-idx]");
-  if(!b)return;
-  heroIndex=+b.dataset.idx;
+
+function mountHero(i) {
+  if (!heroList.length) return;
+  const g = heroList[i % heroList.length];
+  setText("#heroTitle", g.name);
+  setText("#heroDesc", g.desc);
+  setText(
+    "#heroTags",
+    (g.tags.slice(0, 2).map(t => t[0].toUpperCase() + t.slice(1)).join(" · ")) ||
+    "Featured"
+  );
+  $("#heroPreview").style.backgroundImage = `url('${g.cover}')`;
+  const hv = $("#heroVideo");
+  if (g.vid) {
+    hv.src = g.vid;
+    hv.style.opacity = 0.28;
+  } else {
+    hv.removeAttribute("src");
+    hv.load?.();
+  }
+ const playBtn = document.querySelector("#heroPlay");
+if (playBtn)
+  playBtn.onclick = () => {
+    addContinueGame(g.id); // track it like other games
+    location.hash = encodeURIComponent(g.id); // open overlay, NOT full play mode
+  };
+
+
+
+const detailsBtn = document.querySelector("#heroDetails");
+if (detailsBtn) detailsBtn.onclick = () => alert(`${g.name}\n\n${g.desc}`);
+
+  const dots = $("#heroDots");
+  dots.innerHTML = heroList
+    .map(
+      (_, idx) => `<button class="${idx === i ? "active" : ""}" data-idx="${idx}"></button>`
+    )
+    .join("");
+  heroAnimate();
+  
+  document.getElementById("heroTracker").dataset.active = g.name;
+}
+
+let heroTimer = null;
+
+function startHeroRotation() {
+  // Stop any previous rotation to avoid multiple timers
+  if (heroTimer) {
+    clearInterval(heroTimer);
+    heroTimer = null;
+  }
+
+  if (heroList.length > 1) {
+    console.log("🎬 Starting hero rotation for", heroList.length, "games");
+    heroTimer = setInterval(() => {
+      heroIndex = (heroIndex + 1) % heroList.length;
+      console.log("➡️ Switching to hero index:", heroIndex);
+      mountHero(heroIndex);
+    }, 8000);
+  } else {
+    console.warn("⚠️ Not enough featured games to rotate.");
+  }
+}
+
+
+$("#heroDots")?.addEventListener("click", e => {
+  const b = e.target.closest("button[data-idx]");
+  if (!b) return;
+  heroIndex = +b.dataset.idx;
   mountHero(heroIndex);
 });
+
+function initHeroRotation() {
+  const featuredGames = GAMES.filter(g => g.featured);
+  if (featuredGames.length > 0) {
+    heroList = featuredGames;
+    heroIndex = 0;
+    mountHero(heroIndex);
+    startHeroRotation();
+  } else {
+    console.warn("⚠️ No featured games found!");
+  }
+}
+
+
+
+
 
 /* ---------- Card + Carousel Rendering ---------- */
 function slideHTML(g){return`
@@ -2317,6 +2405,46 @@ function renderGrid(sel,filterFn){
   });
 }
 
+// ✅ Continue Playing Renderer
+function renderContinue() {
+  const el = $("#gridContinue");
+  if (!el) return;
+
+  // get last played ids
+  const ids = JSON.parse(localStorage.getItem("deblocked:continue") || "[]");
+
+  // find those games from GAMES
+  const list = ids
+    .map(id => GAMES.find(g => g.id.toLowerCase() === id.toLowerCase()))
+    .filter(Boolean)
+    .slice(0, 4); // only show last 4 played
+
+  if (list.length === 0) {
+    el.innerHTML = `<p class="soft small">You haven’t played anything yet — try a game!</p>`;
+    return;
+  }
+
+  el.innerHTML = list.map(cardHTML).join("");
+
+  // rebind click and favorite actions like other grids
+  el.querySelectorAll(".card").forEach(card => {
+    const id = card.getAttribute("data-id");
+
+    card.querySelector(".thumb").onclick = () => {
+      const game = GAMES.find(g => g.id === id);
+      if (!game) return;
+      addContinueGame(game.id);
+      window.location.hash = encodeURIComponent(game.id);
+      showGameOverlay(game);
+    };
+
+    card.querySelector(".fav").onclick = e => {
+      e.stopPropagation();
+      toggleFav(id);
+    };
+  });
+}
+
 /* ---------- Search + categories ---------- */
 let currentQuery="";
 function applyQuery(list){
@@ -2328,13 +2456,73 @@ $("#searchInput").addEventListener("input",e=>{
   currentQuery=e.target.value.trim();
   renderAll();
 });
-$("#catDock").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-cat]");
-  if(!b)return;
-  $("#searchInput").value=b.dataset.cat;
-  currentQuery=b.dataset.cat;
+/* ---------- Categories with keyword maps ---------- */
+const CATEGORY_KEYWORDS = {
+  all: [],
+
+  action: [
+    "fight","battle","pvp","1v1","arena","combat","war","soldier","gun","defense","box","physics",
+    "gladihoppers","shoot","tank","warfare","sniper","stick","brawl","rage","assault","hunter",
+    "knife","army","weapon","bullet","ninja","platformer","clash"
+  ],
+
+  puzzle: [
+    "crossy","road","mario","run","runner","duck","life","island","connect","cut","rope","fireboy",
+    "watergirl","flappy","geo","gear","escape","hobo","lol","legend","riddle","maze","block","logic",
+    "brain","smart","think","portal","tile","stack","slide","match"
+  ],
+
+  racing: [
+    "rocket","league","rush","drive","drift","king","earn","die","funny","mad","truck","gta","car",
+    "hill","climb","madalin","kart","mario","race","moto","poly","track","racer","turbo","dash",
+    "pako","parking","runway","speed","bike","quad"
+  ],
+
+  io: [
+    "io","i.o","online","multiplayer","balls","sim","craft","eagler","minecraft","metroid","recoil",
+    "rooftop","league","lol","yoh","battle","agar","worm","diep","slither","paper","zombs","gun",
+    "fight","arena"
+  ],
+
+  "2 player": [
+    "2","3","4","5","6","7","duo","friends","friend","team","league","lol","squad","shoot","1v1",
+    "pvp","coop","battle","versus","multi","play","pair","pong"
+  ],
+
+  casual: [
+    "drift","sim","dance","ice","fire","fireboy","watergirl","spiderman","among","basketball","stars",
+    "fnaf","craft","mine","minecraft","clicker","fun","idle","relax","simple","tap","casual","chill",
+    "easy","cute","paint","draw","memory"
+  ],
+
+  sandbox: [
+    "mario","sonic","minecraft","eagler","gta","lol","escape","flee","poly","slope","skibidi","toilet",
+    "legend","shooter","simulator","doom","free","creative","build","craft","sandbox","world","map",
+    "editor","physics","test","funny"
+  ]
+};
+
+let currentCategory = "all";
+
+$("#catDock").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-cat]");
+  if (!btn) return;
+
+  $$("#catDock button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  
+  currentCategory = btn.dataset.cat;
   renderAll();
 });
+
+function applyCategory(list) {
+  if (currentCategory === "all") return list;
+  const keywords = CATEGORY_KEYWORDS[currentCategory] || [];
+  return list.filter(g => {
+    const n = (g.name + " " + g.tags.join(" ")).toLowerCase();
+    return keywords.some(k => n.includes(k));
+  });
+}
 
 /* ---------- Controls ---------- */
 $$(".control").forEach(btn=>btn.addEventListener("click",()=>{
@@ -2358,22 +2546,66 @@ const io=new IntersectionObserver((entries)=>{
 $$(".section").forEach(sec=>io.observe(sec));
 
 /* ---------- Render all ---------- */
-function renderAll(){
-  if(!GAMES.length)return;
-  setText("#gameCount",GAMES.length);
-  const mostRecent=GAMES.reduce((a,b)=>a.added>b.added?a:b).added;
-  setText("#lastUpdated",since(mostRecent));
-  setText("#statUpdated",since(mostRecent));
-  const active=$(".control.active");
-  const tag=active?active.dataset.quick:null;
-  renderCarousel(tag&&tag!=="all"?tag:null);
-  renderGrid("#gridTrending", g => applyQuery(GAMES).includes(g) && g.tags.includes("trending"));
-  renderGrid("#gridNew",      g => applyQuery(GAMES).includes(g) && (g.tags.includes("new") || since(g.added)==="today" || since(g.added).includes("day")));
-  renderGrid("#gridContinue", g => applyQuery(GAMES).slice(0,4).includes(g));
-  renderGrid("#gridFavs",     g => favorites.has(g.id) && applyQuery(GAMES).includes(g));
-  $("#favorites").classList.toggle("hidden", $("#gridFavs").children.length===0);
+function renderAll() {
+  if (!GAMES.length) return;
+
+  // 🧩 Apply both search and category filters safely
+  let visibleGames = applyQuery(GAMES);
+  visibleGames = applyCategory(visibleGames);
+
+  // 🧮 Update stats
+  setText("#gameCount", visibleGames.length);
+  const mostRecent = visibleGames.reduce((a, b) => (a.added > b.added ? a : b)).added;
+  setText("#lastUpdated", since(mostRecent));
+  setText("#statUpdated", since(mostRecent));
+
+  // 🧭 Handle carousel (uses quick buttons)
+  const active = $(".control.active");
+  const tag = active ? active.dataset.quick : null;
+  renderCarousel(tag && tag !== "all" ? tag : null);
+
+  // 🧱 Render grids with the filtered list
+  renderGrid("#gridTrending", g => visibleGames.includes(g) && g.tags.includes("trending"));
+  renderGrid("#gridNew", g =>
+    visibleGames.includes(g) &&
+    (g.tags.includes("new") ||
+      since(g.added) === "today" ||
+      since(g.added).includes("day"))
+  );
+  renderContinue();
+
+  renderGrid("#gridFavs", g => favorites.has(g.id) && visibleGames.includes(g));
+
+  // 🩵 Toggle favorites section
+  $("#favorites").classList.toggle("hidden", $("#gridFavs").children.length === 0);
+
+  // 🪩 Keep hero up to date
   mountHero(heroIndex);
 }
+
+
+// ===== CLICK BLOCK DIAGNOSTIC (temporary) =====
+window.addEventListener("click", (e) => {
+  const el = e.target;
+  const top = document.elementFromPoint(e.clientX, e.clientY);
+  if (el !== top) {
+    console.log("⚠️ Click blocked! Element above card:", top);
+  }
+});
+
+// ✅ Global delegated click handler for all game cards
+document.addEventListener("click", (e) => {
+  const card = e.target.closest(".card[data-id]");
+  if (!card) return;
+
+  const id = card.getAttribute("data-id");
+  const game = GAMES.find(g => g.id === id);
+  if (!game) return;
+
+  e.preventDefault();
+  window.location.hash = encodeURIComponent(game.id);
+  showGameOverlay(game);
+});
 
 
 
@@ -2597,19 +2829,19 @@ window.addEventListener("hashchange", () => {
   if (!g) return hidePanel();
   if (playMode) showGameOnly(g);
   else showPanelForGame(g);
-});
 
-// Hide or show footer depending on mode
-window.addEventListener("hashchange", () => {
-  const footer = document.getElementById("siteFooter");
-  if (!footer) return;
-
-  if (location.hash.toLowerCase().endsWith("/play")) {
-    footer.style.display = "none";
-  } else {
-    footer.style.display = "";
+  // 🔄 Rebind overlay click events after switching back
+  if (document.querySelector("#gridTrending") || document.querySelector("#gridNew")) {
+    document.querySelectorAll(".card .thumb").forEach(card => {
+      card.onclick = () => {
+        const id = card.closest(".card").dataset.id;
+        const game = GAMES.find(g => g.id === id);
+        if (game) showGameOverlay(game);
+      };
+    });
   }
 });
+
 
 
 // --- Auto-load correct view on refresh
@@ -3226,27 +3458,66 @@ function initStars() {
   // Keep these sections visible when not in Proxies
   const HOME_SECTIONS = ["#hero","#featured","#trending","#favorites","#continue","#new","#catDock"];
 
-  function setDisplay(el, show) { if (el) el.style.display = show ? "" : "none"; }
+  const gamePanel = document.getElementById("gamePanel");
+if (gamePanel) gamePanel.classList.add("hidden-temp");
 
-  function showProxies() {
-    // hide home sections
-    HOME_SECTIONS.forEach(sel => setDisplay(document.querySelector(sel), false));
-    // hide inline game panel if open
-    setDisplay(document.getElementById("gamePanel"), false);
-    // show proxies
-    proxySection.style.display = "";
-    window.scrollTo(0,0);
+
+function showProxies() {
+  if (!proxySection) return;
+
+  // hide home sections
+  if (HOME_SECTIONS && Array.isArray(HOME_SECTIONS)) {
+    HOME_SECTIONS.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.style.display = "none";
+    });
   }
 
-  function hideProxies() {
-    // restore home sections
-    HOME_SECTIONS.forEach(sel => setDisplay(document.querySelector(sel), true));
-    // hide proxies
-    proxySection.style.display = "none";
-    // close portal if open
-    proxyPortal.style.display = "none";
-    proxyFrame.src = "";
+  // temporarily hide inline game panel if open
+  const gamePanel = document.getElementById("gamePanel");
+  if (gamePanel) {
+    gamePanel.classList.add("hidden-temp");
+    gamePanel.style.display = "none";
   }
+
+  // hide hacks section if open
+  const hacks = document.getElementById("hacksSection");
+  if (hacks) hacks.style.display = "none";
+
+  // show proxies section
+  proxySection.style.display = "block";
+  window.scrollTo(0, 0);
+}
+
+function hideProxies() {
+  if (!proxySection) return;
+
+  // hide proxies
+  proxySection.style.display = "none";
+  proxyPortal.style.display = "none";
+  proxyFrame.src = "";
+
+  // restore home sections
+  if (HOME_SECTIONS && Array.isArray(HOME_SECTIONS)) {
+    HOME_SECTIONS.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.style.display = "";
+    });
+  }
+
+  // restore game panel if temporarily hidden
+  const gp = document.getElementById("gamePanel");
+  if (gp && gp.classList.contains("hidden-temp")) {
+    gp.classList.remove("hidden-temp");
+    gp.style.display = "";
+  }
+
+  // restore hacks section if previously hidden
+  const hacks = document.getElementById("hacksSection");
+  if (hacks) hacks.style.display = "";
+}
+
+
 
  // ===== SIDEBAR ROUTING (FINAL PATCHED VERSION) =====
 if (sidebar) {
@@ -3553,12 +3824,256 @@ if (sidebar) {
 </script>
 
 
+<!-- LINKS OVERLAY (paste into your main JS file near proxies/hacks) -->
+<style>
+  /* Links overlay styles (scoped) */
+  #linksOverlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 999998;
+    background: rgba(3,8,14,0.72);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+  }
+  #linksOverlay .panel {
+    width: min(1100px, 96%);
+    max-height: 86vh;
+    overflow: auto;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(12,16,22,0.96), rgba(6,8,12,0.96));
+    padding: 18px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+  }
+  #linksOverlay .intro {
+    display:flex;
+    gap:14px;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    padding: 28px;
+    text-align:center;
+  }
+  #linksOverlay .intro .choices { display:flex; gap:12px; margin-top: 12px; }
+  #linksOverlay .choices button { padding:10px 18px; border-radius:12px; border:none; cursor:pointer; font-weight:600; }
+  #linksOverlay .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:12px; margin-top:14px; }
+  .link-card { background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; min-height:150px; }
+  .link-card img { width:100%; height:130px; object-fit:cover; display:block; }
+  .link-body { padding:10px; display:flex; gap:8px; flex-direction:column; flex:1; }
+  .link-title { font-weight:700; font-size:1rem; color:var(--accent,#43d0ff); }
+  .link-desc { font-size:0.9rem; opacity:0.85; margin-top:4px; flex:1; }
+  .link-actions { display:flex; gap:8px; margin-top:8px; }
+  .btn-small { padding:8px 10px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
+  #linksOverlay .topRow { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  #linksOverlay .closeBtn { background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.06); padding:8px 10px; border-radius:10px; cursor:pointer; }
+  #linksFilter { width:280px; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit; }
+</style>
+
+<div id="linksOverlay" aria-hidden="true">
+  <div class="panel" role="dialog" aria-modal="true">
+    <div class="topRow">
+      <div>
+        <h3 style="margin:0 0 6px;">External Links</h3>
+        <div style="opacity:.85;font-size:.95rem">Choose filtering to continue.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input id="linksFilter" placeholder="Filter (search name/desc/tags)" />
+        <button class="closeBtn" id="closeLinksOverlay">Close</button>
+      </div>
+    </div>
+
+    <div id="linksIntro" class="intro">
+      <div style="max-width:720px;">
+        <p style="margin:0 0 8px;">Content Keeper Filtering — choose a safety level.</p>
+        <div class="choices">
+          <button id="linksChoiceMedium" class="btn-small" style="background:linear-gradient(90deg,var(--glow,#00d0ff),var(--glow2,#a040ff)); color:#fff">Medium</button>
+          <button id="linksChoiceAggressive" class="btn-small" style="background:rgba(255,255,255,0.06); color:#fff">Aggressive (hide Neocities)</button>
+        </div>
+        <p style="opacity:.8; margin-top:10px; font-size:.92rem;">Medium shows everything from <code>gamelinks.json</code>. Aggressive hides links whose URL contains <code>neocities</code>.</p>
+      </div>
+    </div>
+
+    <div id="linksGridWrap" style="display:none;">
+      <div id="linksGrid" class="grid"></div>
+      <div style="margin-top:12px;display:flex;justify-content:center;">
+        <button id="linksCloseFooter" class="closeBtn">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const overlay = document.getElementById('linksOverlay');
+  const intro = document.getElementById('linksIntro');
+  const gridWrap = document.getElementById('linksGridWrap');
+  const grid = document.getElementById('linksGrid');
+  const btnClose = document.getElementById('closeLinksOverlay');
+  const btnCloseFooter = document.getElementById('linksCloseFooter');
+  const choiceMedium = document.getElementById('linksChoiceMedium');
+  const choiceAgg = document.getElementById('linksChoiceAggressive');
+  const filterInput = document.getElementById('linksFilter');
+
+  let links = [];       // raw loaded list
+  let currentList = []; // currently displayed
+
+  // Load gamelinks.json once
+  async function loadLinks() {
+    if (links.length) return links;
+    try {
+      const res = await fetch('gamelinks.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Failed loading gamelinks.json');
+      const data = await res.json();
+      links = Array.isArray(data) ? data : [];
+      // normalize: ensure fields exist
+      links = links.map(l => ({
+        title: l.title || 'Untitled',
+        url: l.url || '#',
+        description: l.description || '',
+        thumb: l.thumb || '',
+        tags: Array.isArray(l.tags) ? l.tags : (l.tags ? [l.tags] : [])
+      }));
+      return links;
+    } catch (err) {
+      console.error('gamelinks.json load error', err);
+      links = [];
+      return links;
+    }
+  }
+
+  function renderCards(list) {
+    grid.innerHTML = list.map(l => `
+      <article class="link-card" data-url="${l.url}">
+        ${l.thumb ? `<img src="${l.thumb}" alt="${l.title}">` : `<div style="height:130px;background:linear-gradient(180deg,#0b0e12,#081018);display:flex;align-items:center;justify-content:center;color:#999">No image</div>`}
+        <div class="link-body">
+          <div class="link-title">${escapeHtml(l.title)}</div>
+          <div class="link-desc">${escapeHtml(l.description)}</div>
+          <div class="link-actions">
+            <button class="btn-small" data-action="open">Open</button>
+            <a class="btn-small" data-action="newtab" href="${escapeAttr(l.url)}" target="_blank" rel="noopener">Open in new tab</a>
+          </div>
+        </div>
+      </article>
+    `).join('');
+
+    // add event handlers
+    grid.querySelectorAll('.link-card').forEach(card => {
+      const url = card.dataset.url;
+      card.querySelector('[data-action="open"]').onclick = () => {
+        // open inside overlay portal: we'll just open in new tab to keep things simple
+        // if you want an iframe inside overlay replace this with iframe loading logic
+        window.open(url, '_blank');
+      };
+    });
+  }
+
+  // Utility HTML escaping
+  function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+  function escapeAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+
+  // Filtering modes
+  function applyMode(list, mode) {
+    if (!list || !list.length) return [];
+    if (mode === 'aggressive') {
+      return list.filter(l => !/neocities/i.test(l.url));
+    }
+    return list.slice(); // medium => everything
+  }
+
+  // Search filter
+  function applySearch(list, q) {
+    if (!q) return list;
+    q = q.toLowerCase();
+    return list.filter(l => {
+      const hay = (l.title + ' ' + l.description + ' ' + (l.tags || []).join(' ')).toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  // Show overlay (used by sidebar or manual triggers)
+  async function showLinksOverlay(opts={mode:'medium'}) {
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden','false');
+    // ensure data loaded
+    await loadLinks();
+    // show intro if mode not chosen
+    if (!opts.forceMode) {
+      intro.style.display = 'block';
+      gridWrap.style.display = 'none';
+      filterInput.value = '';
+      return;
+    }
+    // else go directly to grid
+    const mode = opts.mode || 'medium';
+    currentList = applyMode(links, mode);
+    currentList = applySearch(currentList, '');
+    renderCards(currentList);
+    intro.style.display = 'none';
+    gridWrap.style.display = 'block';
+    overlay.scrollTop = 0;
+  }
+
+  function hide() {
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden','true');
+  }
+
+  // Intro buttons
+  choiceMedium.addEventListener('click', async () => {
+    await loadLinks();
+    currentList = applyMode(links, 'medium');
+    currentList = applySearch(currentList, filterInput.value.trim());
+    renderCards(currentList);
+    intro.style.display = 'none';
+    gridWrap.style.display = 'block';
+  });
+  choiceAgg.addEventListener('click', async () => {
+    await loadLinks();
+    currentList = applyMode(links, 'aggressive');
+    currentList = applySearch(currentList, filterInput.value.trim());
+    renderCards(currentList);
+    intro.style.display = 'none';
+    gridWrap.style.display = 'block';
+  });
+
+  // close buttons
+  btnClose.addEventListener('click', hide);
+  btnCloseFooter.addEventListener('click', hide);
+
+  // filter input live
+  filterInput.addEventListener('input', (e)=>{
+    const q = e.target.value.trim();
+    const filtered = applySearch(currentList.length ? currentList : links, q);
+    renderCards(filtered);
+  });
+
+  // click outside panel closes
+  overlay.addEventListener('click', (e)=>{
+    if (e.target === overlay) hide();
+  });
+
+  // Expose showLinksOverlay to global so you can call it from other handlers
+  window.showLinksOverlay = showLinksOverlay;
+
+  // Hook sidebar nav if you have an <a data-filter="links"> or similar
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-filter="links"], button[data-filter="links"], [data-open-links]');
+    if (!a) return;
+    e.preventDefault();
+    // show intro so user picks mode
+    showLinksOverlay({ forceMode:false });
+  });
+
+})();
+</script>
 
 
 <script>
 // ===== HACKS ROUTER — FINAL LAYOUT-STABLE VERSION =====
 function showHacksSection() {
-  // 🚫 Hide only MAIN content sections (not global HUD/widgets)
+  // Hide home content
   document.querySelectorAll(`
     #hero,
     #featured,
@@ -3568,25 +4083,30 @@ function showHacksSection() {
     #new,
     #catDock,
     #proxySection
-  `).forEach(el => {
-    if (el) el.style.display = "none";
-  });
+  `).forEach(el => el && (el.style.display = "none"));
 
-  // 🟦 Show Hacks section cleanly
+  // Temporarily hide game panel if open
+  const gamePanel = document.getElementById("gamePanel");
+  if (gamePanel) {
+    gamePanel.classList.add("hidden-temp-hacks");
+    gamePanel.style.display = "none";
+  }
+
+  // Show Hacks section on top
   const hacks = document.getElementById("hacksSection");
   if (hacks) {
     hacks.removeAttribute("hidden");
     hacks.classList.remove("hidden");
     hacks.style.display = "block";
     hacks.style.position = "relative";
-    hacks.style.zIndex = "3";
+    hacks.style.zIndex = "9999"; // 🟣 ensures it's on top
     hacks.style.minHeight = "100vh";
     hacks.style.opacity = "0";
-    hacks.style.transition = "opacity 0.25s ease";
+    hacks.style.transition = "opacity 0.3s ease";
     requestAnimationFrame(() => (hacks.style.opacity = "1"));
   }
 
-  // Optional — add blur/dim effect to HUD + widgets while in Hacks mode
+  // Dim widgets/HUD
   document.querySelectorAll(`#widgets, #statusDock, #bottomDock, #footer`)
     .forEach(el => {
       if (el) {
@@ -3607,10 +4127,11 @@ function hideHacks() {
     setTimeout(() => {
       hacks.style.display = "none";
       hacks.setAttribute("hidden", "");
-    }, 200);
+      hacks.style.zIndex = ""; // restore z-index
+    }, 250);
   }
 
-  // 🔁 Restore main content sections
+  // Restore main content
   document.querySelectorAll(`
     #hero,
     #featured,
@@ -3620,11 +4141,16 @@ function hideHacks() {
     #new,
     #catDock,
     #proxySection
-  `).forEach(el => {
-    if (el) el.style.display = "";
-  });
+  `).forEach(el => el && (el.style.display = ""));
 
-  // Restore widgets/HUD to normal clarity
+  // 🟢 Restore game panel if temporarily hidden
+  const gp = document.getElementById("gamePanel");
+  if (gp && gp.classList.contains("hidden-temp-hacks")) {
+    gp.classList.remove("hidden-temp-hacks");
+    gp.style.display = "";
+  }
+
+  // Restore widgets/HUD
   document.querySelectorAll(`#widgets, #statusDock, #bottomDock, #footer`)
     .forEach(el => {
       if (el) {
@@ -3636,6 +4162,7 @@ function hideHacks() {
 
   document.body.style.overflow = "";
 }
+
 </script>
 
 
@@ -3667,6 +4194,8 @@ function hideHacks() {
   <div class="introContent">
     <h1>Deblocked <span class="grad">V4</span></h1>
     <h2 id="introType"></h2>
+    <button id="skipIntro">Skip</button>
+
   </div>
 </div>
 
@@ -3691,7 +4220,7 @@ function hideHacks() {
 /* ✨ Fade-out animation */
 #introOverlay.fade-out {
   opacity: 0;
-  transform: translateY(-60px);
+  transform: none;
   pointer-events: none;
 }
 
@@ -3714,7 +4243,6 @@ function hideHacks() {
   pointer-events: none;
   animation: glowPulse 3s ease-in-out infinite alternate;
 }
-
 @keyframes glowPulse {
   from { opacity: 0.6; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1.05); }
@@ -3754,7 +4282,40 @@ function hideHacks() {
 .color-proxies { color: #00d0ff; }
 .color-games { color: #4dff91; }
 .color-visuals { color: #a040ff; }
+
+/* 🟢 SKIP BUTTON — now centered under the text */
+#skipIntro {
+  position: relative;
+  display: inline-block;
+  margin-top: 22px;
+  background: linear-gradient(90deg, var(--glow, #00d0ff), var(--glow2, #a040ff));
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 10px 28px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+#skipIntro.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#skipIntro:hover {
+  transform: scale(1.05);
+  box-shadow: none;
+}
+
+
 </style>
+
 
 <script>
 /* --- STARS --- */
@@ -3834,6 +4395,19 @@ function typeHTML(line) {
 typeHTML(lines[t]);
 </script>
 
+<script>
+/* --- Skip Button Logic --- */
+const skipBtn = document.getElementById("skipIntro");
+
+// Make it fade in after ~2 seconds
+setTimeout(() => skipBtn.classList.add("visible"), 2000);
+
+skipBtn.addEventListener("click", () => {
+  const intro = document.getElementById("introOverlay");
+  intro.classList.add("fade-out");
+  setTimeout(() => intro.remove(), 900);
+});
+</script>
 
 
 
