@@ -31,8 +31,21 @@
     "copyandpase": false,
     "url": "https://example.com/hack4",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-25%20001322.png?updatedAt=1748150014607",
-    "file": "edpuzzle.js",
+    "file": "ezpuzzle.js",
     "tags": ["bookmarklet","edpuzzle"],
+    "added": "2025-10-20",
+    "attribute": {
+      "cnp": "alert('Kahoot boost activated')"
+    }
+  },
+   {
+    "title": "Quizalize Hacks",
+    "description": "Drag this to your bookmarks bar, it will show every awnser for every question",
+    "copyandpase": false,
+    "url": "https://example.com/hack4",
+    "game_image_icon": "https://yt3.googleusercontent.com/hu7Bph5OnBP1zyRptIYEWpyhmyfbShwm-b4L3M-Wqaf4uu1Aj4FgUBbLcKhQrtM9WTGuP-n9AA=s900-c-k-c0x00ffffff-no-rj",
+    "file": "quizalize.js",
+    "tags": ["bookmarklet","quizalize"],
     "added": "2025-10-20",
     "attribute": {
       "cnp": "alert('Kahoot boost activated')"
