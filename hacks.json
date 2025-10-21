@@ -1,90 +1,78 @@
 [
   {
     "title": "Blooket Hacks",
-    "description": "To Enable, Drag the Box to your Bookmarks bar, Hop on Blooket, and Click it",
-    "copyandpase": false,
+    "description": "Drag this to your bookmarks bar, open Blooket, then click the bookmarklet to run the full hack script.",
+    "copyandpase": true,
     "url": "https://example.com/hack1",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-25%20000639.png?updatedAt=1748149613402",
+    "file": "blooket.js",
+    "tags": ["bookmarklet","blooket"],
+    "added": "2025-10-20",
     "attribute": {
       "cnp": "alert('Tool 1 activated')"
     }
   },
   {
-    "title": "Kahoot Hacks",
-    "description": "To Enable, Click the Hack box to Copy, hop on Kahoot, and Inspect, and Paste the Code in the Console, then Look at the Hosters Screen, and Type in the Scrambled Words in the URL",
-    "copyandpase": false,
-    "url": "https://example.com/hack2",
-    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-25%20001031.png?updatedAt=1748149841303",
-    "attribute": {
-      "cnp": "alert('Tool 2 activated')"
-    }
-  },
-  {
     "title": "Nitro Type Hacks",
-    "description": "To Enable, Drag the Hack Box into your Bookmarks bar, Hop on Nitrotype, and click it, It will fill in the Sentance no matter what key you type",
-    "copyandpase": true,
+    "description": "Copy or drag to bookmarks, open Nitro Type, then click the bookmarklet to auto-fill sentences.",
+    "copyandpase": false,
     "url": "https://example.com/hack3",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-26%20221715.png?updatedAt=1748315881227",
+    "file": "nitro.js",
+    "tags": ["bookmarklet","nitrotype"],
+    "added": "2025-10-20",
     "attribute": {
       "cnp": "alert('Quizizz cheat activated')"
     }
   },
   {
     "title": "Edpuzzle Hacks",
-    "description": "To Enable, drag the Hack box into your Bookmarks bar, Hop on Edpuzzle, and Click it.",
+    "description": "Drag this to your bookmarks bar and click while on Edpuzzle to run the script.",
     "copyandpase": false,
     "url": "https://example.com/hack4",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-25%20001322.png?updatedAt=1748150014607",
+    "file": "edpuzzle.js",
+    "tags": ["bookmarklet","edpuzzle"],
+    "added": "2025-10-20",
     "attribute": {
       "cnp": "alert('Kahoot boost activated')"
     }
   },
   {
     "title": "Prodigy Hacks",
-    "description": "To Enable, Drag the Hack box into your Bookmarks bar, and Click it once your on Prodigy",
+    "description": "Drag into bookmarks and click while on Prodigy to run the full hack script.",
     "copyandpase": true,
     "url": "https://example.com/hack5",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-27%20104208.png",
+    "file": "prodigy.js",
+    "tags": ["bookmarklet","prodigy"],
+    "added": "2025-10-20",
     "attribute": {
       "cnp": "alert('Classcraft power-up activated')"
     }
   },
   {
-    "title": "Chess Hacks",
-    "description": "To Enable, To Enable To Enable, To Enabl",
-    "copyandpase": false,
-    "url": "https://example.com/hack6",
-    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-27%20104825.png",
-    "attribute": {
-      "cnp": "alert('Prodigy magic activated')"
-    }
-  },
-  {
-    "title": "GimKit Hacks",
-    "description": "Unlock all Edpuzzle content. Copy this code to proceed.",
-    "copyandpase": true,
-    "url": "https://example.com/hack7",
-    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-27%20105224.png",
-    "attribute": {
-      "cnp": "alert('Edpuzzle unlocked')"
-    }
-  },
-  {
     "title": "Quizzez Hacks",
-    "description": "Speed up your Gimkit gameplay. Drag to bookmarks and click to enable.",
+    "description": "Drag to bookmarks then click during gameplay to apply speed/utility features.",
     "copyandpase": false,
     "url": "https://example.com/hack8",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-27%20105450.png",
+    "file": "quizzez.js",
+    "tags": ["bookmarklet","quiz"],
+    "added": "2025-10-20",
     "attribute": {
       "cnp": "alert('Gimkit turbo activated')"
     }
   },
   {
     "title": "Curipod Hacks",
-    "description": "Working on it, Il tell when its out",
+    "description": "Work-in-progress — drag/copy will be available once the full script is uploaded.",
     "copyandpase": true,
     "url": "https://example.com/hack9",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-27%20110002.png",
+    "file": "curipod-hacks.js",
+    "tags": ["bookmarklet","curipod"],
+    "added": "2025-10-20",
     "attribute": {
       "cnp": "alert('Nearpod enhanced')"
     }
