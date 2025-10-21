@@ -3652,75 +3652,78 @@ if (sidebar) {
 
 <script>
 (() => {
-  const HACKS_JSON = '/hacks.json'; // ✅ Correct path for Neocities
-  const basePath = `${location.origin}/hacks/`; // ✅ Correct base folder
-  const grid = document.getElementById('hacksGrid');
-  const searchInput = document.getElementById('hacksSearch');
-  const sortSel = document.getElementById('hacksSort');
-  const randomBtn = document.getElementById('hacksRandom');
+  const HACKS_JSON = "hacks.json"; // ✅ relative path (root)
+  const basePath = `${location.origin}/hacks/`; // ✅ folder with all hack files
+  const grid = document.getElementById("hacksGrid");
+  const searchInput = document.getElementById("hacksSearch");
+  const sortSel = document.getElementById("hacksSort");
+  const randomBtn = document.getElementById("hacksRandom");
 
   let hacks = [];
 
-  function slugify(s){ return (s||'').toLowerCase().replace(/[^\w]+/g,'-').replace(/^-|-$/g,''); }
-  function safeText(s){ return (s||'').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+  function slugify(s) {
+    return (s || "").toLowerCase().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
+  }
+  function safeText(s) {
+    return (s || "").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+  }
 
-  function fileFor(h){
+  function fileFor(h) {
     if (h.file) return h.file;
     const base = slugify(h.title);
     return h.minified ? `${base}.min.js` : `${base}.js`;
   }
 
-  // ✅ Handles all wrapping logic safely
-  function buildBookmarkletFromText(text) {
-    if (!text) return '';
-
-    text = text.trim();
+  // ✅ Wrap any fetched hack file into a valid bookmarklet
+  function buildBookmarkletFromText(fullCode) {
+    if (!fullCode) return "";
+    fullCode = fullCode.trim();
 
     // Already a bookmarklet
-    if (text.startsWith('javascript:')) {
-      return text;
+    if (fullCode.startsWith("javascript:")) return fullCode;
+
+    // Likely an IIFE or function
+    const looksLikeFunc = /^(?:\(?function\b|!\s*function|\(\s*\)\s*=>|\(async\s+function)/.test(fullCode);
+    if (looksLikeFunc) {
+      return `javascript:${fullCode.replace(/\s*;?\s*$/, "")};void(0);`;
     }
 
-    // Looks like a function/IIFE — wrap with javascript: prefix
-    if (/^\(?function\b|^\(\s*\)\s*=>|^!function\b|^\(async function\b/.test(text)) {
-      return `javascript:${text.replace(/\s*;?\s*$/, '')};void(0);`;
-    }
-
-    // Otherwise wrap plain JS inside an IIFE
-    return `javascript:(function(){${text}})();void(0);`;
+    // Default → wrap in anonymous IIFE
+    return `javascript:(function(){${fullCode}})();void(0);`;
   }
 
+  // ✅ Fetch full hack file and convert to bookmarklet
   async function resolveBookmarklet(h) {
     const fileName = fileFor(h);
     const url = basePath + fileName;
 
     try {
-      const res = await fetch(url, { cache: 'no-store' });
+      const res = await fetch(url, { cache: "no-store" });
       const text = await res.text();
 
-      // 🧠 Detect if fallback HTML (Neocities not_found.html) got returned
-      if (text.includes('<!DOCTYPE html') && text.includes('<html')) {
-        console.warn(`⚠️ ${fileName} returned HTML instead of JS — check that it exists in /hacks/`);
-        return 'javascript:alert("Hack file not found or mislocated!");';
+      // Detect if Neocities returned 404 HTML
+      if (text.includes("<!DOCTYPE html")) {
+        console.warn(`⚠️ ${fileName} returned HTML (likely 404)`);
+        return 'javascript:alert("⚠️ Hack file not found or mislocated!");';
       }
 
-      // ✅ Return proper bookmarklet version
       return buildBookmarkletFromText(text);
     } catch (err) {
-      console.error('Fetch failed for', url, err);
+      console.error("❌ Fetch failed for:", fileName, err);
       return 'javascript:alert("Error loading hack file!");';
     }
   }
 
-  function renderCard(h){
-    const el = document.createElement('article');
-    el.className = 'hack-card';
-    const thumb = h.game_image_icon || 'https://via.placeholder.com/800x400?text=Hack';
-    const desc = safeText(h.description || 'No description available.');
-    const title = safeText(h.title);
+  // ✅ Render one hack card
+  function renderCard(h) {
+    const el = document.createElement("article");
+    el.className = "hack-card";
+    const thumb = h.thumb || h.game_image_icon || "https://via.placeholder.com/800x400?text=Hack";
+    const desc = safeText(h.description || "No description available.");
+    const title = safeText(h.title || "Untitled Hack");
 
     el.innerHTML = `
-      <img class="hack-thumb" src="${thumb}" alt="${title} screenshot" onerror="this.src='https://via.placeholder.com/800x400?text=Hack'"/>
+      <img class="hack-thumb" src="${thumb}" alt="${title}" onerror="this.src='https://via.placeholder.com/800x400?text=Hack'">
       <div class="hack-body">
         <h4 class="hack-title" style="color:var(--accent,#43d0ff);">${title}</h4>
         <p class="hack-desc">${desc}</p>
@@ -3728,78 +3731,92 @@ if (sidebar) {
           ${
             h.copyandpase
               ? `<button class="btn small primary btn-copy">Copy Code</button>`
-              : `<a class="btn small primary btn-drag" draggable="true">Drag to Bookmarks</a>`
+              : `<a href="#" class="btn small primary btn-drag" draggable="true">Drag to Bookmarks</a>`
           }
         </div>
       </div>
     `;
 
-    // 📋 Console copy-type
+    // 📋 Copy button
     if (h.copyandpase) {
-      const btn = el.querySelector('.btn-copy');
-      btn.addEventListener('click', async () => {
+      const btn = el.querySelector(".btn-copy");
+      btn.addEventListener("click", async () => {
         const url = basePath + fileFor(h);
         try {
           const r = await fetch(url);
           const text = await r.text();
+
+          // Detect HTML fallback
+          if (text.includes("<!DOCTYPE html")) {
+            alert("⚠️ Hack file not found or mislocated!");
+            return;
+          }
+
           await navigator.clipboard.writeText(text);
-          btn.textContent = 'Copied!';
-          setTimeout(() => (btn.textContent = 'Copy Code'), 1200);
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy Code"), 1200);
         } catch (err) {
-          alert('Could not copy. Check console.');
+          alert("❌ Could not copy code. Check console.");
           console.error(err);
         }
       });
     }
 
-    // 🧲 Bookmarklet-type
-    if (!h.copyandpase) {
-      const dragEl = el.querySelector('.btn-drag');
-      dragEl.addEventListener('dragstart', async (e) => {
-        const href = await resolveBookmarklet(h);
-        e.dataTransfer.setData('text/uri-list', href);
-        e.dataTransfer.setData('text/plain', href);
-      });
+ // 🧲 Bookmarklet drag/click
+if (!h.copyandpase) {
+  const dragEl = el.querySelector(".btn-drag");
 
-      dragEl.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const href = await resolveBookmarklet(h);
-        await navigator.clipboard.writeText(href);
-        alert('Copied bookmarklet to clipboard — drag or paste into your bookmarks bar.');
-      });
-    }
+  // ✅ Give link a working bookmarklet href (so drag → javascript:... works)
+  resolveBookmarklet(h).then(href => dragEl.setAttribute("href", href));
+
+  dragEl.addEventListener("dragstart", async (e) => {
+    const href = await resolveBookmarklet(h);
+    e.dataTransfer.setData("text/uri-list", href);
+    e.dataTransfer.setData("text/plain", href);
+    e.dataTransfer.setData("text/html", `<a href="${href}">${h.title}</a>`);
+  });
+
+  dragEl.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const href = await resolveBookmarklet(h);
+    await navigator.clipboard.writeText(href);
+    alert(`✅ Copied full bookmarklet for "${h.title}". You can paste or drag it into your bookmarks bar.`);
+  });
+}
+
 
     return el;
   }
 
+  // ✅ Render all hacks
   function renderAll(list) {
-    grid.innerHTML = '';
+    grid.innerHTML = "";
     if (!list.length) {
       grid.innerHTML = `<p class="soft small">No hacks found.</p>`;
       return;
     }
-    list.forEach(h => grid.appendChild(renderCard(h)));
+    list.forEach((h) => grid.appendChild(renderCard(h)));
   }
 
-  // 🚀 Load everything
-  (async function init(){
+  // 🚀 Load hacks.json on start
+  (async function init() {
     try {
-      const res = await fetch(HACKS_JSON, { cache: 'no-store' });
+      const res = await fetch(HACKS_JSON, { cache: "no-store" });
       if (!res.ok) throw new Error(`${res.status} loading hacks.json`);
       const data = await res.json();
 
       hacks = Array.isArray(data) ? data : [];
-      hacks.forEach(h => (h.file = h.file || fileFor(h)));
+      hacks.forEach((h) => (h.file = h.file || fileFor(h)));
 
       renderAll(hacks);
     } catch (err) {
-      console.error('Failed to load hacks.json', err);
+      console.error("Failed to load hacks.json", err);
       grid.innerHTML = `<p class="soft small">Failed to load hacks list.</p>`;
     }
   })();
 
   // 🔍 Filters
-  searchInput?.addEventListener('input', (e) => {
+  searchInput?.addEventListener("input", (e) => {
     const q = e.target.value.toLowerCase().trim();
     const filtered = hacks.filter(
       (h) => h.title.toLowerCase().includes(q) || h.description.toLowerCase().includes(q)
@@ -3807,21 +3824,23 @@ if (sidebar) {
     renderAll(filtered);
   });
 
-  sortSel?.addEventListener('change', (e) => {
+  sortSel?.addEventListener("change", (e) => {
     const mode = e.target.value;
     const arr = [...hacks];
-    if (mode === 'alpha') arr.sort((a, b) => a.title.localeCompare(b.title));
+    if (mode === "alpha") arr.sort((a, b) => a.title.localeCompare(b.title));
     else arr.reverse();
     renderAll(arr);
   });
 
-  randomBtn?.addEventListener('click', () => {
+  randomBtn?.addEventListener("click", () => {
     if (!hacks.length) return;
     const pick = hacks[Math.floor(Math.random() * hacks.length)];
     renderAll([pick]);
   });
 })();
 </script>
+
+
 
 
 <!-- LINKS OVERLAY (paste into your main JS file near proxies/hacks) -->
