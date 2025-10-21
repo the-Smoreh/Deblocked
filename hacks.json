@@ -90,6 +90,19 @@
       "cnp": "alert('Gimkit turbo activated')"
     }
   },
+   {
+    "title": "Katamari Rolling Ball",
+    "description": "Drag to bookmarks, you can spawn a ball that eats text",
+    "copyandpase": false,
+    "url": "https://example.com/hack8",
+    "game_image_icon": "https://img.freepik.com/premium-photo/black-metal-ball-3d-render_88211-5826.jpg",
+    "file": "katamari.js",
+    "tags": ["bookmarklet","quiz"],
+    "added": "2025-10-20",
+    "attribute": {
+      "cnp": "alert('Gimkit turbo activated')"
+    }
+  },
   {
     "title": "Curipod Hacks",
     "description": "Work-in-progress — drag/copy will be available once the full script is uploaded.",
