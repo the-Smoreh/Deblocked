@@ -757,6 +757,32 @@ body.ui-frosted #featured .carousel {
 #gamePanel .detail-card h2{
   margin:0 0 8px;font:900 32px/1 Outfit,Inter;
 }
+#gamePanel .inline-exit-btn{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  border:1px solid rgba(207,227,248,0.18);
+  background:rgba(15,23,36,0.72);
+  color:#fff;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  transition:transform var(--speed),background .25s ease,box-shadow .25s ease;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+#gamePanel .inline-exit-btn:hover{
+  transform:scale(1.05);
+  background:rgba(15,23,36,0.85);
+  box-shadow:0 12px 30px rgba(0,0,0,0.28);
+}
+#gamePanel .inline-exit-btn:active{
+  transform:scale(0.96);
+}
 #gamePanel .detail-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
 #gamePanel iframe{
   width:100%;height:72vh;border:1px solid var(--line);
@@ -2656,60 +2682,42 @@ function renderGamePanel(game) {
   if (!panel) return;
 
   // 🔧 Build game info and preview layout
- panel.innerHTML = `
-  <div class="detail-card" style="
-    position: relative;
-    margin-top: -25px;
-    padding: 24px 28px;
-    min-height: 70vh;           /* 🟢 makes the panel about x2 taller */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  ">
-
-
-    
+  panel.innerHTML = `
+    <div class="detail-card" style="
+      position:relative;
+      margin-top:-25px;
+      padding:24px 28px;
+      min-height:70vh;
+    ">
+      <button class="inline-exit-btn" id="closeGamePanel" type="button" title="Exit">✕</button>
 
       <!-- Game icon -->
-      <img src="${game.thumb}" alt="${game.name}" 
-           style="width:180px;height:180px;border-radius:12px;object-fit:cover;margin-bottom:12px;">
+      <img src="${game.thumb}" alt="${game.name}"
+           style="width:180px;height:180px;border-radius:12px;object-fit:cover;">
 
-      <div style="flex:1;">
-        <h2>${game.name}</h2>
-        <p class="soft small" style="margin:0 0 8px;">${(game.tags || []).join(" • ")}</p>
-        <p class="soft" style="margin:0 0 12px;">${game.desc || "No description provided."}</p>
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px;">
+        <div>
+          <h2>${game.name}</h2>
+          <p class="soft small" style="margin:0 0 8px;">${(game.tags || []).join(" • ")}</p>
+          <p class="soft" style="margin:0;">${game.desc || "No description provided."}</p>
+        </div>
 
         <!-- Action buttons -->
-        <div class="detail-actions" style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div class="detail-actions">
           <button class="btn primary" id="playEmbeddedBtn">▶ Play Now</button>
           <a class="btn" href="${game.url}" target="_blank" rel="noopener">Open in new tab</a>
         </div>
 
-<!-- Iframe toolbar -->
-<div class="toolbar" style="
-  margin-top:12px;
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:8px;
-  margin-bottom:10px;
-">
-  <button class="control-btn" id="iframeRefreshBtn" title="Refresh">⟳</button>
-  <button class="control-btn" id="iframeFsBtn" title="Fullscreen">⛶</button>
-  <button class="control-btn" id="closeGamePanel" title="Exit">✕</button>
-</div>
-
-
         <!-- 🟢 Preview image shows first -->
         <div class="iframePreview" id="iframePreview" style="margin-top:14px;">
-          <img id="previewImage" 
-               src="${game.preview || game.thumb}" 
+          <img id="previewImage"
+               src="${game.preview || game.thumb}"
                alt="${game.name} preview"
                style="width:100%;border-radius:16px;object-fit:cover;max-height:70vh;">
         </div>
 
         <!-- 🕹️ Iframe starts hidden -->
-        <iframe id="gameIframe" allowfullscreen 
+        <iframe id="gameIframe" allowfullscreen
                 style="display:none;width:100%;height:80vh;border:1px solid var(--line);border-radius:16px;background:#000;margin-top:10px;"></iframe>
       </div>
     </div>
@@ -2718,21 +2726,11 @@ function renderGamePanel(game) {
   // 🔗 Controls
   $("#closeGamePanel").onclick = () => { location.hash = ""; };
 
-  const iframe = $("#gameIframe");
-  const preview = $("#iframePreview");
-  
-// ▶ Play button — go to /Play route
-$("#playEmbeddedBtn").onclick = () => {
-  addContinueGame(game.id); // track it
-  location.hash = encodeURIComponent(game.id) + "/Play";
-};
-
-
-  // 🔁 Refresh button
-  $("#iframeRefreshBtn").onclick = () => { if (iframe.src) iframe.src = iframe.src; };
-
-  // ⛶ Fullscreen button
-  $("#iframeFsBtn").onclick = () => iframe.requestFullscreen?.();
+  // ▶ Play button — go to /Play route
+  $("#playEmbeddedBtn").onclick = () => {
+    addContinueGame(game.id); // track it
+    location.hash = encodeURIComponent(game.id) + "/Play";
+  };
 
 }
 
