@@ -757,6 +757,32 @@ body.ui-frosted #featured .carousel {
 #gamePanel .detail-card h2{
   margin:0 0 8px;font:900 32px/1 Outfit,Inter;
 }
+#gamePanel .inline-exit-btn{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  border:1px solid rgba(207,227,248,0.18);
+  background:rgba(15,23,36,0.72);
+  color:#fff;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  transition:transform var(--speed),background .25s ease,box-shadow .25s ease;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+#gamePanel .inline-exit-btn:hover{
+  transform:scale(1.05);
+  background:rgba(15,23,36,0.85);
+  box-shadow:0 12px 30px rgba(0,0,0,0.28);
+}
+#gamePanel .inline-exit-btn:active{
+  transform:scale(0.96);
+}
 #gamePanel .detail-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
 #gamePanel iframe{
   width:100%;height:72vh;border:1px solid var(--line);
@@ -2666,6 +2692,7 @@ function renderGamePanel(game) {
     flex-direction: column;
     justify-content: flex-start;
   ">
+      <button class="inline-exit-btn" id="closeGamePanel" title="Exit">✕</button>
 
 
     
@@ -2685,21 +2712,6 @@ function renderGamePanel(game) {
           <a class="btn" href="${game.url}" target="_blank" rel="noopener">Open in new tab</a>
         </div>
 
-<!-- Iframe toolbar -->
-<div class="toolbar" style="
-  margin-top:12px;
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:8px;
-  margin-bottom:10px;
-">
-  <button class="control-btn" id="iframeRefreshBtn" title="Refresh">⟳</button>
-  <button class="control-btn" id="iframeFsBtn" title="Fullscreen">⛶</button>
-  <button class="control-btn" id="closeGamePanel" title="Exit">✕</button>
-</div>
-
-
         <!-- 🟢 Preview image shows first -->
         <div class="iframePreview" id="iframePreview" style="margin-top:14px;">
           <img id="previewImage" 
@@ -2718,21 +2730,11 @@ function renderGamePanel(game) {
   // 🔗 Controls
   $("#closeGamePanel").onclick = () => { location.hash = ""; };
 
-  const iframe = $("#gameIframe");
-  const preview = $("#iframePreview");
-  
 // ▶ Play button — go to /Play route
 $("#playEmbeddedBtn").onclick = () => {
   addContinueGame(game.id); // track it
   location.hash = encodeURIComponent(game.id) + "/Play";
 };
-
-
-  // 🔁 Refresh button
-  $("#iframeRefreshBtn").onclick = () => { if (iframe.src) iframe.src = iframe.src; };
-
-  // ⛶ Fullscreen button
-  $("#iframeFsBtn").onclick = () => iframe.requestFullscreen?.();
 
 }
 
