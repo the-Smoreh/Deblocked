@@ -90,6 +90,19 @@
       "cnp": "alert('Gimkit turbo activated')"
     }
   },
+  {
+    "title": "Dog Whistle++",
+    "description": "Drag to bookmarks, it will show 9 Different HZ Sounds, and fake Audio Bar to prove yourself Innocent",
+    "copyandpase": false,
+    "url": "https://example.com/hack8",
+    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-10-24%20001711.png",
+    "file": "whistle.js",
+    "tags": ["bookmarklet","quiz"],
+    "added": "2025-10-20",
+    "attribute": {
+      "cnp": "alert('Gimkit turbo activated')"
+    }
+  },
    {
     "title": "Katamari Rolling Ball",
     "description": "Drag to bookmarks, you can spawn a ball that eats text",
