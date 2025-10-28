@@ -9,7 +9,62 @@
         "featured": false,
         "url": "https://deblocked-chat-production.up.railway.app/"
     },
-    
+     {
+        "title": "Bendy and the Ink Machine",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsDZD08LE1j2nyQrTVL6VFOilI52_JTqEHb_jZfoK43_ed320zTRNNKcgcFAQkPcOPk-g&usqp=CAU",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://hzfznlbigb.pratikpatel.in/resources/semag/bendy/index.html"
+    },
+     {
+        "title": "Cuphead",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://user-images.githubusercontent.com/53346722/66120658-fa659480-e5a0-11e9-9c6a-247a1605159e.jpg",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://hzfznlbigb.pratikpatel.in/resources/semag/cuphead/index.html"
+    },
+     {
+        "title": "Hollow Knight",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKxwFbL-3n08lpsFf7VdeJdDilR6XGn3utcg&s",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://hzfznlbigb.pratikpatel.in/resources/semag/hollowknight/index.html"
+    },
+
+     {
+        "title": "Buckshot Roulette",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAXc6jiuw5uQUIrjycUC7aXv6jXL9gLYhuPw&s",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://hzfznlbigb.pratikpatel.in/resources/semag/buckshot-roulette/index.html"
+    },
+     {
+        "title": "Undertale",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://www.freeiconspng.com/thumbs/undertale-icon/undertale-icon-27.png",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://hzfznlbigb.pratikpatel.in/resources/semag/undertale/index.html"
+    },
+
+     {
+        "title": "People Playground",
+        "description": "WARNING: This is a 2D Semi-Realistic Game that has Blood",
+        "game_image_icon": "https://m.media-amazon.com/images/M/MV5BMDU4NjMzMDUtNWZkYS00NzIwLWI3YjUtMDA1ZTAzNjEyOGRkXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://hzfznlbigb.pratikpatel.in/resources/semag/people-playground/index.html"
+    },
     {
         "title": "Classic Deblocked",
         "description": "Navigate a ball through a twisting 3D tunnel, avoiding obstacles in this fast-paced game!",
