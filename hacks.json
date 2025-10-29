@@ -78,6 +78,19 @@
     }
   },
    {
+    "title": "Piano Bookmarklet",
+    "description": "You Dont click it, you click keys to press them, best to play either when a class is loud, or very silent.",
+    "copyandpase": false,
+    "url": "https://example.com/hack8",
+    "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS64bHM1ETYOyCLZxC6bnVdEgCyHc9Hurjkbg&s",
+    "file": "piano.js",
+    "tags": ["bookmarklet","quiz"],
+    "added": "2025-10-20",
+    "attribute": {
+      "cnp": "alert('Gimkit turbo activated')"
+    }
+  },
+   {
     "title": "Lincon Sora AI Confette",
     "description": "Drag to bookmarks, it will change all text, and drop Lincon PNG's from the screen, and then it goes back to normal",
     "copyandpase": false,
