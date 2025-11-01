@@ -29,6 +29,7 @@ body{
   background:var(--bg);
   color:var(--fg);
   overflow-y:overlay;
+  overflow-x:hidden;
 }
 /* Kill all underlines and keep inherited color everywhere */
 a, a:visited, a:hover,
@@ -317,6 +318,105 @@ body.game-active .game-frame{height:100dvh!important;min-height:100dvh!important
 .social{position:fixed;left:14px;bottom:14px;z-index:6;display:flex;gap:8px;animation:fadeUp .8s .6s ease both}
 .social a{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:#101722;border:1px solid var(--line);color:#dfeaf7;transition:var(--speed)}
 .social a:hover{transform:translateY(-3px)}
+
+/* ---------- INLINE GAME PANEL ---------- */
+#gamePanel{padding:28px;animation:fadeUp .4s ease}
+#gamePanel .detail-card{
+  position:relative;
+  display:flex;
+  gap:24px;
+  align-items:flex-start;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:24px;
+  backdrop-filter:var(--blur);
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
+}
+#gamePanel .detail-card img{
+  width:180px;
+  height:180px;
+  border-radius:14px;
+  object-fit:cover;
+}
+#gamePanel .detail-card h2{margin:0 0 8px;font:900 32px/1 Outfit,Inter}
+#gamePanel .detail-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+#gamePanel iframe{
+  width:100%;
+  height:72vh;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#000;
+  margin-top:16px;
+}
+#gamePanel .game-fullscreen{
+  padding:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+#gamePanel .inline-exit-btn{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  border:1px solid rgba(207,227,248,.18);
+  background:rgba(15,23,36,.72);
+  color:#fff;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  transition:transform var(--speed),background .25s ease,box-shadow .25s ease;
+}
+#gamePanel .inline-exit-btn:hover{
+  transform:scale(1.05);
+  background:rgba(15,23,36,.85);
+  box-shadow:0 12px 30px rgba(0,0,0,.28);
+}
+#gamePanel .inline-exit-btn:active{transform:scale(.96)}
+@media (max-width:900px){
+  #gamePanel .detail-card{flex-direction:column;align-items:center;text-align:center}
+  #gamePanel .detail-card img{margin-bottom:14px}
+  #gamePanel .inline-exit-btn{position:static;margin-left:auto;margin-bottom:12px}
+}
+#iframePreview img{opacity:0;transition:opacity .6s ease}
+#iframePreview img[src]{opacity:1}
+
+/* ---------- SETTINGS: SITE IDENTITY ICONS ---------- */
+.preset-icons{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.icon-choice{
+  width:48px;
+  height:48px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  cursor:pointer;
+  transition:all .25s ease;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  backdrop-filter:blur(4px);
+}
+.icon-choice img{
+  width:32px;
+  height:32px;
+  object-fit:contain;
+  opacity:.85;
+  transition:opacity .25s ease;
+}
+.icon-choice:hover{border-color:var(--glow);box-shadow:0 0 6px var(--glow2);transform:translateY(-2px)}
+.icon-choice:hover img{opacity:1}
+.icon-choice.active{border-color:var(--glow);box-shadow:0 0 10px var(--glow2);transform:scale(1.05)}
+.upload-choice{background:rgba(255,255,255,.05);color:var(--fg);font-weight:700;font-size:22px}
+.upload-placeholder{display:flex;justify-content:center;align-items:center;width:100%;height:100%;color:var(--fg);opacity:.6}
+.upload-choice:hover .upload-placeholder{opacity:1}
+.preset-icons .icon-choice img{width:44px;height:44px;border-radius:10px;display:block}
 
 /* ---------- SETTINGS MODAL ---------- */
 #settingsOverlay{position:fixed;inset:0;z-index:10;background:rgba(3,8,14,.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center}
@@ -828,7 +928,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
     </div>
 
     <!-- Preset icons -->
-    <div class="preset-icons" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;">
+    <div class="preset-icons">
       <button class="icon-choice" data-icon="icon1.png" title="Deblocked">
         <img src="icon1.png" alt="Deblocked">
       </button>
@@ -1440,9 +1540,6 @@ function renderGamePanel(game) {
     margin-top: -25px;
     padding: 24px 28px;
     min-height: 70vh;           /* 🟢 makes the panel about x2 taller */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
   ">
       <button class="inline-exit-btn" id="closeGamePanel" title="Exit">✕</button>
 
