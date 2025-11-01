@@ -29,7 +29,6 @@ body{
   background:var(--bg);
   color:var(--fg);
   overflow-y:overlay;
-  overflow-x:hidden;
 }
 /* Kill all underlines and keep inherited color everywhere */
 a, a:visited, a:hover,
@@ -64,41 +63,6 @@ body.card-flat{
 body.card-lifted{
   --card-bg:#0f1624; --card-border:1px solid rgba(255,255,255,.08);
   --card-shadow:0 10px 26px rgba(0,0,0,.38); --card-hover-shadow:0 30px 70px rgba(0,0,0,.5);
-}
-body.card-icon{
-  --card-bg:rgba(14,20,30,0.8);
-  --card-border:1px solid rgba(255,255,255,0.08);
-  --card-shadow:0 18px 38px rgba(0,0,0,0.45);
-  --card-hover-shadow:0 26px 60px rgba(0,0,0,0.6);
-  --card-min:150px;
-}
-body.card-icon .grid{gap:18px;}
-body.card-icon .card{
-  padding:18px;
-  border-radius:28px;
-  background:linear-gradient(160deg,rgba(20,30,44,0.92),rgba(10,14,22,0.72));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-body.card-icon .card .thumb{
-  aspect-ratio:1;
-  border-radius:22px;
-  overflow:hidden;
-  box-shadow:0 16px 46px rgba(0,0,0,0.55);
-}
-body.card-icon .card .thumb::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(180deg,rgba(255,255,255,0.18),transparent 38%,rgba(0,0,0,0.22));
-  pointer-events:none;
-  mix-blend-mode:screen;
-}
-body.card-icon .card .thumb .vid{display:none!important;}
-body.card-icon .card .body,
-body.card-icon .card .fav{
-  display:none!important;
 }
 
 /* ---------- BG LAYERS ---------- */
@@ -264,159 +228,11 @@ body.card-icon .card .fav{
 .fav{position:absolute;right:10px;bottom:10px;width:36px;height:36px;border-radius:999px;display:grid;place-items:center;background:#0f1724;border:1px solid var(--line);color:#9fb5cc;transition:var(--speed)}
 .fav.active{color:#ffe066;background:#2a1e00;border-color:#ffefb0}
 
-/* ---------- PROXIES & HACKS SHOWCASE ---------- */
-#proxies{padding:60px 6vw 120px;display:flex;flex-direction:column;gap:24px}
-.proxy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px}
-.proxy-card{position:relative;overflow:hidden;border-radius:22px;padding-bottom:20px;display:flex;flex-direction:column;gap:18px;background:linear-gradient(160deg,rgba(20,30,44,.92),rgba(10,14,22,.78));border:1px solid rgba(255,255,255,.1);box-shadow:0 28px 70px rgba(0,0,0,.5);transform:translateY(0);transition:transform .35s ease,box-shadow .35s ease}
-.proxy-card::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 20% -10%,rgba(255,255,255,.18),transparent 55%);opacity:0;transition:opacity .3s ease}
-.proxy-card:hover{transform:translateY(-12px) scale(1.02);box-shadow:0 40px 88px rgba(0,0,0,.6)}
-.proxy-card:hover::after{opacity:1}
-.proxy-card .proxy-thumb{position:relative;height:220px;border-radius:22px 22px 0 0;overflow:hidden}
-.proxy-card .proxy-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;filter:saturate(1.1)}
-.proxy-card:hover .proxy-thumb img{transform:scale(1.06)}
-.proxy-card .proxy-thumb span{position:absolute;left:16px;bottom:16px;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);color:#fff;font-size:.75rem}
-.proxy-card .proxy-body{padding:0 22px;display:flex;flex-direction:column;gap:10px}
-.proxy-card h3{margin:0;font-size:1.25rem;font-weight:700;letter-spacing:.3px}
-.proxy-card p{font-size:.92rem;color:rgba(208,220,240,.88);margin:0}
-.proxy-card .proxy-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-.proxy-card button{align-self:flex-start;background:linear-gradient(120deg,var(--glow),var(--glow2));color:#001318;border:none;border-radius:12px;padding:10px 18px;cursor:pointer;font-weight:700;letter-spacing:.2px;box-shadow:0 14px 30px rgba(0,208,255,.3);transition:transform .25s ease,box-shadow .25s ease}
-.proxy-card button:hover{transform:translateY(-2px);box-shadow:0 20px 44px rgba(0,208,255,.35)}
-
-#hacksSection{width:100%;padding:60px 6vw 120px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:28px}
-#hacksSection .filters{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
-#hacksSection input,#hacksSection select{padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(12,16,24,.9);color:#f5faff;min-width:220px}
-#hacksSection input:focus,#hacksSection select:focus{outline:2px solid rgba(0,208,255,.6)}
-#hacksGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px;width:100%;max-width:1200px}
-.hack-card{background:linear-gradient(160deg,rgba(18,26,40,.92),rgba(8,12,20,.78));border:1px solid rgba(255,255,255,.08);border-radius:22px;overflow:hidden;box-shadow:0 26px 70px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:14px;transition:transform .35s ease,box-shadow .35s ease}
-.hack-card:hover{transform:translateY(-10px) scale(1.01);box-shadow:0 36px 84px rgba(0,0,0,.58)}
-.hack-thumb{width:100%;height:200px;object-fit:cover}
-.hack-body{padding:0 22px 24px;display:flex;flex-direction:column;gap:10px}
-.hack-title{font-size:1.2rem;margin:8px 0 0;font-weight:700;color:var(--glow)}
-.hack-desc{font-size:.95rem;color:rgba(210,224,240,.86);margin:0}
-.hack-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
-.hack-actions .btn{flex:1;justify-content:center;background:linear-gradient(120deg,var(--glow),var(--glow2));color:#001318;border:none;border-radius:12px;padding:10px 16px;font-weight:700;letter-spacing:.2px;box-shadow:0 12px 26px rgba(0,208,255,.25);transition:transform .25s ease,box-shadow .25s ease}
-.hack-actions .btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(0,208,255,.3)}
-
-/* ---------- IN-GAME FOCUS MODE ---------- */
-.game-frame{width:100%;border:none;border-radius:16px;background:#000;min-height:79vh}
-.game-fullscreen{padding:0;margin:0}
-body.game-active{overflow:hidden}
-body.game-active main{min-height:100dvh;overflow:hidden}
-body.game-active #hudTop,
-body.game-active #hudSpacer,
-body.game-active .header,
-body.game-active .top-info,
-body.game-active .stats,
-body.game-active .social{display:none!important}
-body.game-active .container{padding:0}
-body.game-active #gamePanel{padding:0;margin:0}
-body.game-active .game-fullscreen{min-height:100dvh;padding:0;margin:0}
-body.game-active .game-frame{height:100dvh!important;min-height:100dvh!important;border-radius:0}
-
 /* ---------- FOOTER & SOCIAL ---------- */
 .footer{opacity:.85;padding:28px 10px 40px;text-align:center;color:#9eb2c8}
 .social{position:fixed;left:14px;bottom:14px;z-index:6;display:flex;gap:8px;animation:fadeUp .8s .6s ease both}
 .social a{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:#101722;border:1px solid var(--line);color:#dfeaf7;transition:var(--speed)}
 .social a:hover{transform:translateY(-3px)}
-
-/* ---------- INLINE GAME PANEL ---------- */
-#gamePanel{padding:28px;animation:fadeUp .4s ease}
-#gamePanel .detail-card{
-  position:relative;
-  display:flex;
-  gap:24px;
-  align-items:flex-start;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:var(--radius-lg);
-  padding:24px;
-  backdrop-filter:var(--blur);
-  box-shadow:0 20px 50px rgba(0,0,0,.4);
-}
-#gamePanel .detail-card img{
-  width:180px;
-  height:180px;
-  border-radius:14px;
-  object-fit:cover;
-}
-#gamePanel .detail-card h2{margin:0 0 8px;font:900 32px/1 Outfit,Inter}
-#gamePanel .detail-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-#gamePanel iframe{
-  width:100%;
-  height:72vh;
-  border:1px solid var(--line);
-  border-radius:16px;
-  background:#000;
-  margin-top:16px;
-}
-#gamePanel .game-fullscreen{
-  padding:0;
-  background:transparent;
-  border:0;
-  box-shadow:none;
-}
-#gamePanel .inline-exit-btn{
-  position:absolute;
-  top:18px;
-  right:18px;
-  width:36px;
-  height:36px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:12px;
-  border:1px solid rgba(207,227,248,.18);
-  background:rgba(15,23,36,.72);
-  color:#fff;
-  cursor:pointer;
-  backdrop-filter:blur(10px);
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
-  transition:transform var(--speed),background .25s ease,box-shadow .25s ease;
-}
-#gamePanel .inline-exit-btn:hover{
-  transform:scale(1.05);
-  background:rgba(15,23,36,.85);
-  box-shadow:0 12px 30px rgba(0,0,0,.28);
-}
-#gamePanel .inline-exit-btn:active{transform:scale(.96)}
-@media (max-width:900px){
-  #gamePanel .detail-card{flex-direction:column;align-items:center;text-align:center}
-  #gamePanel .detail-card img{margin-bottom:14px}
-  #gamePanel .inline-exit-btn{position:static;margin-left:auto;margin-bottom:12px}
-}
-#iframePreview img{opacity:0;transition:opacity .6s ease}
-#iframePreview img[src]{opacity:1}
-
-/* ---------- SETTINGS: SITE IDENTITY ICONS ---------- */
-.preset-icons{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
-.icon-choice{
-  width:48px;
-  height:48px;
-  border-radius:12px;
-  border:1px solid var(--line);
-  background:var(--panel);
-  cursor:pointer;
-  transition:all .25s ease;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-  backdrop-filter:blur(4px);
-}
-.icon-choice img{
-  width:32px;
-  height:32px;
-  object-fit:contain;
-  opacity:.85;
-  transition:opacity .25s ease;
-}
-.icon-choice:hover{border-color:var(--glow);box-shadow:0 0 6px var(--glow2);transform:translateY(-2px)}
-.icon-choice:hover img{opacity:1}
-.icon-choice.active{border-color:var(--glow);box-shadow:0 0 10px var(--glow2);transform:scale(1.05)}
-.upload-choice{background:rgba(255,255,255,.05);color:var(--fg);font-weight:700;font-size:22px}
-.upload-placeholder{display:flex;justify-content:center;align-items:center;width:100%;height:100%;color:var(--fg);opacity:.6}
-.upload-choice:hover .upload-placeholder{opacity:1}
-.preset-icons .icon-choice img{width:44px;height:44px;border-radius:10px;display:block}
 
 /* ---------- SETTINGS MODAL ---------- */
 #settingsOverlay{position:fixed;inset:0;z-index:10;background:rgba(3,8,14,.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center}
@@ -543,6 +359,1324 @@ body.game-active .game-frame{height:100dvh!important;min-height:100dvh!important
   pointer-events: all !important;   /* Let the panel and its buttons receive input */
   position: relative;
   z-index: 1000000;                 /* Above the blurred background */
+}
+
+/* ===============================================================
+   TRUE FROSTED GLASS FIX (Force Apply)
+   =============================================================== */
+
+body.ui-frosted {
+  --frost-bg: rgba(14, 20, 28, 0.55);
+  --frost-border: rgba(255, 255, 255, 0.08);
+  --frost-shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* ✅ Sidebar & Header (still glassy) */
+body.ui-frosted .sidebar,
+body.ui-frosted .header {
+  background: rgba(10, 15, 20, 0.7) !important;
+  backdrop-filter: blur(22px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.4) !important;
+  border: 1px solid var(--frost-border) !important;
+}
+
+/* 🎃 Update ticker / announcement bar */
+body.ui-frosted .news-ticker,
+body.ui-frosted .announcement-bar {
+  background: var(--frost-bg) !important;
+  backdrop-filter: blur(22px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.5) !important;
+  border-bottom: 1px solid var(--frost-border) !important;
+  box-shadow: 0 4px 24px var(--frost-shadow) !important;
+}
+
+/* 🎮 Featured game container (below hero) */
+body.ui-frosted .featured,
+body.ui-frosted .featured-section,
+body.ui-frosted #featured,
+body.ui-frosted .carouselRow,
+body.ui-frosted .carousel-row,
+body.ui-frosted .games-container,
+body.ui-frosted .game-section {
+  background: var(--frost-bg) !important;
+  backdrop-filter: blur(22px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.5) !important;
+  border: 1px solid var(--frost-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 36px var(--frost-shadow) !important;
+  padding: 12px !important;
+}
+
+/* 🧊 Game cards */
+body.ui-frosted .card,
+body.ui-frosted .game-card,
+body.ui-frosted .gameCard,
+body.ui-frosted .game {
+  background: rgba(10, 15, 25, 0.65) !important;
+  backdrop-filter: blur(18px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.3) !important;
+  border: 1px solid var(--frost-border) !important;
+  transition: background 0.25s ease, transform 0.25s ease !important;
+}
+body.ui-frosted .card:hover,
+body.ui-frosted .game-card:hover {
+  background: rgba(18, 26, 38, 0.75) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 🏷️ Pills / categories */
+body.ui-frosted .pill,
+body.ui-frosted .tag,
+body.ui-frosted .category-pill {
+  background: rgba(20, 28, 38, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--frost-border) !important;
+}
+
+/* 🔹 Exclude hero (so it stays clean) */
+body.ui-frosted .hero,
+body.ui-frosted .hero .copy,
+body.ui-frosted .hero .visual {
+  background: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Smooth transition */
+body.ui-frosted * {
+  transition: background 0.35s ease, backdrop-filter 0.35s ease, border 0.35s ease !important;
+}
+
+/* ===== FROSTED GLASS MODE ===== */
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .section,
+body.ui-frosted .carousel,
+body.ui-frosted .card {
+  background: rgba(20, 26, 36, 0.4) !important;
+  backdrop-filter: blur(18px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* make it pop a bit more on hover */
+body.ui-frosted .card:hover {
+  background: rgba(26, 34, 46, 0.5) !important;
+}
+
+/* === FROSTED GLASS ENHANCEMENTS === */
+body.ui-frosted {
+  --glass-darkness: 0.4; /* default 40% opacity */
+}
+
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .section,
+body.ui-frosted .carousel,
+body.ui-frosted .card,
+body.ui-frosted .top-info .marquee {
+  background: rgba(20, 26, 36, var(--glass-darkness)) !important;
+  backdrop-filter: blur(18px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* keep Play Featured Game hero solid */
+.hero .copy,
+.hero .visual {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: none !important;
+}
+
+/* === GLASS DARKNESS & STYLED SLIDER === */
+body.ui-frosted {
+  --glass-darkness: 0.4;
+}
+
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .section,
+body.ui-frosted .carousel,
+body.ui-frosted .card,
+body.ui-frosted .top-info,
+body.ui-frosted .marquee {
+  background: rgba(20, 26, 36, var(--glass-darkness)) !important;
+  backdrop-filter: blur(18px) saturate(1.6) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  transition: background 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+/* ✅ Featured Hero stays solid */
+.hero .copy,
+.hero .visual {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: none !important;
+}
+
+/* Slider styling */
+.styled-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 160px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  outline: none;
+  cursor: pointer;
+  transition: filter 0.3s ease;
+}
+.styled-slider:hover {
+  filter: brightness(1.3);
+}
+.styled-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--glow);
+  box-shadow: 0 0 8px var(--glow);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.styled-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 14px var(--glow2);
+}
+
+/* Global default */
+:root {
+  --glass-darkness: 0.40; /* 0.00 - 1.00 */
+}
+
+/* Apply glass ONLY when enabled */
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .carousel,
+body.ui-frosted .row-scroll,
+body.ui-frosted .section,
+body.ui-frosted .card,
+body.ui-frosted .top-info,
+body.ui-frosted .marquee,
+body.ui-frosted .news,
+body.ui-frosted #featured .carousel {
+  background: rgba(20, 26, 36, var(--glass-darkness)) !important;
+  backdrop-filter: blur(18px) saturate(1.6) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.6) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  transition: background .25s ease, backdrop-filter .25s ease;
+}
+
+/* Hero stays solid (no glass) */
+.hero .copy,
+.hero .visual {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: none !important;
+}
+
+/* === Frosted glass global style === */
+:root {
+  --glass-darkness: 0.40; /* Slider controls this */
+}
+
+/* Enable frosted glass for most panels when class is active */
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .carousel,
+body.ui-frosted .row-scroll,
+body.ui-frosted .section,
+body.ui-frosted .card,
+body.ui-frosted .top-info,
+body.ui-frosted .marquee,
+body.ui-frosted .news,
+body.ui-frosted #featured .carousel {
+  background: rgba(20, 26, 36, var(--glass-darkness)) !important;
+  backdrop-filter: blur(18px) saturate(1.6) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.6) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  transition: background .25s ease, backdrop-filter .25s ease;
+}
+
+/* ❌ Explicitly remove glass from the hero copy area */
+.hero .copy {
+  background: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Keep the right-side visual clean too */
+.hero .visual {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#gameDetailView {
+  position: relative;
+  z-index: 5;
+  padding: 3rem;
+  backdrop-filter: blur(12px);
+  background: rgba(20, 20, 20, 0.8);
+  border-radius: 16px;
+  margin: 2rem;
+}
+#gameDetailView.hidden {
+  display: none;
+}
+.game-detail-container {
+  max-width: 900px;
+  margin: auto;
+}
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.detail-icon {
+  width: 160px;
+  height: 160px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.detail-info h1 {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+.play-now {
+  background: linear-gradient(90deg, #00aaff, #9d40ff);
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.close-btn {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 1.4rem;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ===============================================================
+   GAME DETAIL + IFRAME OVERLAY STYLES
+   =============================================================== */
+#gameDetail {
+  padding: 28px;
+  animation: fadeUp 0.4s ease;
+}
+#gameDetail .detail-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  backdrop-filter: var(--blur);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+.detail-icon {
+  width: 160px;
+  height: 160px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+.detail-info h2 {
+  margin: 0;
+  font: 900 28px/1 Outfit, Inter;
+}
+#iframeOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,10,20,0.85);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 20px;
+}
+#iframeOverlay iframe {
+  flex: 1;
+  width: 100%;
+  height: 85vh;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #000;
+}
+.iframe-toolbar {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* === Overlay scrollbar polish === */
+#gameOverlay::-webkit-scrollbar {
+  width: 8px;
+}
+#gameOverlay::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+#gameOverlay::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Inline game detail panel (inside main) === */
+#gamePanel {
+  padding: 28px;
+  animation: fadeUp .4s ease;
+}
+#gamePanel .detail-card{
+  display:flex;gap:24px;align-items:flex-start;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:24px;
+  backdrop-filter:var(--blur);box-shadow:0 20px 50px rgba(0,0,0,.4);
+}
+#gamePanel .detail-card img{
+  width:180px;height:180px;border-radius:14px;object-fit:cover;
+}
+#gamePanel .detail-card h2{
+  margin:0 0 8px;font:900 32px/1 Outfit,Inter;
+}
+#gamePanel .inline-exit-btn{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  border:1px solid rgba(207,227,248,0.18);
+  background:rgba(15,23,36,0.72);
+  color:#fff;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  transition:transform var(--speed),background .25s ease,box-shadow .25s ease;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+#gamePanel .inline-exit-btn:hover{
+  transform:scale(1.05);
+  background:rgba(15,23,36,0.85);
+  box-shadow:0 12px 30px rgba(0,0,0,0.28);
+}
+#gamePanel .inline-exit-btn:active{
+  transform:scale(0.96);
+}
+#gamePanel .detail-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+#gamePanel iframe{
+  width:100%;height:72vh;border:1px solid var(--line);
+  border-radius:16px;background:#000;margin-top:16px;
+}
+#gamePanel .toolbar{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+#gamePanel .close-btn{
+  position:absolute;right:14px;top:14px;background:rgba(255,255,255,.1);
+  border:0;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer
+}
+
+#gamePanel {
+  overflow-y: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#iframePreview img {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+#iframePreview img[src] {
+  opacity: 1;
+}
+
+.control-btn:hover {
+  background: rgba(255,255,255,0.16) !important;
+  transition: background 0.2s ease;
+}
+
+/* 🔧 Kill hero hover zoom */
+.hero:hover video,
+.hero:hover .preview {
+  transform: none !important;
+  opacity: .36 !important;   /* keep your default look */
+}
+
+/* also stop smooth zoom animation so it feels instant (no jitter) */
+.hero .visual video,
+.hero .preview {
+  transition: none !important;
+}
+
+/* Only disable fadeUp on hero */
+#hero .fadeUp,
+.hero.fadeUp {
+  transform: translateY(0px) !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+/* ✨ Smooth dimming hover effect for hero */
+#hero {
+  transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+  will-change: filter, opacity, transform;
+}
+
+#hero:hover {
+  filter: brightness(0.94); /* subtle dimming */
+  opacity: 0.98;            /* very gentle fade */
+  transform: scale(1.002);  /* barely perceptible zoom */
+  transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+}
+
+/* 🌙 Smooth, subtle hero hover transition */
+#hero,
+#hero .copy,
+.hero,
+.hero .copy {
+  transition: 
+    filter 0.6s ease-in-out,
+    opacity 0.6s ease-in-out,
+    transform 0.6s ease-in-out !important;
+  will-change: filter, opacity, transform;
+}
+
+/* Hover: slightly dim, soften, and breathe */
+#hero:hover,
+#hero:hover .copy,
+.hero:hover,
+.hero:hover .copy {
+  filter: brightness(0.94);
+  opacity: 0.98;
+  transform: scale(1.002);
+  transition: 
+    filter 0.6s ease-in-out,
+    opacity 0.6s ease-in-out,
+    transform 0.6s ease-in-out !important;
+}
+
+transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+
+/* Keep hero carousel but make transitions smooth */
+#hero.hero.animating {
+  animation: none !important;
+  transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+}
+
+/* Hide Featured & Trending visually (keep for JS references) */
+#featured,
+#trending {
+  display: none !important;
+}
+
+/* 🌐 Site Identity styling */
+.setting-group h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.preset-icons {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.icon-choice {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--ui-bg);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+.icon-choice img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  opacity: 0.85;
+  transition: opacity 0.25s ease;
+}
+.icon-choice:hover img { opacity: 1; }
+.icon-choice:hover { border-color: var(--glow); box-shadow: 0 0 6px var(--glow2); transform: translateY(-2px); }
+.icon-choice.active { border-color: var(--glow); box-shadow: 0 0 10px var(--glow2); }
+
+.upload-choice {
+  background: rgba(255,255,255,0.05);
+  color: var(--textColor);
+  font-weight: bold;
+  font-size: 22px;
+}
+.upload-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; height: 100%;
+  color: var(--textColor);
+  opacity: 0.6;
+}
+.upload-choice:hover .upload-placeholder { opacity: 1; }
+
+.icon-choice.active {
+  box-shadow: 0 0 10px var(--glow2);
+  border-color: var(--glow);
+  transform: scale(1.08);
+}
+.icon-choice img {
+  transition: all 0.3s ease;
+}
+.preset-icons .icon-choice.active {
+  outline: 2px solid var(--glow);
+  box-shadow: 0 0 0 3px #00000040;
+  border-radius: 12px;
+}
+.preset-icons .icon-choice img {
+  width: 44px; height: 44px; border-radius: 10px; display:block;
+}
+
+/* 🚫 Completely hide scrollbar but keep scrolling */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html, body {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE + Edge Legacy */
+  overflow-y: scroll;         /* still allow scrolling */
+}
+
+/* --- Sidebar Brand Styling --- */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 20px 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+
+
+
+.brand-title {
+  font-family: 'Outfit', Inter, sans-serif;
+  font-weight: 800;
+  font-size: 2rem; /* 🔹 slightly larger text */
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 12px rgba(255,255,255,0.1);
+}
+
+.sidebar .brand-title {
+  font-family: 'Outfit', Inter, sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem !important;  /* 🔥 Force size override */
+  letter-spacing: -0.01em;
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none; /* optional: removes subtle glow if you want fully flat text */
+  margin: 0;
+  padding: 0;
+}
+
+/* Pills look & feel */
+.pill.sys-pill{
+  display:flex; align-items:center; gap:10px;
+  padding:6px 12px; border-radius:14px;
+  background: rgba(255,255,255,.05);
+  box-shadow: inset 0 0 10px rgba(255,255,255,.03), 0 0 6px rgba(0,0,0,.45);
+  font-weight:600; letter-spacing:.3px;
+}
+.pill.sys-pill b{
+  background: linear-gradient(90deg,var(--glow),var(--glow2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-weight:800;
+}
+#fpsPill .label{ opacity:.75 }
+
+/* Battery shimmer animation (runs when .charging class toggled in JS) */
+#batteryPill.charging #batteryShimmer{
+  opacity:.6;
+  animation: batteryShimmer 1.6s linear infinite;
+}
+@keyframes batteryShimmer{
+  from{ transform: translateX(0) }
+  to  { transform: translateX(192px) }
+}
+
+/* If your header pills are cramped, allow them to wrap nicely */
+.header{
+  gap:10px;
+  flex-wrap: wrap;
+}
+.pill.sys-pill {
+  display:flex;align-items:center;gap:8px;
+  padding:6px 12px;border-radius:12px;
+  background:rgba(255,255,255,.04);
+  backdrop-filter:blur(10px);
+  font-weight:600;
+  font-family:Inter,Outfit,sans-serif;
+  color:var(--textColor);
+  transition:.3s ease;
+}
+.pill.sys-pill:hover {background:rgba(255,255,255,.08);}
+.pill.sys-pill b{
+  background:linear-gradient(90deg,var(--glow),var(--glow2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+#batteryPill.charging svg{animation:pulse 1.2s infinite ease-in-out;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+
+/* 🕒 Time Widget (no glow version) */
+#timePill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--ui-bg);
+  border-radius: 999px;
+  padding: 5px 14px;
+  box-shadow: none; /* 🔥 disables glow */
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--textColor, #e6eaf2);
+  transition: all 0.3s ease;
+}
+
+#timePill:hover {
+  transform: none; /* no floating effect */
+  box-shadow: none; /* 🔥 disables hover glow */
+}
+
+#timeVal {
+  font-family: "Outfit", "Inter", sans-serif;
+  letter-spacing: 0.3px;
+}
+
+#dateVal {
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+#timeVal {
+  font-family: "Outfit", "Inter", sans-serif;
+  letter-spacing: 0.3px;
+  color: var(--accent, #00d0ff); /* Accent color */
+  font-weight: 700;
+}
+
+#timeVal small {
+  color: var(--textColor, #e6eaf2);
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* 🕒 Time Widget - perfectly matches FPS/Battery */
+#timePill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05); /* same as FPS */
+  border-radius: 8px;
+  padding: 4px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08); /* subtle depth */
+  height: 28px;
+  min-width: 130px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--textColor, #e6eaf2);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+#timePill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+#timeVal {
+  color: var(--accent, #00d0ff);
+  font-weight: 700;
+}
+
+#dateVal {
+  opacity: 0.7;
+  font-weight: 500;
+  color: var(--textColor, #e6eaf2);
+}
+
+#bg-stars-1,
+#bg-stars-2,
+#bg-stars-3 {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: transparent;
+}
+
+/* ================================
+   PROXY HUB SECTION — DEBLOCKED ULTRA
+   ================================ */
+#proxies {
+  background: radial-gradient(circle at 60% -10%, #121827, #090c12 80%);
+  padding: 30px 24px;
+  color: #e9efff;
+  font-family: "Fredoka", sans-serif;
+  min-height: 100vh;
+}
+
+#proxies h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #00d0ff, #7b5bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+}
+
+.proxy-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.proxy-controls input,
+.proxy-controls select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: #e9efff;
+  font-size: 14px;
+  backdrop-filter: blur(6px);
+}
+
+.proxy-controls button {
+  background: linear-gradient(90deg, #00d0ff, #7b5bff);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-weight: 600;
+}
+
+.proxy-controls button:hover {
+  transform: translateY(-1px);
+}
+
+.proxy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.proxy-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: 0.3s ease;
+}
+.proxy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+}
+
+.proxy-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.proxy-card p {
+  font-size: 0.85rem;
+  color: #9fb1d4;
+}
+
+.proxy-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.proxy-card .tag {
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  font-size: 0.7rem;
+}
+
+.proxy-card button {
+  align-self: flex-start;
+  margin-top: auto;
+  background: linear-gradient(90deg, #00d0ff, #7b5bff);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.proxy-portal {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,10,14,0.9);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  display: none;
+}
+
+.proxy-portal iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  height: 85vh;
+  border-radius: 14px;
+  border: none;
+}
+
+.close-proxy {
+  position: fixed;
+  top: 18px;
+  right: 24px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.proxy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+}
+
+.proxy-card img {
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.proxy-card:hover img {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 🔧 Normalize proxy action buttons */
+.proxy-card .btn,
+.proxy-card button {
+  min-width: 100px;               /* ensures both Launch / Visit Site stay balanced */
+  padding: 10px 18px;             /* identical vertical + horizontal padding */
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* optional: ensure gradient buttons keep consistent line height */
+.proxy-card .btn.primary {
+  line-height: 1.2;
+}
+
+/* --- Fix Play Now alignment --- */
+.btn.primary,
+button.btn.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  padding: 10px 18px !important;
+  line-height: 1;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+/* Match spacing and baseline with "Open in new tab" */
+.proxy-card .btn.primary {
+  margin-top: 0;
+  vertical-align: middle;
+  transform: translateY(1px); /* tiny optical alignment */
+}
+
+/* ===== Hacks Section ===== */
+.page.hidden { display: none; }
+.page { display: block; padding: 20px 30px; max-width: 1400px; margin: auto; }
+
+.grid-hacks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.hack-card {
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
+}
+
+.hack-thumb {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #0b0d11;
+}
+
+.hack-title {
+  font-weight: 700;
+  margin: 6px 0 0;
+  font-size: 1.05rem;
+  color: var(--accent1, #00d0ff);
+}
+
+.hack-desc {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin: 0 0 6px 0;
+}
+
+.hack-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+
+.btn.small {
+  padding: 6px 10px;
+  font-size: 0.86rem;
+  border-radius: 10px;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--accent1,#00d0ff), var(--accent2,#a040ff));
+  color: #fff;
+}
+
+.input-sm {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+@media (max-width:720px){
+  .grid-hacks{ grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); }
+}
+
+
+/* ===== Hacks Section Layout — Deblocked Ultra Style ===== */
+#hacksSection {
+  width: 100%;
+  padding: 40px 6vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--textColor, #fff);
+}
+
+/* Title */
+#hacksSection h2, #hacksSection h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 24px;
+  background: linear-gradient(90deg, #6ddcff, #7f60f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Filter bar (search + sort + random) */
+#hacksSection .filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+#hacksSection input[type="text"] {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  width: 220px;
+}
+#hacksSection select, #hacksSection button {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+#hacksSection button:hover, #hacksSection select:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Hacks Grid Layout */
+#hacksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 22px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Individual Hack Cards */
+.hack-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  padding-bottom: 12px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.hack-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.hack-thumb {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.hack-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 12px 14px 4px;
+  color: #00cfff;
+}
+.hack-desc {
+  font-size: 0.85rem;
+  margin: 0 14px 10px;
+  color: rgba(255,255,255,0.8);
+}
+.hack-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+}
+.hack-actions .btn {
+  flex: 1;
+  background: linear-gradient(90deg, #00cfff, #7f60f9);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.hack-actions .btn:hover {
+  transform: scale(1.05);
+}
+
+/* === Deblocked Hacks Section — Final Polished Look === */
+#hacksSection {
+  width: 100%;
+  padding: 40px 6vw 100px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--textColor, #fff);
+}
+
+/* remove any default header text */
+#hacksSection h2,
+#hacksSection h3 {
+  display: none;
+}
+
+/* top filter bar */
+.hacks-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.hacks-header .filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+}
+
+#hacksSearch {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 14px;
+  width: clamp(220px, 40%, 300px);
+  font-size: 0.95rem;
+  font-family: "Inter", "Nunito", sans-serif;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+#hacksSearch:focus {
+  border-color: var(--accent, #7f60f9);
+  box-shadow: 0 0 12px var(--accent, #7f60f9);
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#hacksSort {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+#hacksSort:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* grid layout */
+#hacksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 26px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* hack cards */
+.hack-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  padding-bottom: 14px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  position: relative;
+  backdrop-filter: blur(8px);
+}
+.hack-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.hack-thumb {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.hack-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 12px 14px 4px;
+  background: linear-gradient(90deg, var(--accent, #00cfff), var(--accent2, #7f60f9));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hack-desc {
+  font-size: 0.85rem;
+  margin: 0 14px 12px;
+  color: rgba(255,255,255,0.8);
+
+/* Fixed HUD bar (Header + Info) */
+#hudTop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  background: rgba(12, 16, 24, 0.65);
+  backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.45);
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Keep the rest of the content pushed below */
+main, .container {
+  margin-top: 180px; /* adjust to fit your topbar height */
 }
 
 /* Optional: smooth scroll and subtle hover highlight */
@@ -838,7 +1972,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
     <button id="proxyRandom" class="btn primary">🎲 Random</button>
   </div>
 
-  <div id="proxyGrid" class="proxy-grid"></div>
+  <div id="proxyGrid" class="proxy-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;"></div>
 
   <!-- Fullscreen portal -->
   <div id="proxyPortal" class="proxy-portal" style="position:fixed;inset:0;background:rgba(8,10,14,.9);backdrop-filter:blur(8px);z-index:9999;display:none;">
@@ -928,7 +2062,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
     </div>
 
     <!-- Preset icons -->
-    <div class="preset-icons">
+    <div class="preset-icons" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;">
       <button class="icon-choice" data-icon="icon1.png" title="Deblocked">
         <img src="icon1.png" alt="Deblocked">
       </button>
@@ -977,6 +2111,23 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
     <button class="control-btn" data-bg="gradient">Gradient</button>
     <button class="control-btn" data-bg="image">Image</button>
   </div>
+  <div class="inline" style="margin-top:8px;">
+  <button class="control-btn" id="toggleGlass">Toggle Frosted Glass</button>
+</div>
+<span class="soft small">(Works best with a Custom Background for Contrast)</span>
+<div class="opt" id="glassOptions" style="margin-top:10px;">
+  <b>Frosted Glass Settings</b>
+  <div class="inline">
+    <label for="glassDarkness" style="font-size:13px;color:#bcd0e6;">Darkness:</label>
+    <input type="range" id="glassDarkness" min="0" max="100" value="40" class="styled-slider">
+    <span id="glassDarkValue" style="font-size:13px;color:#bcd0e6;">40%</span>
+  </div>
+  <span class="soft small">Adjusts transparency of the glass panels and cards.</span>
+  
+</div>
+
+
+
   <!-- Custom image input (hidden unless bg=image) -->
   <div id="customImageControls" style="display:none;flex-direction:column;gap:8px;margin-top:10px;">
     <input type="text" id="customImageURL" placeholder="Enter image URL" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);">
@@ -1001,9 +2152,8 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
         <div class="inline">
           <button class="control-btn" data-style="flat">Flat</button>
           <button class="control-btn" data-style="lifted">Lifted</button>
-          <button class="control-btn" data-style="icon">Icon Only</button>
         </div>
-        <span class="soft small">Switch between subtle dashboard, 3D pop, or app icon grid.</span>
+        <span class="soft small">Switch between subtle dashboard vs 3D pop.</span>
       </div>
     </div>
   </div>
@@ -1523,7 +2673,6 @@ function showHomeSections() {
   $("#favorites")?.classList.toggle("hidden", !favs || !favs.children.length);
   $("#catDock")?.classList.remove("hidden"); // 🟢 NEW — shows category bar again
   document.querySelector('.social')?.classList.remove('hidden');
-  document.body.classList.remove('game-active');
 }
 
 
@@ -1531,7 +2680,6 @@ function showHomeSections() {
 function renderGamePanel(game) {
   const panel = $("#gamePanel");
   if (!panel) return;
-  document.body.classList.remove('game-active');
 
   // 🔧 Build game info and preview layout
  panel.innerHTML = `
@@ -1540,6 +2688,9 @@ function renderGamePanel(game) {
     margin-top: -25px;
     padding: 24px 28px;
     min-height: 70vh;           /* 🟢 makes the panel about x2 taller */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   ">
       <button class="inline-exit-btn" id="closeGamePanel" title="Exit">✕</button>
 
@@ -1601,10 +2752,9 @@ function showGameOnly(game) {
 
   hideHomeSections();
   window.scrollTo(0,0);
-  document.body.classList.add('game-active');
 
   panel.innerHTML = `
-  <div class="detail-card game-fullscreen" style="position:relative;">
+  <div class="detail-card" style="position:relative;margin-top:-25px;padding-bottom:0;">
     <!-- Unified toolbar -->
     <!-- Floating toolbar -->
 <div class="toolbar" style="
@@ -1641,9 +2791,9 @@ function showGameOnly(game) {
 </div>
 
 
-    <iframe id="gameIframe" src="${game.url}" allowfullscreen class="game-frame"
-      style="width:100%;border:none;border-radius:16px;background:#000;min-height:79vh;">
-      </iframe>
+    <iframe id="gameIframe" src="${game.url}" allowfullscreen
+      style="width:100%;height:79vh;border:none;border-radius:16px;background:#000;">
+    </iframe>
   </div>
 `;
 
@@ -1666,7 +2816,6 @@ function hidePanel() {
     panel.innerHTML = "";
   }
   showHomeSections();
-  document.body.classList.remove('game-active');
 }
 
 // --- Router: handles both #Game and #Game/Play
@@ -1897,7 +3046,7 @@ $$(".preset-icons .icon-choice:not(.upload-choice)").forEach(btn => {
   $$(".control-btn[data-style]").forEach(btn => {
     btn.onclick = () => {
       const style = btn.dataset.style;
-      body.classList.remove("card-flat", "card-lifted", "card-icon");
+      body.classList.remove("card-flat", "card-lifted");
       body.classList.add(`card-${style}`);
       localStorage.setItem("deblocked:cardStyle", style);
 
@@ -1948,12 +3097,10 @@ if (bgMode) {
 
   const cardStyle = localStorage.getItem("deblocked:cardStyle");
   if (cardStyle) {
-    body.classList.remove("card-flat", "card-lifted", "card-icon");
+    body.classList.remove("card-flat", "card-lifted");
     body.classList.add(`card-${cardStyle}`);
     const activeBtn = $(`[data-style='${cardStyle}']`);
     if (activeBtn) activeBtn.classList.add("active");
-  } else {
-    $(`[data-style='lifted']`)?.classList.add("active");
   }
 
   const density = localStorage.getItem("deblocked:density");
@@ -2045,14 +3192,16 @@ if (bgMode) {
 })();
 
 /* ===============================================================
-   CUSTOM BACKGROUND SETTINGS
+   CUSTOM BACKGROUND + FROSTED GLASS SETTINGS
    =============================================================== */
 (() => {
   const body = document.body;
+  const root = document.documentElement;
   const customControls = $("#customImageControls");
   const urlInput = $("#customImageURL");
   const fileInput = $("#customImageUpload");
   const applyBtn = $("#applyCustomImage");
+  const toggleFrost = $("#toggleFrosted");
   const bgImage = $("#bg-image");
 
   // --- Watch for background mode change ---
@@ -2090,12 +3239,69 @@ if (bgMode) {
     console.log("🖼️ Custom background applied:", url);
   }
 
+  // --- Frosted UI toggle ---
+  toggleFrost.addEventListener("click", () => {
+    body.classList.toggle("ui-frosted");
+    const active = body.classList.contains("ui-frosted");
+    localStorage.setItem("deblocked:frosted", active ? "1" : "0");
+    toggleFrost.classList.toggle("active", active);
+  });
+
   // --- Restore saved settings ---
   const savedImage = localStorage.getItem("deblocked:customImage");
   if (savedImage) {
     bgImage.style.backgroundImage = `url('${savedImage}')`;
   }
-  console.log("🖼️ Custom background logic active");
+
+  const frosted = localStorage.getItem("deblocked:frosted") === "1";
+  if (frosted) {
+    body.classList.add("ui-frosted");
+    toggleFrost.classList.add("active");
+  }
+
+  console.log("🧊 Custom image & frosted UI logic active");
+})();
+// ===== FROSTED GLASS TOGGLE =====
+const glassBtn = document.getElementById("toggleGlass");
+
+if (glassBtn) {
+  glassBtn.addEventListener("click", () => {
+    document.body.classList.toggle("ui-frosted");
+    const on = document.body.classList.contains("ui-frosted");
+    glassBtn.textContent = on ? "Disable Frosted Glass" : "Enable Frosted Glass";
+    localStorage.setItem("deblocked:glass", on ? "1" : "0");
+  });
+
+  // restore saved state on load
+  if (localStorage.getItem("deblocked:glass") === "1") {
+    document.body.classList.add("ui-frosted");
+    glassBtn.textContent = "Disable Frosted Glass";
+  }
+}
+
+// Ensure frosted class is applied (so changes are visible)
+document.body.classList.add('ui-frosted');
+
+// Slider wiring
+const darknessSlider = document.getElementById('glassDarkness');
+const glassDarkValue = document.getElementById('glassDarkValue');
+
+// Restore and apply
+(function initGlassSlider(){
+  if (!darknessSlider || !glassDarkValue) return;
+
+  const saved = localStorage.getItem('deblocked:glassDark') ?? '40';
+  darknessSlider.value = saved;
+  glassDarkValue.textContent = `${saved}%`;
+  // Apply to :root so all components see it
+  document.documentElement.style.setProperty('--glass-darkness', (saved/100).toString());
+
+  darknessSlider.addEventListener('input', (e) => {
+    const val = String(e.target.value);
+    document.documentElement.style.setProperty('--glass-darkness', (Number(val)/100).toString());
+    glassDarkValue.textContent = `${val}%`;
+    localStorage.setItem('deblocked:glassDark', val);
+  });
 })();
 
 (function initSystemStats(){
@@ -2260,7 +3466,6 @@ if (gamePanel) gamePanel.classList.add("hidden-temp");
 
 function showProxies() {
   if (!proxySection) return;
-  document.body.classList.remove('game-active');
 
   // hide home sections
   if (HOME_SECTIONS && Array.isArray(HOME_SECTIONS)) {
@@ -2282,7 +3487,7 @@ function showProxies() {
   if (hacks) hacks.style.display = "none";
 
   // show proxies section
-  proxySection.style.display = "flex";
+  proxySection.style.display = "block";
   window.scrollTo(0, 0);
 }
 
@@ -2366,27 +3571,24 @@ if (sidebar) {
   let proxies = [];
 
  function renderProxies(list) {
-  proxyGrid.innerHTML = list.map(p => {
-    const thumb = p.thumb || 'https://via.placeholder.com/400x200?text=Proxy+Preview';
-    const name = p.name || 'Untitled Proxy';
-    const desc = p.desc || 'No description available.';
-    const tags = (p.tags || []).slice(0,2).join(' • ');
-    return `
-      <article class="proxy-card">
-        <div class="proxy-thumb">
-          <img src="${thumb}" alt="${name}">
-          ${tags ? `<span>${tags}</span>` : ''}
-        </div>
-        <div class="proxy-body">
-          <h3>${name}</h3>
-          <p>${desc}</p>
-          <div class="proxy-actions">
-            <button class="btn primary" data-url="${p.url}">Launch</button>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join("");
+  proxyGrid.innerHTML = list.map(p => `
+    <article class="proxy-card" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:0.3s;">
+      <div style="position:relative;">
+        <img src="${p.thumb || 'https://via.placeholder.com/400x200?text=Proxy+Preview'}" 
+             alt="${p.name || 'Proxy'}" 
+             style="width:100%;height:160px;object-fit:cover;opacity:0.9;">
+        <div style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);padding:4px 8px;border-radius:8px;font-size:12px;color:#fff;">${(p.tags || []).slice(0,2).join(" • ")}</div>
+      </div>
+      <div style="padding:14px;display:flex;flex-direction:column;gap:6px;">
+        <h3 style="margin:0;font-size:1.1rem;font-weight:700;">${p.name || "Untitled Proxy"}</h3>
+        <p style="font-size:0.85rem;opacity:0.85;margin:0;">${p.desc || "No description available."}</p>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+  <button class="btn primary" data-url="${p.url}">Launch</button>
+</div>
+
+      </div>
+    </article>
+  `).join("");
 
   // Hook up launch buttons
   proxyGrid.querySelectorAll("button[data-url]").forEach(btn => {
@@ -2892,7 +4094,6 @@ if (!h.copyandpase) {
 <script>
 // ===== HACKS ROUTER — FINAL LAYOUT-STABLE VERSION =====
 function showHacksSection() {
-  document.body.classList.remove('game-active');
   // Hide home content
   document.querySelectorAll(`
     #hero,
@@ -2917,7 +4118,7 @@ function showHacksSection() {
   if (hacks) {
     hacks.removeAttribute("hidden");
     hacks.classList.remove("hidden");
-    hacks.style.display = "flex";
+    hacks.style.display = "block";
     hacks.style.position = "relative";
     hacks.style.zIndex = "9999"; // 🟣 ensures it's on top
     hacks.style.minHeight = "100vh";
