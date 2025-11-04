@@ -802,6 +802,105 @@ body.ui-frosted #featured .carousel {
   justify-content: flex-start;
 }
 
+#gamePanel .fullscreen-game{
+  position:relative;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  border-radius:20px;
+  overflow:hidden;
+  background:rgba(12,18,28,0.82);
+  border:1px solid var(--line);
+  box-shadow:0 24px 60px rgba(0,0,0,0.55);
+}
+
+#gamePanel .fullscreen-game iframe{
+  flex:1;
+  width:100%;
+  height:100%;
+  border:none;
+  background:#000;
+}
+
+#gamePanel .game-toolbar{
+  position:absolute;
+  top:18px;
+  right:22px;
+  display:flex;
+  gap:10px;
+  z-index:5;
+}
+
+#gamePanel .game-toolbar button{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(8,12,20,0.65);
+  color:#fff;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  backdrop-filter:blur(12px);
+  transition:transform .2s ease, background .2s ease;
+}
+
+#gamePanel .game-toolbar button:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,0.14);
+}
+
+#gamePanel .game-toolbar button:active{
+  transform:scale(0.94);
+}
+
+body.playing-game #hudTop,
+body.playing-game #hudSpacer{
+  display:none !important;
+}
+
+body.playing-game main{
+  margin-top:0;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+}
+
+body.playing-game .container{
+  flex:1;
+  padding:0;
+  margin:0;
+  height:100%;
+}
+
+body.playing-game .container > *:not(#gamePanel){
+  display:none !important;
+}
+
+body.playing-game #gamePanel{
+  flex:1;
+  height:100%;
+  padding:0;
+  margin:0;
+}
+
+body.playing-game #gamePanel .fullscreen-game{
+  border-radius:0;
+  border:none;
+  box-shadow:none;
+  background:rgba(5,10,18,0.88);
+}
+
+body.playing-game #gamePanel .fullscreen-game iframe{
+  border-radius:0;
+}
+
+body.playing-game .social{
+  display:none !important;
+}
+
 #iframePreview img {
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -2740,9 +2839,14 @@ $("#playEmbeddedBtn").onclick = () => {
 
 // Show panel
 function showPanelForGame(game) {
+  document.body.classList.remove("playing-game");
   renderGamePanel(game);
   hideHomeSections();
-  $("#gamePanel")?.classList.remove("hidden");
+  const panel = $("#gamePanel");
+  if (panel) {
+    panel.classList.remove("hidden");
+    panel.classList.remove("is-playing");
+  }
   window.scrollTo(0,0);
 }
 
@@ -2751,55 +2855,28 @@ function showGameOnly(game) {
   if (!panel) return;
 
   hideHomeSections();
+  document.body.classList.add("playing-game");
+  panel.classList.remove("hidden");
+  panel.classList.add("is-playing");
   window.scrollTo(0,0);
 
   panel.innerHTML = `
-  <div class="detail-card" style="position:relative;margin-top:-25px;padding-bottom:0;">
-    <!-- Unified toolbar -->
-    <!-- Floating toolbar -->
-<div class="toolbar" style="
-  position:absolute;
-  top:12px;
-  right:16px;
-  display:flex;
-  gap:8px;
-  z-index:20;
-">
-  <button class="control-btn" id="iframeRefreshBtn" title="Refresh" style="
-    width:36px;height:36px;border:none;border-radius:10px;
-    background:rgba(255,255,255,0.08);
-    color:#fff;font-size:18px;
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;backdrop-filter:blur(6px);
-  ">⟳</button>
-
-  <button class="control-btn" id="iframeFsBtn" title="Fullscreen" style="
-    width:36px;height:36px;border:none;border-radius:10px;
-    background:rgba(255,255,255,0.08);
-    color:#fff;font-size:18px;
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;backdrop-filter:blur(6px);
-  ">⛶</button>
-
-  <button class="control-btn" id="closeGamePanel" title="Exit" style="
-    width:36px;height:36px;border:none;border-radius:10px;
-    background:rgba(255,255,255,0.08);
-    color:#fff;font-size:18px;
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;backdrop-filter:blur(6px);
-  ">✕</button>
-</div>
-
-
-    <iframe id="gameIframe" src="${game.url}" allowfullscreen
-      style="width:100%;height:79vh;border:none;border-radius:16px;background:#000;">
-    </iframe>
-  </div>
-`;
+    <div class="fullscreen-game">
+      <div class="game-toolbar">
+        <button class="control-btn" id="iframeRefreshBtn" title="Refresh">⟳</button>
+        <button class="control-btn" id="iframeFsBtn" title="Fullscreen">⛶</button>
+        <button class="control-btn" id="closeGamePanel" title="Exit">✕</button>
+      </div>
+      <iframe id="gameIframe" src="${game.url}" allowfullscreen></iframe>
+    </div>
+  `;
 
 
   // Controls
-  $("#closeGamePanel").onclick = () => { location.hash = encodeURIComponent(game.id); };
+  $("#closeGamePanel").onclick = () => {
+    document.body.classList.remove("playing-game");
+    location.hash = encodeURIComponent(game.id);
+  };
   $("#iframeRefreshBtn").onclick = () => {
     const iframe = $("#gameIframe");
     if (iframe.src) iframe.src = iframe.src;
@@ -2813,8 +2890,10 @@ function hidePanel() {
   const panel = $("#gamePanel");
   if (panel) {
     panel.classList.add("hidden");
+    panel.classList.remove("is-playing");
     panel.innerHTML = "";
   }
+  document.body.classList.remove("playing-game");
   showHomeSections();
 }
 
@@ -3480,7 +3559,10 @@ function showProxies() {
   if (gamePanel) {
     gamePanel.classList.add("hidden-temp");
     gamePanel.style.display = "none";
+    gamePanel.classList.remove("is-playing");
   }
+
+  document.body.classList.remove("playing-game");
 
   // hide hacks section if open
   const hacks = document.getElementById("hacksSection");
@@ -4111,7 +4193,10 @@ function showHacksSection() {
   if (gamePanel) {
     gamePanel.classList.add("hidden-temp-hacks");
     gamePanel.style.display = "none";
+    gamePanel.classList.remove("is-playing");
   }
+
+  document.body.classList.remove("playing-game");
 
   // Show Hacks section on top
   const hacks = document.getElementById("hacksSection");
