@@ -129,6 +129,19 @@
       "cnp": "alert('Gimkit turbo activated')"
     }
   },
+   {
+    "title": "Website Ghostifier",
+    "description": "Copy The code, put it in Inspect Console, And put in any link, and it will display it in your website, and Pressing + or - changes the Visibility, Made to Counter Screen Viewers ",
+    "copyandpase": true,
+    "url": "https://example.com/hack8",
+    "game_image_icon": "https://img.freepik.com/premium-vector/glass-morphism-concept-with-spheres-frosted-glass-effect-illustration-dark-background_206325-3198.jpg",
+    "file": "hider.js",
+    "tags": ["bookmarklet","quiz"],
+    "added": "2025-10-20",
+    "attribute": {
+      "cnp": "alert('Gimkit turbo activated')"
+    }
+  },
   {
     "title": "Curipod Hacks",
     "description": "Work-in-progress — drag/copy will be available once the full script is uploaded.",
