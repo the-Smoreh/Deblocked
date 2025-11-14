@@ -91,9 +91,9 @@
     }
   },
    {
-    "title": "Lincon Sora AI Confette",
-    "description": "Drag to bookmarks, it will change all text, and drop Lincon PNG's from the screen, and then it goes back to normal",
-    "copyandpase": false,
+    "title": "Lincon Sora AI[UNPATCHED]",
+    "description": "Paste into any Inspect Console on any Website, and it will temporary put Lincoln COnfetti all over the screen",
+    "copyandpase": true,
     "url": "https://example.com/hack8",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/4c326e29-9176-4f0d-ab51-dd206f714352.png",
     "file": "lincon.js",
