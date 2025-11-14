@@ -13,9 +13,9 @@
     }
   },
   {
-    "title": "Nitro Type Hacks",
-    "description": "Copy or drag to bookmarks, open Nitro Type, then click the bookmarklet to auto-fill sentences.",
-    "copyandpase": false,
+    "title": "Nitro Type Hacks[UNPATCHED]",
+    "description": "Copy the Code, paste it in Inspect console on Nitro Type(When your in a race) and every key will turn correct",
+    "copyandpase": true,
     "url": "https://example.com/hack3",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-26%20221715.png?updatedAt=1748315881227",
     "file": "nitro.js",
@@ -105,7 +105,7 @@
   },
   {
     "title": "Dog Whistle++",
-    "description": "Drag to bookmarks, it will show 9 Different HZ Sounds, and fake Audio Bar to prove yourself Innocent",
+    "description": "Paste the Code inside any website[NOT GOOGLE ONES] it will show 9 Different HZ Sounds, and fake Audio Bar to prove yourself Innocent",
     "copyandpase": true,
     "url": "https://example.com/hack8",
     "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-10-24%20001711.png",
