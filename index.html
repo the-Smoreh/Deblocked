@@ -901,6 +901,49 @@ body.playing-game .social{
   display:none !important;
 }
 
+/* HUD for in-game stats */
+.game-stats-hud{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:240px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(10,16,26,0.9);
+  box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04);
+  display:none;
+  flex-direction:column;
+  gap:8px;
+  z-index:9990;
+  backdrop-filter:var(--blur);
+}
+
+.game-stats-hud .hud-title{
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.game-stats-hud .hud-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  font-weight:700;
+}
+
+.game-stats-hud .hud-row span:last-child{
+  color:var(--fg);
+}
+
+body.playing-game .game-stats-hud{
+  display:flex;
+}
+
 #iframePreview img {
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -2338,6 +2381,89 @@ function since(s){
 }
 function setText(sel,txt){const el=typeof sel==="string"?$(sel):sel;if(el)el.textContent=txt;}
 
+/* ---------- Game HUD (battery + FPS) ---------- */
+let fpsLoopId=null;
+let batteryCleanup=null;
+let gameHud=null;
+
+function ensureGameHud(){
+  if(gameHud) return gameHud;
+  const hud=document.createElement("div");
+  hud.id="gameStatsHud";
+  hud.className="game-stats-hud";
+  hud.innerHTML=`
+    <div class="hud-title">Game Stats</div>
+    <div class="hud-row"><span>Battery</span><span data-hud-battery>--</span></div>
+    <div class="hud-row"><span>FPS</span><span data-hud-fps>-- FPS</span></div>
+  `;
+  document.body.appendChild(hud);
+  gameHud=hud;
+  return hud;
+}
+
+function stopGameHud(){
+  if(fpsLoopId){
+    cancelAnimationFrame(fpsLoopId);
+    fpsLoopId=null;
+  }
+  if(batteryCleanup){
+    batteryCleanup();
+    batteryCleanup=null;
+  }
+}
+
+function startFpsMonitor(target){
+  let frames=0;
+  let last=performance.now();
+  const loop=(now)=>{
+    frames++;
+    if(now-last>=1000){
+      const fps=Math.round(frames*1000/(now-last));
+      setText(target,`${fps} FPS`);
+      frames=0;
+      last=now;
+    }
+    fpsLoopId=requestAnimationFrame(loop);
+  };
+  fpsLoopId=requestAnimationFrame(loop);
+}
+
+function startBatteryMonitor(target){
+  if(!navigator.getBattery){
+    setText(target,"N/A");
+    return;
+  }
+
+  navigator.getBattery()
+    .then(manager=>{
+      const update=()=>{
+        const level=Math.round(manager.level*100);
+        const status=manager.charging?" (charging)":"";
+        setText(target,`${level}%${status}`);
+      };
+
+      update();
+      manager.addEventListener("levelchange",update);
+      manager.addEventListener("chargingchange",update);
+      batteryCleanup=()=>{
+        manager.removeEventListener("levelchange",update);
+        manager.removeEventListener("chargingchange",update);
+      };
+    })
+    .catch(()=>setText(target,"N/A"));
+}
+
+function startGameHud(){
+  const hud=ensureGameHud();
+  stopGameHud();
+  const batteryEl=hud.querySelector('[data-hud-battery]');
+  const fpsEl=hud.querySelector('[data-hud-fps]');
+  setText(batteryEl,"--");
+  setText(fpsEl,"-- FPS");
+  startBatteryMonitor(batteryEl);
+  startFpsMonitor(fpsEl);
+}
+
 /* ---------- Favorites ---------- */
 const favKey="deblocked:favorites";
 let favorites=new Set(JSON.parse(localStorage.getItem(favKey)||"[]"));
@@ -2840,6 +2966,7 @@ $("#playEmbeddedBtn").onclick = () => {
 // Show panel
 function showPanelForGame(game) {
   document.body.classList.remove("playing-game");
+  stopGameHud();
   renderGamePanel(game);
   hideHomeSections();
   const panel = $("#gamePanel");
@@ -2882,6 +3009,8 @@ function showGameOnly(game) {
     if (iframe.src) iframe.src = iframe.src;
   };
   $("#iframeFsBtn").onclick = () => $("#gameIframe").requestFullscreen?.();
+
+  startGameHud();
 }
 
 
@@ -2893,6 +3022,7 @@ function hidePanel() {
     panel.classList.remove("is-playing");
     panel.innerHTML = "";
   }
+  stopGameHud();
   document.body.classList.remove("playing-game");
   showHomeSections();
 }
