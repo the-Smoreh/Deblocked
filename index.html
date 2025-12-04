@@ -1766,6 +1766,95 @@ button.btn.primary {
   max-width: 1200px;
 }
 
+/* Hacks gate overlay */
+#hacksSection {
+  position: relative;
+}
+
+#hacksSection.gated .hacks-header,
+#hacksSection.gated #hacksGrid {
+  filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.4;
+}
+
+#hacksGate {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(180deg, rgba(6, 10, 16, 0.92), rgba(6, 10, 16, 0.8));
+  backdrop-filter: blur(10px) saturate(140%);
+  z-index: 12;
+}
+
+.hacks-gate-card {
+  width: min(520px, 90vw);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+.hacks-gate-card h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.hacks-gate-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.gate-actions .btn,
+.gate-choice {
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.gate-actions .btn.primary,
+.gate-choice.active {
+  background: linear-gradient(90deg, var(--accent, #00cfff), var(--accent2, #7f60f9));
+  border-color: transparent;
+}
+
+.gate-actions .btn:hover,
+.gate-choice:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.gate-instructions {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: left;
+  line-height: 1.5;
+}
+
 /* hack cards */
 .hack-card {
   background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
@@ -2027,8 +2116,46 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
 <!-- 🔽 everything else continues as-is -->
 <div class="container">
 
-    
+
  <section id="hacksSection" class="page hidden" aria-label="Hacks">
+  <div id="hacksGate">
+    <div class="hacks-gate-card" id="hacksGateCard">
+      <div id="hacksGateStage1" class="gate-stage">
+      <h3>Do you know how to use the hacks?</h3>
+      <p>Pick the option that matches how comfortable you are with bookmarklets and console copies.</p>
+      <div class="gate-actions">
+        <button id="hacksGateKnow" class="btn primary">I know how to use bookmarklets and console copies</button>
+        <button id="hacksGateLearn" class="btn">I don't know how to use the hacks</button>
+      </div>
+      </div>
+
+      <div id="hacksGateStage2" class="gate-stage hidden">
+      <h3>Choose how you want to use hacks</h3>
+      <div class="gate-actions">
+        <button id="hacksGateConsole" class="gate-choice active">Console copies</button>
+        <button id="hacksGateBookmark" class="gate-choice">Bookmarklets</button>
+      </div>
+      <div id="hacksGateConsoleSteps" class="gate-instructions">
+        <ul>
+          <li>Copy the hack code.</li>
+          <li>Open the site the hack is for, open Inspect/DevTools, and switch to the Console tab.</li>
+          <li>Paste the code. If paste is blocked, type <code>allow pasting</code> and press Enter, then paste again.</li>
+        </ul>
+      </div>
+      <div id="hacksGateBookmarkSteps" class="gate-instructions hidden">
+        <ul>
+          <li>Find a hack button that says "Drag to Bookmarks".</li>
+          <li>Drag it to your bookmarks bar.</li>
+          <li>Open the intended site and click the new bookmarklet to run the hack.</li>
+        </ul>
+      </div>
+        <div class="gate-actions">
+          <button id="hacksGateBack" class="btn">Back</button>
+          <button id="hacksGateContinue" class="btn primary">I understand, show the hacks</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="hacks-header">
     <div class="filters">
       <input id="hacksSearch" type="text" placeholder="Search hacks..." />
@@ -3872,8 +3999,90 @@ if (sidebar) {
   const searchInput = document.getElementById("hacksSearch");
   const sortSel = document.getElementById("hacksSort");
   const randomBtn = document.getElementById("hacksRandom");
+  const hacksSection = document.getElementById("hacksSection");
+  const gate = document.getElementById("hacksGate");
+  const gateCard = document.getElementById("hacksGateCard");
+  const stage1 = document.getElementById("hacksGateStage1");
+  const stage2 = document.getElementById("hacksGateStage2");
+  const btnKnow = document.getElementById("hacksGateKnow");
+  const btnLearn = document.getElementById("hacksGateLearn");
+  const btnBack = document.getElementById("hacksGateBack");
+  const btnContinue = document.getElementById("hacksGateContinue");
+  const btnConsole = document.getElementById("hacksGateConsole");
+  const btnBookmark = document.getElementById("hacksGateBookmark");
+  const stepsConsole = document.getElementById("hacksGateConsoleSteps");
+  const stepsBookmark = document.getElementById("hacksGateBookmarkSteps");
 
   let hacks = [];
+
+  function setGateActive(active) {
+    if (!hacksSection || !gate) return;
+    if (active) {
+      hacksSection.classList.add("gated");
+      gate.classList.remove("hidden");
+    } else {
+      hacksSection.classList.remove("gated");
+      gate.classList.add("hidden");
+    }
+  }
+
+  function markGateComplete() {
+    try { localStorage.setItem("hacksGateSeen", "1"); } catch (e) { /* ignore */ }
+    setGateActive(false);
+  }
+
+  function showStage(which) {
+    if (!stage1 || !stage2) return;
+    if (which === 2) {
+      stage1.classList.add("hidden");
+      stage2.classList.remove("hidden");
+    } else {
+      stage1.classList.remove("hidden");
+      stage2.classList.add("hidden");
+    }
+  }
+
+  function showInstruction(mode) {
+    if (!btnConsole || !btnBookmark || !stepsConsole || !stepsBookmark) return;
+    if (mode === "bookmark") {
+      btnBookmark.classList.add("active");
+      btnConsole.classList.remove("active");
+      stepsBookmark.classList.remove("hidden");
+      stepsConsole.classList.add("hidden");
+    } else {
+      btnConsole.classList.add("active");
+      btnBookmark.classList.remove("active");
+      stepsConsole.classList.remove("hidden");
+      stepsBookmark.classList.add("hidden");
+    }
+  }
+
+  (function initGate() {
+    if (!hacksSection || !gate || !gateCard) return;
+
+    const seen = (() => {
+      try { return localStorage.getItem("hacksGateSeen") === "1"; } catch (e) { return false; }
+    })();
+
+    if (!seen) {
+      setGateActive(true);
+      showStage(1);
+      showInstruction("console");
+    } else {
+      setGateActive(false);
+    }
+
+    btnKnow?.addEventListener("click", markGateComplete);
+    btnLearn?.addEventListener("click", () => {
+      showStage(2);
+      setGateActive(true);
+      showInstruction("console");
+    });
+    btnBack?.addEventListener("click", () => showStage(1));
+    btnContinue?.addEventListener("click", markGateComplete);
+    btnConsole?.addEventListener("click", () => showInstruction("console"));
+    btnBookmark?.addEventListener("click", () => showInstruction("bookmark"));
+  })();
 
   function slugify(s) {
     return (s || "").toLowerCase().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
