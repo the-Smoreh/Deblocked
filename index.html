@@ -901,6 +901,69 @@ body.playing-game .social{
   display:none !important;
 }
 
+/* HUD for in-game stats */
+.game-stats-hud{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:240px;
+  min-height:140px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(10,16,26,0.9);
+  box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04);
+  display:none;
+  flex-direction:column;
+  gap:8px;
+  z-index:9990;
+  backdrop-filter:var(--blur);
+}
+
+.game-stats-hud.corner-tl{
+  top:18px;
+  left:18px;
+  right:auto;
+  bottom:auto;
+}
+
+.game-stats-hud.corner-tr{
+  top:18px;
+  right:18px;
+  bottom:auto;
+}
+
+.game-stats-hud.corner-bl{
+  bottom:18px;
+  left:18px;
+  right:auto;
+}
+
+.game-stats-hud .hud-title{
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.game-stats-hud .hud-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+  font-weight:700;
+}
+
+.game-stats-hud .hud-row span:last-child{
+  color:var(--fg);
+}
+
+body.playing-game .game-stats-hud{
+  display:flex;
+}
+
 #iframePreview img {
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -1723,6 +1786,95 @@ button.btn.primary {
   max-width: 1200px;
 }
 
+/* Hacks gate overlay */
+#hacksSection {
+  position: relative;
+}
+
+#hacksSection.gated .hacks-header,
+#hacksSection.gated #hacksGrid {
+  filter: blur(8px);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.4;
+}
+
+#hacksGate {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: linear-gradient(180deg, rgba(6, 10, 16, 0.92), rgba(6, 10, 16, 0.8));
+  backdrop-filter: blur(10px) saturate(140%);
+  z-index: 12;
+}
+
+.hacks-gate-card {
+  width: min(520px, 90vw);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+.hacks-gate-card h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.hacks-gate-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.gate-actions .btn,
+.gate-choice {
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.gate-actions .btn.primary,
+.gate-choice.active {
+  background: linear-gradient(90deg, var(--accent, #00cfff), var(--accent2, #7f60f9));
+  border-color: transparent;
+}
+
+.gate-actions .btn:hover,
+.gate-choice:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.gate-instructions {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: left;
+  line-height: 1.5;
+}
+
 /* hack cards */
 .hack-card {
   background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
@@ -1984,8 +2136,46 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
 <!-- 🔽 everything else continues as-is -->
 <div class="container">
 
-    
+
  <section id="hacksSection" class="page hidden" aria-label="Hacks">
+  <div id="hacksGate">
+    <div class="hacks-gate-card" id="hacksGateCard">
+      <div id="hacksGateStage1" class="gate-stage">
+      <h3>Do you know how to use the hacks?</h3>
+      <p>Pick the option that matches how comfortable you are with bookmarklets and console copies.</p>
+      <div class="gate-actions">
+        <button id="hacksGateKnow" class="btn primary">I know how to use bookmarklets and console copies</button>
+        <button id="hacksGateLearn" class="btn">I don't know how to use the hacks</button>
+      </div>
+      </div>
+
+      <div id="hacksGateStage2" class="gate-stage hidden">
+      <h3>Choose how you want to use hacks</h3>
+      <div class="gate-actions">
+        <button id="hacksGateConsole" class="gate-choice active">Console copies</button>
+        <button id="hacksGateBookmark" class="gate-choice">Bookmarklets</button>
+      </div>
+      <div id="hacksGateConsoleSteps" class="gate-instructions">
+        <ul>
+          <li>Copy the hack code.</li>
+          <li>Open the site the hack is for, open Inspect/DevTools, and switch to the Console tab.</li>
+          <li>Paste the code. If paste is blocked, type <code>allow pasting</code> and press Enter, then paste again.</li>
+        </ul>
+      </div>
+      <div id="hacksGateBookmarkSteps" class="gate-instructions hidden">
+        <ul>
+          <li>Find a hack button that says "Drag to Bookmarks".</li>
+          <li>Drag it to your bookmarks bar.</li>
+          <li>Open the intended site and click the new bookmarklet to run the hack.</li>
+        </ul>
+      </div>
+        <div class="gate-actions">
+          <button id="hacksGateBack" class="btn">Back</button>
+          <button id="hacksGateContinue" class="btn primary">I understand, show the hacks</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="hacks-header">
     <div class="filters">
       <input id="hacksSearch" type="text" placeholder="Search hacks..." />
@@ -2337,6 +2527,161 @@ function since(s){
   if(days<1)return"today";if(days===1)return"1 day ago";return`${days} days ago`;
 }
 function setText(sel,txt){const el=typeof sel==="string"?$(sel):sel;if(el)el.textContent=txt;}
+
+/* ---------- Game HUD (battery + FPS) ---------- */
+let fpsLoopId=null;
+let batteryCleanup=null;
+let memoryCleanup=null;
+let gpuCleanup=null;
+let gameHuds=null;
+
+function ensureGameHuds(){
+  if(gameHuds) return gameHuds;
+
+  const configs=[
+    { cls:"corner-tl",  title:"Game Stats", rows:[{ label:"FPS", key:"fps" }] },
+    { cls:"corner-tr",  title:"Performance", rows:[{ label:"Memory", key:"memory" }] },
+    { cls:"corner-br",  title:"Game Stats", rows:[{ label:"Battery", key:"battery" }] },
+    { cls:"corner-bl",  title:"Performance", rows:[{ label:"GPU", key:"gpu" }] },
+  ];
+
+  gameHuds=configs.map(cfg=>{
+    const hud=document.createElement("div");
+    hud.className=`game-stats-hud ${cfg.cls}`;
+    const rowsHtml=cfg.rows.map(row=>`
+      <div class="hud-row"><span>${row.label}</span><span data-hud-${row.key}>--</span></div>
+    `).join("");
+    hud.innerHTML=`
+      <div class="hud-title">${cfg.title}</div>
+      ${rowsHtml}
+    `;
+    const rowRefs=cfg.rows.reduce((acc,row)=>{
+      acc[row.key]=hud.querySelector(`[data-hud-${row.key}]`);
+      return acc;
+    },{});
+    document.body.appendChild(hud);
+    return { root:hud, rows:rowRefs };
+  });
+
+  return gameHuds;
+}
+
+function stopGameHud(){
+  if(fpsLoopId){
+    cancelAnimationFrame(fpsLoopId);
+    fpsLoopId=null;
+  }
+  if(batteryCleanup){
+    batteryCleanup();
+    batteryCleanup=null;
+  }
+  if(memoryCleanup){
+    memoryCleanup();
+    memoryCleanup=null;
+  }
+  if(gpuCleanup){
+    gpuCleanup();
+    gpuCleanup=null;
+  }
+}
+
+function startFpsMonitor(targets){
+  let frames=0;
+  let last=performance.now();
+  const loop=(now)=>{
+    frames++;
+    if(now-last>=1000){
+      const fps=Math.round(frames*1000/(now-last));
+      targets.forEach(t=>setText(t,`${fps} FPS`));
+      frames=0;
+      last=now;
+    }
+    fpsLoopId=requestAnimationFrame(loop);
+  };
+  fpsLoopId=requestAnimationFrame(loop);
+}
+
+function startBatteryMonitor(targets){
+  if(!navigator.getBattery){
+    targets.forEach(t=>setText(t,"N/A"));
+    return ()=>{};
+  }
+
+    navigator.getBattery()
+      .then(manager=>{
+        const update=()=>{
+          const level=Math.round(manager.level*100);
+          const status=manager.charging?" (charging)":"";
+          targets.forEach(t=>setText(t,`${level}%${status}`));
+        };
+
+        update();
+        manager.addEventListener("levelchange",update);
+        manager.addEventListener("chargingchange",update);
+        const cleanup=()=>{
+          manager.removeEventListener("levelchange",update);
+          manager.removeEventListener("chargingchange",update);
+        };
+        batteryCleanup=cleanup;
+        return cleanup;
+      })
+      .catch(()=>targets.forEach(t=>setText(t,"N/A")));
+}
+
+function startMemoryMonitor(targets){
+  if(!performance.memory){
+    targets.forEach(t=>setText(t,"N/A"));
+    return ()=>{};
+  }
+
+  const interval=setInterval(()=>{
+    const { usedJSHeapSize, totalJSHeapSize } = performance.memory;
+    const used=Math.round(usedJSHeapSize/1048576);
+    const total=Math.round(totalJSHeapSize/1048576);
+    targets.forEach(t=>setText(t,`${used} / ${total} MB`));
+  },1000);
+
+  const cleanup=()=>clearInterval(interval);
+  memoryCleanup=cleanup;
+  return cleanup;
+}
+
+function startGpuMonitor(targets){
+  let gpuLabel="N/A";
+  try{
+    const canvas=document.createElement("canvas");
+    const gl=canvas.getContext("webgl")||canvas.getContext("experimental-webgl");
+    if(gl){
+      const ext=gl.getExtension("WEBGL_debug_renderer_info");
+      gpuLabel=ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):(gl.getParameter(gl.RENDERER)||"WebGL renderer");
+    }
+  }catch(e){
+    gpuLabel="N/A";
+  }
+  targets.forEach(t=>setText(t,gpuLabel));
+  const cleanup=()=>{};
+  gpuCleanup=cleanup;
+  return cleanup;
+}
+
+function startGameHud(){
+  const huds=ensureGameHuds();
+  stopGameHud();
+  const batteryEls=huds.map(h=>h.rows.battery).filter(Boolean);
+  const fpsEls=huds.map(h=>h.rows.fps).filter(Boolean);
+  const memoryEls=huds.map(h=>h.rows.memory).filter(Boolean);
+  const gpuEls=huds.map(h=>h.rows.gpu).filter(Boolean);
+
+  batteryEls.forEach(el=>setText(el,"--"));
+  fpsEls.forEach(el=>setText(el,"-- FPS"));
+  memoryEls.forEach(el=>setText(el,"--"));
+  gpuEls.forEach(el=>setText(el,"--"));
+
+  batteryCleanup=startBatteryMonitor(batteryEls);
+  startFpsMonitor(fpsEls);
+  memoryCleanup=startMemoryMonitor(memoryEls);
+  gpuCleanup=startGpuMonitor(gpuEls);
+}
 
 /* ---------- Favorites ---------- */
 const favKey="deblocked:favorites";
@@ -2840,6 +3185,7 @@ $("#playEmbeddedBtn").onclick = () => {
 // Show panel
 function showPanelForGame(game) {
   document.body.classList.remove("playing-game");
+  stopGameHud();
   renderGamePanel(game);
   hideHomeSections();
   const panel = $("#gamePanel");
@@ -2882,6 +3228,8 @@ function showGameOnly(game) {
     if (iframe.src) iframe.src = iframe.src;
   };
   $("#iframeFsBtn").onclick = () => $("#gameIframe").requestFullscreen?.();
+
+  startGameHud();
 }
 
 
@@ -2893,6 +3241,7 @@ function hidePanel() {
     panel.classList.remove("is-playing");
     panel.innerHTML = "";
   }
+  stopGameHud();
   document.body.classList.remove("playing-game");
   showHomeSections();
 }
@@ -3742,8 +4091,90 @@ if (sidebar) {
   const searchInput = document.getElementById("hacksSearch");
   const sortSel = document.getElementById("hacksSort");
   const randomBtn = document.getElementById("hacksRandom");
+  const hacksSection = document.getElementById("hacksSection");
+  const gate = document.getElementById("hacksGate");
+  const gateCard = document.getElementById("hacksGateCard");
+  const stage1 = document.getElementById("hacksGateStage1");
+  const stage2 = document.getElementById("hacksGateStage2");
+  const btnKnow = document.getElementById("hacksGateKnow");
+  const btnLearn = document.getElementById("hacksGateLearn");
+  const btnBack = document.getElementById("hacksGateBack");
+  const btnContinue = document.getElementById("hacksGateContinue");
+  const btnConsole = document.getElementById("hacksGateConsole");
+  const btnBookmark = document.getElementById("hacksGateBookmark");
+  const stepsConsole = document.getElementById("hacksGateConsoleSteps");
+  const stepsBookmark = document.getElementById("hacksGateBookmarkSteps");
 
   let hacks = [];
+
+  function setGateActive(active) {
+    if (!hacksSection || !gate) return;
+    if (active) {
+      hacksSection.classList.add("gated");
+      gate.classList.remove("hidden");
+    } else {
+      hacksSection.classList.remove("gated");
+      gate.classList.add("hidden");
+    }
+  }
+
+  function markGateComplete() {
+    try { localStorage.setItem("hacksGateSeen", "1"); } catch (e) { /* ignore */ }
+    setGateActive(false);
+  }
+
+  function showStage(which) {
+    if (!stage1 || !stage2) return;
+    if (which === 2) {
+      stage1.classList.add("hidden");
+      stage2.classList.remove("hidden");
+    } else {
+      stage1.classList.remove("hidden");
+      stage2.classList.add("hidden");
+    }
+  }
+
+  function showInstruction(mode) {
+    if (!btnConsole || !btnBookmark || !stepsConsole || !stepsBookmark) return;
+    if (mode === "bookmark") {
+      btnBookmark.classList.add("active");
+      btnConsole.classList.remove("active");
+      stepsBookmark.classList.remove("hidden");
+      stepsConsole.classList.add("hidden");
+    } else {
+      btnConsole.classList.add("active");
+      btnBookmark.classList.remove("active");
+      stepsConsole.classList.remove("hidden");
+      stepsBookmark.classList.add("hidden");
+    }
+  }
+
+  (function initGate() {
+    if (!hacksSection || !gate || !gateCard) return;
+
+    const seen = (() => {
+      try { return localStorage.getItem("hacksGateSeen") === "1"; } catch (e) { return false; }
+    })();
+
+    if (!seen) {
+      setGateActive(true);
+      showStage(1);
+      showInstruction("console");
+    } else {
+      setGateActive(false);
+    }
+
+    btnKnow?.addEventListener("click", markGateComplete);
+    btnLearn?.addEventListener("click", () => {
+      showStage(2);
+      setGateActive(true);
+      showInstruction("console");
+    });
+    btnBack?.addEventListener("click", () => showStage(1));
+    btnContinue?.addEventListener("click", markGateComplete);
+    btnConsole?.addEventListener("click", () => showInstruction("console"));
+    btnBookmark?.addEventListener("click", () => showInstruction("bookmark"));
+  })();
 
   function slugify(s) {
     return (s || "").toLowerCase().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
@@ -4305,6 +4736,14 @@ function hideHacks() {
   </div>
 </div>
 
+<!-- Responsibility reminder popup -->
+<div id="responsibilityPopup" aria-hidden="true">
+  <div class="notice-card" role="alertdialog" aria-labelledby="responsibilityText">
+    <p id="responsibilityText">Use the Website after Completing all your work, and its your responsibility.</p>
+    <button id="agreeNotice">I agree</button>
+  </div>
+</div>
+
 <style>
 /* --- INTRO OVERLAY STYLING --- */
 #introOverlay {
@@ -4419,11 +4858,100 @@ function hideHacks() {
   box-shadow: none;
 }
 
+/* Responsibility popup */
+#responsibilityPopup {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 18px;
+  pointer-events: none;
+  z-index: 999000;
+}
+
+#responsibilityPopup .notice-card {
+  max-width: 340px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  color: var(--fg);
+  gap: 12px;
+  display: grid;
+  align-content: start;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  pointer-events: auto;
+}
+
+#responsibilityPopup.visible .notice-card {
+  opacity: 1;
+  transform: none;
+}
+
+#responsibilityPopup p {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+#agreeNotice {
+  justify-self: end;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: #001018;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#agreeNotice:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+
 
 </style>
 
-
 <script>
+function showResponsibilityPopup(){
+  const popup=document.getElementById("responsibilityPopup");
+  if(!popup)return;
+  popup.classList.add("visible");
+  popup.setAttribute("aria-hidden","false");
+}
+
+function hideResponsibilityPopup(){
+  const popup=document.getElementById("responsibilityPopup");
+  if(!popup)return;
+  popup.classList.remove("visible");
+  popup.setAttribute("aria-hidden","true");
+}
+
+const agreeNoticeBtn=document.getElementById("agreeNotice");
+agreeNoticeBtn?.addEventListener("click",hideResponsibilityPopup);
+
+function finishIntro(fadeDelay=0, removeDelay=900){
+  const intro=document.getElementById("introOverlay");
+  if(!intro){
+    showResponsibilityPopup();
+    return;
+  }
+
+  setTimeout(()=>intro.classList.add("fade-out"), fadeDelay);
+  setTimeout(()=>{
+    intro.remove();
+    showResponsibilityPopup();
+  }, removeDelay);
+}
+
 /* --- STARS --- */
 const introCanvas = document.getElementById("introStars");
 const ictx = introCanvas.getContext("2d");
@@ -4488,13 +5016,7 @@ function typeHTML(line) {
       }, 500);
     } else {
       // Finished all lines → start fade-out
-      setTimeout(() => {
-        document.getElementById("introOverlay").classList.add("fade-out");
-      }, 700);
-      // Remove after fade completes
-      setTimeout(() => {
-        document.getElementById("introOverlay").remove();
-      }, 2200);
+      setTimeout(() => finishIntro(0, 1500), 700);
     }
   }
 }
@@ -4509,9 +5031,7 @@ const skipBtn = document.getElementById("skipIntro");
 setTimeout(() => skipBtn.classList.add("visible"), 2000);
 
 skipBtn.addEventListener("click", () => {
-  const intro = document.getElementById("introOverlay");
-  intro.classList.add("fade-out");
-  setTimeout(() => intro.remove(), 900);
+  finishIntro();
 });
 </script>
 
