@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- minor display tweak for merge verification (recreated) -->
+<!-- minor display tweak for merge verification -->
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -2570,6 +2570,21 @@ function ensureGameHuds(){
   });
 
   return gameHuds;
+let gameHud=null;
+
+function ensureGameHud(){
+  if(gameHud) return gameHud;
+  const hud=document.createElement("div");
+  hud.id="gameStatsHud";
+  hud.className="game-stats-hud";
+  hud.innerHTML=`
+    <div class="hud-title">Game Stats</div>
+    <div class="hud-row"><span>Battery</span><span data-hud-battery>--</span></div>
+    <div class="hud-row"><span>FPS</span><span data-hud-fps>-- FPS</span></div>
+  `;
+  document.body.appendChild(hud);
+  gameHud=hud;
+  return hud;
 }
 
 function stopGameHud(){
@@ -2592,6 +2607,9 @@ function stopGameHud(){
 }
 
 function startFpsMonitor(targets){
+}
+
+function startFpsMonitor(target){
   let frames=0;
   let last=performance.now();
   const loop=(now)=>{
@@ -2599,6 +2617,7 @@ function startFpsMonitor(targets){
     if(now-last>=1000){
       const fps=Math.round(frames*1000/(now-last));
       targets.forEach(t=>setText(t,`${fps} FPS`));
+      setText(target,`${fps} FPS`);
       frames=0;
       last=now;
     }
@@ -2687,6 +2706,40 @@ function startGameHud(){
   startFpsMonitor(fpsEls);
   memoryCleanup=startMemoryMonitor(memoryEls);
   gpuCleanup=startGpuMonitor(gpuEls);
+function startBatteryMonitor(target){
+  if(!navigator.getBattery){
+    setText(target,"N/A");
+    return;
+  }
+
+  navigator.getBattery()
+    .then(manager=>{
+      const update=()=>{
+        const level=Math.round(manager.level*100);
+        const status=manager.charging?" (charging)":"";
+        setText(target,`${level}%${status}`);
+      };
+
+      update();
+      manager.addEventListener("levelchange",update);
+      manager.addEventListener("chargingchange",update);
+      batteryCleanup=()=>{
+        manager.removeEventListener("levelchange",update);
+        manager.removeEventListener("chargingchange",update);
+      };
+    })
+    .catch(()=>setText(target,"N/A"));
+}
+
+function startGameHud(){
+  const hud=ensureGameHud();
+  stopGameHud();
+  const batteryEl=hud.querySelector('[data-hud-battery]');
+  const fpsEl=hud.querySelector('[data-hud-fps]');
+  setText(batteryEl,"--");
+  setText(fpsEl,"-- FPS");
+  startBatteryMonitor(batteryEl);
+  startFpsMonitor(fpsEl);
 }
 
 /* ---------- Favorites ---------- */
@@ -4875,6 +4928,123 @@ function hideHacks() {
   pointer-events: none;
   z-index: 999000;
 }
+
+#responsibilityPopup .notice-card {
+  max-width: 340px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--panel-solid);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  color: var(--fg);
+  gap: 12px;
+  display: grid;
+  align-content: start;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  pointer-events: auto;
+}
+
+#responsibilityPopup.visible .notice-card {
+  opacity: 1;
+  transform: none;
+}
+
+#responsibilityPopup p {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+#agreeNotice {
+  justify-self: end;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: #001018;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#agreeNotice:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+
+#agreeNotice {
+  justify-self: end;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: #001018;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#agreeNotice:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+
+
+#responsibilityPopup p {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+#agreeNotice {
+  justify-self: end;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: #001018;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#agreeNotice:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+
+#responsibilityPopup p {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+#agreeNotice {
+  justify-self: end;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: #001018;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#agreeNotice:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+
+
+</style>
 
 #responsibilityPopup .notice-card {
   max-width: 340px;
