@@ -907,7 +907,6 @@ body.playing-game .social{
   right:18px;
   bottom:18px;
   width:240px;
-  min-height:140px;
   padding:14px 16px;
   border-radius:16px;
   border:1px solid var(--line);
@@ -918,25 +917,6 @@ body.playing-game .social{
   gap:8px;
   z-index:9990;
   backdrop-filter:var(--blur);
-}
-
-.game-stats-hud.corner-tl{
-  top:18px;
-  left:18px;
-  right:auto;
-  bottom:auto;
-}
-
-.game-stats-hud.corner-tr{
-  top:18px;
-  right:18px;
-  bottom:auto;
-}
-
-.game-stats-hud.corner-bl{
-  bottom:18px;
-  left:18px;
-  right:auto;
 }
 
 .game-stats-hud .hud-title{
@@ -2531,44 +2511,21 @@ function setText(sel,txt){const el=typeof sel==="string"?$(sel):sel;if(el)el.tex
 /* ---------- Game HUD (battery + FPS) ---------- */
 let fpsLoopId=null;
 let batteryCleanup=null;
-let memoryCleanup=null;
-let gpuCleanup=null;
-let gameHuds=null;
+let gameHud=null;
 
-document.addEventListener("DOMContentLoaded",()=>{
-  // Ensure HUD shells always exist, even if merge conflicts previously dropped them
-  ensureGameHuds();
-});
-
-function ensureGameHuds(){
-  if(gameHuds) return gameHuds;
-
-  const configs=[
-    { cls:"corner-tl",  title:"Game Stats", rows:[{ label:"FPS", key:"fps" }] },
-    { cls:"corner-tr",  title:"Performance", rows:[{ label:"Memory", key:"memory" }] },
-    { cls:"corner-br",  title:"Game Stats", rows:[{ label:"Battery", key:"battery" }] },
-    { cls:"corner-bl",  title:"Performance", rows:[{ label:"GPU", key:"gpu" }] },
-  ];
-
-  gameHuds=configs.map(cfg=>{
-    const hud=document.createElement("div");
-    hud.className=`game-stats-hud ${cfg.cls}`;
-    const rowsHtml=cfg.rows.map(row=>`
-      <div class="hud-row"><span>${row.label}</span><span data-hud-${row.key}>--</span></div>
-    `).join("");
-    hud.innerHTML=`
-      <div class="hud-title">${cfg.title}</div>
-      ${rowsHtml}
-    `;
-    const rowRefs=cfg.rows.reduce((acc,row)=>{
-      acc[row.key]=hud.querySelector(`[data-hud-${row.key}]`);
-      return acc;
-    },{});
-    document.body.appendChild(hud);
-    return { root:hud, rows:rowRefs };
-  });
-
-  return gameHuds;
+function ensureGameHud(){
+  if(gameHud) return gameHud;
+  const hud=document.createElement("div");
+  hud.id="gameStatsHud";
+  hud.className="game-stats-hud";
+  hud.innerHTML=`
+    <div class="hud-title">Game Stats</div>
+    <div class="hud-row"><span>Battery</span><span data-hud-battery>--</span></div>
+    <div class="hud-row"><span>FPS</span><span data-hud-fps>-- FPS</span></div>
+  `;
+  document.body.appendChild(hud);
+  gameHud=hud;
+  return hud;
 }
 
 function stopGameHud(){
@@ -2580,24 +2537,16 @@ function stopGameHud(){
     batteryCleanup();
     batteryCleanup=null;
   }
-  if(memoryCleanup){
-    memoryCleanup();
-    memoryCleanup=null;
-  }
-  if(gpuCleanup){
-    gpuCleanup();
-    gpuCleanup=null;
-  }
 }
 
-function startFpsMonitor(targets){
+function startFpsMonitor(target){
   let frames=0;
   let last=performance.now();
   const loop=(now)=>{
     frames++;
     if(now-last>=1000){
       const fps=Math.round(frames*1000/(now-last));
-      targets.forEach(t=>setText(t,`${fps} FPS`));
+      setText(target,`${fps} FPS`);
       frames=0;
       last=now;
     }
@@ -2606,86 +2555,40 @@ function startFpsMonitor(targets){
   fpsLoopId=requestAnimationFrame(loop);
 }
 
-function startBatteryMonitor(targets){
+function startBatteryMonitor(target){
   if(!navigator.getBattery){
-    targets.forEach(t=>setText(t,"N/A"));
-    return ()=>{};
+    setText(target,"N/A");
+    return;
   }
 
-    navigator.getBattery()
-      .then(manager=>{
-        const update=()=>{
-          const level=Math.round(manager.level*100);
-          const status=manager.charging?" (charging)":"";
-          targets.forEach(t=>setText(t,`${level}%${status}`));
-        };
+  navigator.getBattery()
+    .then(manager=>{
+      const update=()=>{
+        const level=Math.round(manager.level*100);
+        const status=manager.charging?" (charging)":"";
+        setText(target,`${level}%${status}`);
+      };
 
-        update();
-        manager.addEventListener("levelchange",update);
-        manager.addEventListener("chargingchange",update);
-        const cleanup=()=>{
-          manager.removeEventListener("levelchange",update);
-          manager.removeEventListener("chargingchange",update);
-        };
-        batteryCleanup=cleanup;
-        return cleanup;
-      })
-      .catch(()=>targets.forEach(t=>setText(t,"N/A")));
-}
-
-function startMemoryMonitor(targets){
-  if(!performance.memory){
-    targets.forEach(t=>setText(t,"N/A"));
-    return ()=>{};
-  }
-
-  const interval=setInterval(()=>{
-    const { usedJSHeapSize, totalJSHeapSize } = performance.memory;
-    const used=Math.round(usedJSHeapSize/1048576);
-    const total=Math.round(totalJSHeapSize/1048576);
-    targets.forEach(t=>setText(t,`${used} / ${total} MB`));
-  },1000);
-
-  const cleanup=()=>clearInterval(interval);
-  memoryCleanup=cleanup;
-  return cleanup;
-}
-
-function startGpuMonitor(targets){
-  let gpuLabel="N/A";
-  try{
-    const canvas=document.createElement("canvas");
-    const gl=canvas.getContext("webgl")||canvas.getContext("experimental-webgl");
-    if(gl){
-      const ext=gl.getExtension("WEBGL_debug_renderer_info");
-      gpuLabel=ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):(gl.getParameter(gl.RENDERER)||"WebGL renderer");
-    }
-  }catch(e){
-    gpuLabel="N/A";
-  }
-  targets.forEach(t=>setText(t,gpuLabel));
-  const cleanup=()=>{};
-  gpuCleanup=cleanup;
-  return cleanup;
+      update();
+      manager.addEventListener("levelchange",update);
+      manager.addEventListener("chargingchange",update);
+      batteryCleanup=()=>{
+        manager.removeEventListener("levelchange",update);
+        manager.removeEventListener("chargingchange",update);
+      };
+    })
+    .catch(()=>setText(target,"N/A"));
 }
 
 function startGameHud(){
-  const huds=ensureGameHuds();
+  const hud=ensureGameHud();
   stopGameHud();
-  const batteryEls=huds.map(h=>h.rows.battery).filter(Boolean);
-  const fpsEls=huds.map(h=>h.rows.fps).filter(Boolean);
-  const memoryEls=huds.map(h=>h.rows.memory).filter(Boolean);
-  const gpuEls=huds.map(h=>h.rows.gpu).filter(Boolean);
-
-  batteryEls.forEach(el=>setText(el,"--"));
-  fpsEls.forEach(el=>setText(el,"-- FPS"));
-  memoryEls.forEach(el=>setText(el,"--"));
-  gpuEls.forEach(el=>setText(el,"--"));
-
-  batteryCleanup=startBatteryMonitor(batteryEls);
-  startFpsMonitor(fpsEls);
-  memoryCleanup=startMemoryMonitor(memoryEls);
-  gpuCleanup=startGpuMonitor(gpuEls);
+  const batteryEl=hud.querySelector('[data-hud-battery]');
+  const fpsEl=hud.querySelector('[data-hud-fps]');
+  setText(batteryEl,"--");
+  setText(fpsEl,"-- FPS");
+  startBatteryMonitor(batteryEl);
+  startFpsMonitor(fpsEl);
 }
 
 /* ---------- Favorites ---------- */
@@ -4922,6 +4825,51 @@ function hideHacks() {
   box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
 }
 
+#agreeNotice {
+  justify-self: end;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: #001018;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#agreeNotice:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+
+
+#responsibilityPopup p {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+#agreeNotice {
+  justify-self: end;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: #001018;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#agreeNotice:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
+}
+
+
+</style>
 
 </style>
 
