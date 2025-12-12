@@ -903,20 +903,26 @@ body.playing-game .social{
 
 /* HUD for in-game stats */
 .game-stats-hud{
-  position:fixed;
-  right:18px;
-  bottom:18px;
+  position:absolute;
+  inset:0;
+  display:none;
+  pointer-events:none;
+  z-index:9990;
+}
+
+.game-stats-hud .hud-card{
+  position:absolute;
   width:240px;
   padding:14px 16px;
   border-radius:16px;
   border:1px solid var(--line);
-  background:rgba(10,16,26,0.9);
+  background:rgba(10,16,26,0.92);
   box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04);
-  display:none;
-  flex-direction:column;
-  gap:8px;
-  z-index:9990;
   backdrop-filter:var(--blur);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  pointer-events:auto;
 }
 
 .game-stats-hud .hud-title{
@@ -926,22 +932,18 @@ body.playing-game .social{
   color:var(--muted);
 }
 
-.game-stats-hud .hud-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 12px;
-  border-radius:12px;
-  background:rgba(255,255,255,.04);
-  font-weight:700;
-}
-
-.game-stats-hud .hud-row span:last-child{
+.game-stats-hud .hud-value{
+  font-weight:800;
+  font-size:18px;
   color:var(--fg);
 }
 
+.battery-card{top:18px;left:18px;}
+.fps-card{bottom:18px;left:18px;}
+.extra-card{bottom:18px;right:18px;}
+
 body.playing-game .game-stats-hud{
-  display:flex;
+  display:block;
 }
 
 #iframePreview img {
@@ -2381,7 +2383,7 @@ function since(s){
 }
 function setText(sel,txt){const el=typeof sel==="string"?$(sel):sel;if(el)el.textContent=txt;}
 
-/* ---------- Game HUD (battery + FPS) ---------- */
+/* ---------- Game HUD (battery, FPS, GPU) ---------- */
 let fpsLoopId=null;
 let batteryCleanup=null;
 let gameHud=null;
@@ -2392,11 +2394,19 @@ function ensureGameHud(){
   hud.id="gameStatsHud";
   hud.className="game-stats-hud";
   hud.innerHTML=`
-    <div class="hud-title">Game Stats</div>
-    <div class="hud-row"><span>Battery</span><span data-hud-battery>--</span></div>
-    <div class="hud-row"><span>FPS</span><span data-hud-fps>-- FPS</span></div>
+    <div class="hud-card battery-card">
+      <div class="hud-title">Battery</div>
+      <div class="hud-value" data-hud-battery>--</div>
+    </div>
+    <div class="hud-card fps-card">
+      <div class="hud-title">Performance</div>
+      <div class="hud-value" data-hud-fps>-- FPS</div>
+    </div>
+    <div class="hud-card extra-card">
+      <div class="hud-title">Extra</div>
+      <div class="hud-value" data-hud-extra>Ready</div>
+    </div>
   `;
-  document.body.appendChild(hud);
   gameHud=hud;
   return hud;
 }
@@ -2456,10 +2466,19 @@ function startBatteryMonitor(target){
 function startGameHud(){
   const hud=ensureGameHud();
   stopGameHud();
+  const gameShell=document.querySelector("#gamePanel .fullscreen-game");
+  if(gameShell){
+    if(hud.parentElement!==gameShell){
+      hud.remove();
+      gameShell.appendChild(hud);
+    }
+  }
   const batteryEl=hud.querySelector('[data-hud-battery]');
   const fpsEl=hud.querySelector('[data-hud-fps]');
+  const extraEl=hud.querySelector('[data-hud-extra]');
   setText(batteryEl,"--");
   setText(fpsEl,"-- FPS");
+  setText(extraEl,"HUD active");
   startBatteryMonitor(batteryEl);
   startFpsMonitor(fpsEl);
 }
