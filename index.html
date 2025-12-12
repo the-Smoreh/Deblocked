@@ -903,7 +903,7 @@ body.playing-game .social{
 
 /* HUD for in-game stats */
 .game-stats-hud{
-  position:fixed;
+  position:absolute;
   inset:0;
   display:none;
   pointer-events:none;
@@ -940,7 +940,6 @@ body.playing-game .social{
 
 .battery-card{top:18px;left:18px;}
 .fps-card{bottom:18px;left:18px;}
-.gpu-card{top:18px;right:18px;}
 .extra-card{bottom:18px;right:18px;}
 
 body.playing-game .game-stats-hud{
@@ -2384,37 +2383,38 @@ function since(s){
 }
 function setText(sel,txt){const el=typeof sel==="string"?$(sel):sel;if(el)el.textContent=txt;}
 
-/* ---------- Game HUD (battery, FPS, GPU) ---------- */
+/* ---------- Game HUD (battery + FPS) ---------- */
 let fpsLoopId=null;
 let batteryCleanup=null;
 let gameHud=null;
 
-function ensureGameHud(){
-  if(gameHud) return gameHud;
-  const hud=document.createElement("div");
-  hud.id="gameStatsHud";
-  hud.className="game-stats-hud";
-  hud.innerHTML=`
-    <div class="hud-card battery-card">
-      <div class="hud-title">Battery</div>
-      <div class="hud-value" data-hud-battery>--</div>
-    </div>
-    <div class="hud-card fps-card">
-      <div class="hud-title">Performance</div>
-      <div class="hud-value" data-hud-fps>-- FPS</div>
-    </div>
-    <div class="hud-card gpu-card">
-      <div class="hud-title">GPU</div>
-      <div class="hud-value" data-hud-gpu>Detecting…</div>
-    </div>
-    <div class="hud-card extra-card">
-      <div class="hud-title">Extra</div>
-      <div class="hud-value" data-hud-extra>Ready</div>
-    </div>
-  `;
-  document.body.appendChild(hud);
-  gameHud=hud;
-  return hud;
+function ensureGameHud(container){
+  if(!gameHud){
+    const hud=document.createElement("div");
+    hud.id="gameStatsHud";
+    hud.className="game-stats-hud";
+    hud.innerHTML=`
+      <div class="hud-card battery-card">
+        <div class="hud-title">Battery</div>
+        <div class="hud-value" data-hud-battery>--</div>
+      </div>
+      <div class="hud-card fps-card">
+        <div class="hud-title">Performance</div>
+        <div class="hud-value" data-hud-fps>-- FPS</div>
+      </div>
+      <div class="hud-card extra-card">
+        <div class="hud-title">Extra</div>
+        <div class="hud-value" data-hud-extra>Ready</div>
+      </div>
+    `;
+    gameHud=hud;
+  }
+
+  if(container && gameHud.parentElement!==container){
+    container.appendChild(gameHud);
+  }
+
+  return gameHud;
 }
 
 function stopGameHud(){
@@ -2470,38 +2470,19 @@ function startBatteryMonitor(target){
 }
 
 function startGameHud(){
-  const hud=ensureGameHud();
+  const container=document.querySelector("#gamePanel .fullscreen-game");
+  if(!container) return;
+
+  const hud=ensureGameHud(container);
   stopGameHud();
   const batteryEl=hud.querySelector('[data-hud-battery]');
   const fpsEl=hud.querySelector('[data-hud-fps]');
-  const gpuEl=hud.querySelector('[data-hud-gpu]');
   const extraEl=hud.querySelector('[data-hud-extra]');
   setText(batteryEl,"--");
   setText(fpsEl,"-- FPS");
-  setText(gpuEl,"Detecting…");
   setText(extraEl,"HUD active");
   startBatteryMonitor(batteryEl);
   startFpsMonitor(fpsEl);
-  detectGpuInfo(gpuEl);
-}
-
-function detectGpuInfo(target){
-  if(!target) return;
-  try{
-    const canvas=document.createElement("canvas");
-    const gl=canvas.getContext("webgl")||canvas.getContext("experimental-webgl");
-    if(!gl){
-      setText(target,"WebGL unavailable");
-      return;
-    }
-    const dbg=gl.getExtension("WEBGL_debug_renderer_info");
-    const vendor=dbg?gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL):gl.getParameter(gl.VENDOR);
-    const renderer=dbg?gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);
-    const label=[renderer,vendor].filter(Boolean).join(" · ");
-    setText(target,label||"WebGL active");
-  }catch(e){
-    setText(target,"N/A");
-  }
 }
 
 /* ---------- Favorites ---------- */
