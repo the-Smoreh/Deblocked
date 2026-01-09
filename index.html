@@ -38,6 +38,7 @@ a, a:visited, a:hover,
 /* ---------- TOKENS ---------- */
 :root{
   --bg:#0b0e12; --bg-2:#0f141b; --panel:rgba(17,23,31,.72); --panel-solid:#111823;
+  --bg-image-url:url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1600&auto=format&fit=crop');
   --fg:#eaf2fb; --muted:#a9b6c7; --line:rgba(255,255,255,.06);
   --glow:#00d0ff; --glow2:#a040ff; --accent:var(--glow); --accent2:var(--glow2);
   --radius:16px; --radius-lg:22px; --blur:blur(14px);
@@ -81,13 +82,14 @@ body.card-lifted{
 }
 @keyframes bgDrift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 #bg-image{
-  background:url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+  background:var(--bg-image-url) center/cover no-repeat;
   mix-blend-mode:lighten;opacity:.12
 }
 /* BG modes */
 .bg-mode-stars  #bg-gradient{opacity:.45}.bg-mode-stars  #bg-image{opacity:0}
 .bg-mode-gradient #bg-gradient{opacity:1}.bg-mode-gradient #bg-image{opacity:0}
-.bg-mode-image #bg-gradient{opacity:0}.bg-mode-image #bg-image{opacity:.28}
+.bg-mode-image #bg-gradient{opacity:0}.bg-mode-image #bg-image{opacity:1;mix-blend-mode:normal}
+body.bg-mode-image{--bg:transparent}
 
 /* ---------- LAYOUT ---------- */
 .app{position:relative;z-index:1;min-height:100%;display:grid;grid-template-columns:264px 1fr}
@@ -98,7 +100,22 @@ body.card-lifted{
   position:sticky;top:0;height:100dvh;padding:18px 12px;
   background:linear-gradient(180deg,rgba(17,23,31,.92),rgba(17,23,31,.6));
   backdrop-filter:var(--blur);border-right:1px solid var(--line);
+  overflow:hidden;
   animation:fadeUp .8s .12s ease both;
+}
+.sidebar > *{position:relative;z-index:1}
+body.bg-mode-image .sidebar{
+  background:transparent;
+}
+body.bg-mode-image .sidebar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:var(--bg-image-url) center/cover no-repeat;
+  filter:blur(18px);
+  transform:scale(1.1);
+  opacity:0.95;
+  z-index:0;
 }
 .brand{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px}
 .brand .logo{
@@ -791,6 +808,23 @@ body.ui-frosted #featured .carousel {
   border-radius:var(--radius-lg);
   backdrop-filter:var(--blur);
   box-shadow:0 20px 50px rgba(0,0,0,.4);
+  overflow:hidden;
+}
+#gamePanel .detail-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:var(--detail-bg);
+  background-size:cover;
+  background-position:center;
+  filter:blur(26px);
+  transform:scale(1.1);
+  opacity:0.25;
+  z-index:0;
+}
+#gamePanel .detail-card > *{
+  position:relative;
+  z-index:1;
 }
 #gamePanel .detail-content{
   display:flex;
@@ -2274,6 +2308,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
     <div class="legal-body">
       <section data-legal-section="privacy">
         <p>Deblocked keeps things lightweight. We do not require accounts, and we only store basic preferences (like favorites or theme) in your browser storage when you use those features.</p>
+        <p>Deblocked is a static website, which means the pages are delivered as-is and do not run server-side account or tracking systems for visitors.</p>
         <h4>What we collect</h4>
         <ul>
           <li>Local preferences saved in your browser (device-only).</li>
@@ -3100,7 +3135,7 @@ function renderGamePanel(game) {
 
   // 🔧 Build game info and preview layout
  panel.innerHTML = `
-  <div class="detail-card">
+  <div class="detail-card" style="--detail-bg:url('${game.thumb}')">
       <button class="inline-exit-btn" id="closeGamePanel" title="Exit">✕</button>
 
       <div class="detail-content">
@@ -3370,6 +3405,13 @@ document.addEventListener('click', (e) => {
       // UI active highlight
       $$(".control-btn[data-bg]").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
+
+      if (mode === "stars" && typeof window.initStars === "function") {
+        if (!document.body.dataset.starsInit) {
+          window.initStars();
+          document.body.dataset.starsInit = "1";
+        }
+      }
     };
   });
   // ---------- SITE TAB: Favicon + Title (Presets + Upload) ----------
@@ -3633,6 +3675,7 @@ if (bgMode) {
 
   function applyCustomBackground(url) {
     bgImage.style.backgroundImage = `url('${url}')`;
+    root.style.setProperty("--bg-image-url", `url('${url}')`);
     body.classList.remove("bg-mode-stars", "bg-mode-gradient");
     body.classList.add("bg-mode-image");
     localStorage.setItem("deblocked:customImage", url);
@@ -3651,6 +3694,7 @@ if (bgMode) {
   const savedImage = localStorage.getItem("deblocked:customImage");
   if (savedImage) {
     bgImage.style.backgroundImage = `url('${savedImage}')`;
+    root.style.setProperty("--bg-image-url", `url('${savedImage}')`);
   }
 
   const frosted = localStorage.getItem("deblocked:frosted") === "1";
