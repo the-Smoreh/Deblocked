@@ -778,10 +778,29 @@ body.ui-frosted #featured .carousel {
   animation: fadeUp .4s ease;
 }
 #gamePanel .detail-card{
-  display:flex;gap:24px;align-items:flex-start;
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--radius-lg);padding:24px;
-  backdrop-filter:var(--blur);box-shadow:0 20px 50px rgba(0,0,0,.4);
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 300px;
+  gap:24px;
+  align-items:flex-start;
+  position:relative;
+  margin-top:-25px;
+  padding:24px 28px;
+  min-height:70vh;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  backdrop-filter:var(--blur);
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
+}
+#gamePanel .detail-content{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-width:0;
+}
+#gamePanel .detail-ads{
+  display:flex;
+  justify-content:flex-end;
 }
 #gamePanel .detail-card img{
   width:180px;height:180px;border-radius:14px;object-fit:cover;
@@ -790,13 +809,13 @@ body.ui-frosted #featured .carousel {
   margin:0 0 8px;font:900 32px/1 Outfit,Inter;
 }
 #gamePanel .ad-slots{
-  margin-top:16px;
-  display:grid;
-  gap:12px;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  display:flex;
+  flex-direction:column;
+  gap:16px;
 }
 #gamePanel .ad-slot{
-  min-height:140px;
+  width:300px;
+  height:600px;
   border-radius:14px;
   border:1px dashed rgba(255,255,255,0.18);
   background:rgba(10,16,26,0.55);
@@ -808,6 +827,22 @@ body.ui-frosted #featured .carousel {
   font-weight:600;
   letter-spacing:.02em;
   padding:16px;
+}
+#gamePanel .detail-ads .ad-slot{
+  max-width:100%;
+}
+@media (max-width: 980px) {
+  #gamePanel .detail-card{
+    grid-template-columns:1fr;
+  }
+  #gamePanel .detail-ads{
+    justify-content:flex-start;
+  }
+  #gamePanel .ad-slot{
+    width:100%;
+    max-width:300px;
+    height:600px;
+  }
 }
 #gamePanel .inline-exit-btn{
   position:absolute;
@@ -3065,25 +3100,15 @@ function renderGamePanel(game) {
 
   // 🔧 Build game info and preview layout
  panel.innerHTML = `
-  <div class="detail-card" style="
-    position: relative;
-    margin-top: -25px;
-    padding: 24px 28px;
-    min-height: 70vh;           /* 🟢 makes the panel about x2 taller */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  ">
+  <div class="detail-card">
       <button class="inline-exit-btn" id="closeGamePanel" title="Exit">✕</button>
 
+      <div class="detail-content">
+        <!-- Game icon -->
+        <img src="${game.thumb}" alt="${game.name}" 
+             style="width:180px;height:180px;border-radius:12px;object-fit:cover;">
 
-    
-
-      <!-- Game icon -->
-      <img src="${game.thumb}" alt="${game.name}" 
-           style="width:180px;height:180px;border-radius:12px;object-fit:cover;margin-bottom:12px;">
-
-      <div style="flex:1;">
+        <div style="flex:1;">
         <h2>${game.name}</h2>
         <p class="soft small" style="margin:0 0 8px;">${(game.tags || []).join(" • ")}</p>
         <p class="soft" style="margin:0 0 12px;">${game.desc || "No description provided."}</p>
@@ -3092,12 +3117,6 @@ function renderGamePanel(game) {
         <div class="detail-actions" style="display:flex;gap:10px;flex-wrap:wrap;">
           <button class="btn primary" id="playEmbeddedBtn">▶ Play Now</button>
           
-        </div>
-
-        <div class="ad-slots" aria-label="Advertisement slots">
-          <div class="ad-slot">Ads are Placed here</div>
-          <div class="ad-slot">Ads are Placed here</div>
-          <div class="ad-slot">Ads are Placed here</div>
         </div>
 
         <!-- 🟢 Preview image shows first -->
@@ -3112,6 +3131,15 @@ function renderGamePanel(game) {
         <iframe id="gameIframe" allowfullscreen 
                 style="display:none;width:100%;height:80vh;border:1px solid var(--line);border-radius:16px;background:#000;margin-top:10px;"></iframe>
       </div>
+      </div>
+
+      <aside class="detail-ads" aria-label="Advertisement slots">
+        <div class="ad-slots">
+          <div class="ad-slot">Ads are Placed here</div>
+          <div class="ad-slot">Ads are Placed here</div>
+          <div class="ad-slot">Ads are Placed here</div>
+        </div>
+      </aside>
     </div>
   `;
 
