@@ -1,6 +1,15 @@
 [
     
     {
+        "title": "Suggest Game/Report Bugs",
+        "description": "You can fill this google form or just tell me in person",
+        "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fbrandlogos.net%2Fwp-content%2Fuploads%2F2021%2F10%2Fgoogle-forms-logo.png&f=1&nofb=1&ipt=4385f08f829b26b55c871c2c209168631e14fc4d830b3f62de86fe1508081638",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://forms.gle/dVMtwaFZj7GiPv6v9"
+    },
+    {
         "title": "Deblocked Chat",
         "description": "Il make this its own section, this is temporrary",
         "game_image_icon": "https://www.cq-partners.com/images/chat.jpg",
@@ -437,7 +446,7 @@
         "url": "https://hzfznlbigb.pratikpatel.in/resources/semag/amongus/index.html"
     },
     {
-        "title": "Among Us (New)",
+        "title": "Among Us (new Fan Made)",
         "description": "No description available yet.",
         "game_image_icon": "https://hzfznlbigb.pratikpatel.in/resources/semag/amongusnew/amgojs]_.png",
         "category": "Arcade",
