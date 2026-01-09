@@ -215,6 +215,22 @@ body.card-lifted{
 .section.visible .grid{opacity:1;transform:none}
 .card{background:var(--card-bg);border:var(--card-border);border-radius:14px;overflow:hidden;transition:var(--speed);position:relative;box-shadow:var(--card-shadow)}
 .card:hover{transform:var(--card-hover);box-shadow:var(--card-hover-shadow)}
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:var(--card-bg-image);
+  background-size:cover;
+  background-position:center;
+  filter:blur(12px) brightness(0.85);
+  opacity:0.35;
+  transform:scale(1.08);
+  z-index:0;
+}
+.card > *{
+  position:relative;
+  z-index:1;
+}
 .card .thumb{aspect-ratio:16/10;position:relative;background:#0a0e12}
 .card .thumb .img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.6s ease}
 .card .thumb .vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease .2s}
@@ -773,6 +789,26 @@ body.ui-frosted #featured .carousel {
 #gamePanel .detail-card h2{
   margin:0 0 8px;font:900 32px/1 Outfit,Inter;
 }
+#gamePanel .ad-slots{
+  margin-top:16px;
+  display:grid;
+  gap:12px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+#gamePanel .ad-slot{
+  min-height:140px;
+  border-radius:14px;
+  border:1px dashed rgba(255,255,255,0.18);
+  background:rgba(10,16,26,0.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:var(--muted);
+  font-weight:600;
+  letter-spacing:.02em;
+  padding:16px;
+}
 #gamePanel .inline-exit-btn{
   position:absolute;
   top:18px;
@@ -954,7 +990,7 @@ body.playing-game .social{
   color:var(--fg);
 }
 
-.battery-card{top:18px;left:18px;}
+.battery-card{top:18px;left:18px;transform:scale(1.2);transform-origin:top left;}
 .fps-card{bottom:18px;left:18px;}
 .extra-card{bottom:18px;right:18px;}
 
@@ -2747,7 +2783,7 @@ function cardHTML(g){
   const favActive=favorites.has(g.id)?"active":"";
   const badge=g.tags.includes("hot")?"hot":g.tags.includes("new")?"new":"";
   return`
-<article class="card" data-id="${g.id}">
+<article class="card" data-id="${g.id}" style="--card-bg-image:url('${g.thumb}')">
   <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"></div>
   <div class="body">
     <div class="name">${g.name}</div>
@@ -3056,6 +3092,12 @@ function renderGamePanel(game) {
         <div class="detail-actions" style="display:flex;gap:10px;flex-wrap:wrap;">
           <button class="btn primary" id="playEmbeddedBtn">▶ Play Now</button>
           
+        </div>
+
+        <div class="ad-slots" aria-label="Advertisement slots">
+          <div class="ad-slot">Ads are Placed here</div>
+          <div class="ad-slot">Ads are Placed here</div>
+          <div class="ad-slot">Ads are Placed here</div>
         </div>
 
         <!-- 🟢 Preview image shows first -->
