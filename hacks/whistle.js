@@ -17,14 +17,14 @@ const cv=U.querySelector("#dwpp_bg"),cx=cv.getContext("2d"),note=U.querySelector
 
 const freqs=[
 {hz:12000,txt:"1",risk:"🔴 Very High – easily heard",rc:"#ff7070"},
-{hz:14000,txt:"2",risk:"🟠 High – noticeable to many adults",rc:"#ffaa47"},
-{hz:16000,txt:"3",risk:"🟡 Medium – ALOT of people detect",rc:"#ffd84d"},
+{hz:14000,txt:"2",risk:"🟠 High – noticeable ",rc:"#ffaa47"},
+{hz:16000,txt:"3",risk:"🟡 Medium –  detectable",rc:"#ffd84d"},
 {hz:17000,txt:"4",risk:"🟢 Low – CAN be Heard",rc:"#78ff9c"},
-{hz:18000,txt:"5",risk:"🟢 Very Low – Not Hearable to Many",rc:"#66ffc4"},
-{hz:19000,txt:"6",risk:"🟢 Very Low – stealthy",rc:"#66ffc4"},
+{hz:18000,txt:"5",risk:"🟢 Very Low – Medium",rc:"#66ffc4"},
+{hz:19000,txt:"6",risk:"🟢 Recommended",rc:"#66ffc4"},
 {hz:20000,txt:"7",risk:"🟣 Minimal – near ultrasonic",rc:"#a39dff"},
 {hz:21000,txt:"8",risk:"🟣 Stealth – ultrasonic edge",rc:"#a39dff"},
-{hz:22000,txt:"9",risk:"⚫ Silent – beyond human range",rc:"#9aa0a6"}
+{hz:22000,txt:"9",risk:"⚫ Silent – beyond sound range",rc:"#9aa0a6"}
 ];
 
 const F=U.querySelector("#dwpp_freqs");
