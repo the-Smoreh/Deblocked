@@ -1441,9 +1441,9 @@ html, body {
 }
 
 /* ================================
-   PROXY HUB SECTION — DEBLOCKED ULTRA
+   DIAGNOSTICS HUB SECTION — DEBLOCKED ULTRA
    ================================ */
-#proxies {
+#diagnostics {
   background: radial-gradient(circle at 60% -10%, #121827, #090c12 80%);
   padding: 30px 24px;
   color: #e9efff;
@@ -1451,7 +1451,7 @@ html, body {
   min-height: 100vh;
 }
 
-#proxies h2 {
+#diagnostics h2 {
   font-size: 1.6rem;
   font-weight: 700;
   background: linear-gradient(90deg, #00d0ff, #7b5bff);
@@ -1460,7 +1460,7 @@ html, body {
   margin-bottom: 20px;
 }
 
-.proxy-controls {
+.diagnostic-controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1468,8 +1468,8 @@ html, body {
   margin-bottom: 24px;
 }
 
-.proxy-controls input,
-.proxy-controls select {
+.diagnostic-controls input,
+.diagnostic-controls select {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 10px;
@@ -1479,7 +1479,7 @@ html, body {
   backdrop-filter: blur(6px);
 }
 
-.proxy-controls button {
+.diagnostic-controls button {
   background: linear-gradient(90deg, #00d0ff, #7b5bff);
   color: #fff;
   border: none;
@@ -1490,17 +1490,17 @@ html, body {
   font-weight: 600;
 }
 
-.proxy-controls button:hover {
+.diagnostic-controls button:hover {
   transform: translateY(-1px);
 }
 
-.proxy-grid {
+.diagnostic-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 18px;
 }
 
-.proxy-card {
+.diagnostic-card {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
@@ -1510,34 +1510,34 @@ html, body {
   gap: 8px;
   transition: 0.3s ease;
 }
-.proxy-card:hover {
+.diagnostic-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 28px rgba(0,0,0,0.35);
 }
 
-.proxy-card h3 {
+.diagnostic-card h3 {
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
 }
-.proxy-card p {
+.diagnostic-card p {
   font-size: 0.85rem;
   color: #9fb1d4;
 }
 
-.proxy-card .tags {
+.diagnostic-card .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
-.proxy-card .tag {
+.diagnostic-card .tag {
   padding: 3px 8px;
   border-radius: 8px;
   background: rgba(255,255,255,0.1);
   font-size: 0.7rem;
 }
 
-.proxy-card button {
+.diagnostic-card button {
   align-self: flex-start;
   margin-top: auto;
   background: linear-gradient(90deg, #00d0ff, #7b5bff);
@@ -1548,7 +1548,7 @@ html, body {
   cursor: pointer;
 }
 
-.proxy-portal {
+.diagnostic-portal {
   position: fixed;
   inset: 0;
   background: rgba(8,10,14,0.9);
@@ -1557,7 +1557,7 @@ html, body {
   display: none;
 }
 
-.proxy-portal iframe {
+.diagnostic-portal iframe {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1568,7 +1568,7 @@ html, body {
   border: none;
 }
 
-.close-proxy {
+.close-diagnostic {
   position: fixed;
   top: 18px;
   right: 24px;
@@ -1583,15 +1583,15 @@ html, body {
   z-index: 1000;
 }
 
-.proxy-card:hover {
+.diagnostic-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 28px rgba(0,0,0,0.3);
 }
 
-.proxy-card img {
+.diagnostic-card img {
   transition: transform 0.35s ease, opacity 0.35s ease;
 }
-.proxy-card:hover img {
+.diagnostic-card:hover img {
   transform: scale(1.05);
   opacity: 1;
 }
@@ -1606,9 +1606,9 @@ html, body {
   cursor: pointer;
 }
 
-/* 🔧 Normalize proxy action buttons */
-.proxy-card .btn,
-.proxy-card button {
+/* 🔧 Normalize diagnostic action buttons */
+.diagnostic-card .btn,
+.diagnostic-card button {
   min-width: 100px;               /* ensures both Launch / Visit Site stay balanced */
   padding: 10px 18px;             /* identical vertical + horizontal padding */
   font-size: 15px;
@@ -1620,7 +1620,7 @@ html, body {
 }
 
 /* optional: ensure gradient buttons keep consistent line height */
-.proxy-card .btn.primary {
+.diagnostic-card .btn.primary {
   line-height: 1.2;
 }
 
@@ -1638,7 +1638,7 @@ button.btn.primary {
 }
 
 /* Match spacing and baseline with "Open in new tab" */
-.proxy-card .btn.primary {
+.diagnostic-card .btn.primary {
   margin-top: 0;
   vertical-align: middle;
   transform: translateY(1px); /* tiny optical alignment */
@@ -2087,11 +2087,11 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 4.84 5.34.78-3.86 3.76.91 5.32L12 14.77 6.22 16.7l.91-5.32L3.27 7.62l5.34-.78L12 2z"/></svg>
         <span>Featured</span><span class="badge">New</span>
       </a>
-      <a href="#proxies" data-filter="proxies">
+      <a href="#diagnostics" data-filter="diagnostics">
   <svg viewBox="0 0 24 24" fill="currentColor">
     <path d="M4 4h16v4H4V4zm0 6h16v4H4v-4zm0 6h16v4H4v-4z"/>
   </svg>
-  <span>Proxies</span>
+  <span>Diagnostics</span>
 </a>
  <a href="#" data-filter="hacks"><i class="icon">⚙️</i> Tools </a>
       
@@ -2243,28 +2243,28 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
         <div class="carousel"><div class="row-scroll" id="carouselRow"></div></div>
       </section>
       
-<!-- Proxies -->
-<section class="section" id="proxies" style="display:none;">
-  <h2>Proxies</h2>
+<!-- Diagnostics -->
+<section class="section" id="diagnostics" style="display:none;">
+  <h2>Diagnostics</h2>
 
-  <div class="proxy-controls" style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 16px;">
-    <input id="proxySearch" type="text" placeholder="Search proxies…" style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1622;color:var(--fg)">
-    <select id="proxySort" style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1622;color:var(--fg)">
+  <div class="diagnostic-controls" style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 16px;">
+    <input id="diagnosticSearch" type="text" placeholder="Search diagnostics…" style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1622;color:var(--fg)">
+    <select id="diagnosticSort" style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1622;color:var(--fg)">
       <option value="smart">Sort: Smart</option>
       <option value="rating">Sort: Rating</option>
       <option value="speed">Sort: Speed</option>
       <option value="verified">Sort: Verified</option>
     </select>
-    <button id="proxyRandom" class="btn primary">🎲 Random</button>
+    <button id="diagnosticRandom" class="btn primary">🎲 Random</button>
   </div>
 
-  <div id="proxyGrid" class="proxy-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;"></div>
+  <div id="diagnosticGrid" class="diagnostic-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;"></div>
 
   <!-- Fullscreen portal -->
-  <div id="proxyPortal" class="proxy-portal" style="position:fixed;inset:0;background:rgba(8,10,14,.9);backdrop-filter:blur(8px);z-index:9999;display:none;">
-    <iframe id="proxyFrame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups"
+  <div id="diagnosticPortal" class="diagnostic-portal" style="position:fixed;inset:0;background:rgba(8,10,14,.9);backdrop-filter:blur(8px);z-index:9999;display:none;">
+    <iframe id="diagnosticFrame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups"
             style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90vw;height:85vh;border:none;border-radius:14px;background:#000"></iframe>
-    <button id="proxyClose" class="icon-btn" title="Close"
+    <button id="diagnosticClose" class="icon-btn" title="Close"
             style="position:fixed;top:18px;right:24px;z-index:10000">✕</button>
   </div>
 </section>
@@ -2336,7 +2336,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
           <li>Basic, anonymous usage data if you interact with third-party services.</li>
         </ul>
         <h4>Third-party links</h4>
-        <p>External games, proxies, and tools may have their own privacy policies. Review them before using those sites.</p>
+        <p>External games, diagnostics, and tools may have their own privacy policies. Review them before using those sites.</p>
       </section>
       <section data-legal-section="terms" hidden>
         <p>By using Deblocked, you agree to use the site responsibly and comply with all applicable rules at your location.</p>
@@ -3993,29 +3993,29 @@ function initStars() {
 </script>
 
 <script>
-// ===== PROXIES HOOKUP (non-destructive) =====
+// ===== DIAGNOSTICS HOOKUP (non-destructive) =====
 (() => {
-  const proxySection = document.getElementById("proxies");
-  const proxyGrid    = document.getElementById("proxyGrid");
-  const proxyPortal  = document.getElementById("proxyPortal");
-  const proxyFrame   = document.getElementById("proxyFrame");
-  const proxyClose   = document.getElementById("proxyClose");
-  const proxySearch  = document.getElementById("proxySearch");
-  const proxySort    = document.getElementById("proxySort");
-  const proxyRandom  = document.getElementById("proxyRandom");
+  const diagnosticSection = document.getElementById("diagnostics");
+  const diagnosticGrid    = document.getElementById("diagnosticGrid");
+  const diagnosticPortal  = document.getElementById("diagnosticPortal");
+  const diagnosticFrame   = document.getElementById("diagnosticFrame");
+  const diagnosticClose   = document.getElementById("diagnosticClose");
+  const diagnosticSearch  = document.getElementById("diagnosticSearch");
+  const diagnosticSort    = document.getElementById("diagnosticSort");
+  const diagnosticRandom  = document.getElementById("diagnosticRandom");
   const sidebar      = document.getElementById("sidebarNav");
 
-  if (!proxySection) return; // if you haven't added the section yet, exit
+  if (!diagnosticSection) return; // if you haven't added the section yet, exit
 
-  // Keep these sections visible when not in Proxies
+  // Keep these sections visible when not in Diagnostics
   const HOME_SECTIONS = ["#hero","#featured","#trending","#favorites","#continue","#new","#catDock"];
 
   const gamePanel = document.getElementById("gamePanel");
 if (gamePanel) gamePanel.classList.add("hidden-temp");
 
 
-function showProxies() {
-  if (!proxySection) return;
+function showDiagnostics() {
+  if (!diagnosticSection) return;
 
   // hide home sections
   if (HOME_SECTIONS && Array.isArray(HOME_SECTIONS)) {
@@ -4039,18 +4039,18 @@ function showProxies() {
   const hacks = document.getElementById("hacksSection");
   if (hacks) hacks.style.display = "none";
 
-  // show proxies section
-  proxySection.style.display = "block";
+  // show diagnostics section
+  diagnosticSection.style.display = "block";
   window.scrollTo(0, 0);
 }
 
-function hideProxies() {
-  if (!proxySection) return;
+function hideDiagnostics() {
+  if (!diagnosticSection) return;
 
-  // hide proxies
-  proxySection.style.display = "none";
-  proxyPortal.style.display = "none";
-  proxyFrame.src = "";
+  // hide diagnostics
+  diagnosticSection.style.display = "none";
+  diagnosticPortal.style.display = "none";
+  diagnosticFrame.src = "";
 
   // restore home sections
   if (HOME_SECTIONS && Array.isArray(HOME_SECTIONS)) {
@@ -4086,17 +4086,17 @@ if (sidebar) {
     console.log("Sidebar clicked:", section);
 
     // 🟢 Route logic
-    if (section === "proxies") {
+    if (section === "diagnostics") {
       hideHacks();       // hide hacks if open
-      showProxies();     // show proxies
+      showDiagnostics();     // show diagnostics
     } 
     else if (section === "hacks") {
-      hideProxies();     // hide proxies if open
+      hideDiagnostics();     // hide diagnostics if open
       showHacksSection();// show hacks page
     } 
     else {
       // Default → go back home
-      hideProxies();
+      hideDiagnostics();
       hideHacks();
 
       // show main/home sections again
@@ -4121,19 +4121,19 @@ if (sidebar) {
 
 
   // Data + rendering
-  let proxies = [];
+  let diagnostics = [];
 
- function renderProxies(list) {
-  proxyGrid.innerHTML = list.map(p => `
-    <article class="proxy-card" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:0.3s;">
+ function renderDiagnostics(list) {
+  diagnosticGrid.innerHTML = list.map(p => `
+    <article class="diagnostic-card" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:0.3s;">
       <div style="position:relative;">
-        <img src="${p.thumb || 'https://via.placeholder.com/400x200?text=Proxy+Preview'}" 
-             alt="${p.name || 'Proxy'}" 
+        <img src="${p.thumb || 'https://via.placeholder.com/400x200?text=Diagnostic+Preview'}" 
+             alt="${p.name || 'Diagnostic'}" 
              style="width:100%;height:160px;object-fit:cover;opacity:0.9;">
         <div style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);padding:4px 8px;border-radius:8px;font-size:12px;color:#fff;">${(p.tags || []).slice(0,2).join(" • ")}</div>
       </div>
       <div style="padding:14px;display:flex;flex-direction:column;gap:6px;">
-        <h3 style="margin:0;font-size:1.1rem;font-weight:700;">${p.name || "Untitled Proxy"}</h3>
+        <h3 style="margin:0;font-size:1.1rem;font-weight:700;">${p.name || "Untitled Diagnostic"}</h3>
         <p style="font-size:0.85rem;opacity:0.85;margin:0;">${p.desc || "No description available."}</p>
         <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
   <button class="btn primary" data-url="${p.url}">Launch</button>
@@ -4144,61 +4144,61 @@ if (sidebar) {
   `).join("");
 
   // Hook up launch buttons
-  proxyGrid.querySelectorAll("button[data-url]").forEach(btn => {
-    btn.addEventListener("click", () => openProxy(btn.getAttribute("data-url")));
+  diagnosticGrid.querySelectorAll("button[data-url]").forEach(btn => {
+    btn.addEventListener("click", () => openDiagnostic(btn.getAttribute("data-url")));
   });
 }
 
 
-  function openProxy(url) {
+  function openDiagnostic(url) {
   window.open(url, "_blank");
 }
 
 
-  proxyClose?.addEventListener("click", () => {
-    proxyPortal.style.display = "none";
-    proxyFrame.src = "";
+  diagnosticClose?.addEventListener("click", () => {
+    diagnosticPortal.style.display = "none";
+    diagnosticFrame.src = "";
   });
 
-  proxySearch?.addEventListener("input", (e) => {
+  diagnosticSearch?.addEventListener("input", (e) => {
     const q = e.target.value.toLowerCase().trim();
-    const filtered = proxies.filter(p =>
+    const filtered = diagnostics.filter(p =>
       (p.name||"").toLowerCase().includes(q) ||
       (p.desc||"").toLowerCase().includes(q) ||
       (p.tags||[]).join(" ").toLowerCase().includes(q)
     );
-    renderProxies(filtered);
+    renderDiagnostics(filtered);
   });
 
-  proxySort?.addEventListener("change", (e) => {
+  diagnosticSort?.addEventListener("change", (e) => {
     const mode = e.target.value;
-    let arr = [...proxies];
+    let arr = [...diagnostics];
     if (mode === "rating") arr.sort((a,b) => (b.rating||0)-(a.rating||0));
     else if (mode === "speed") arr.sort((a,b) => (b.speed||0)-(a.speed||0));
     else if (mode === "verified") arr.sort((a,b) => (b.verified?1:0)-(a.verified?1:0));
     else arr.sort((a,b) => a.name.localeCompare(b.name));
-    renderProxies(arr);
+    renderDiagnostics(arr);
   });
 
-  proxyRandom?.addEventListener("click", () => {
-    if (!proxies.length) return;
-    const item = proxies[Math.floor(Math.random()*proxies.length)];
-    openProxy(item.url);
+  diagnosticRandom?.addEventListener("click", () => {
+    if (!diagnostics.length) return;
+    const item = diagnostics[Math.floor(Math.random()*diagnostics.length)];
+    openDiagnostic(item.url);
   });
 
-  // Fetch proxies.json (same folder as index.html)
-  fetchWithDebug("/proxies.json")
+  // Fetch diagnostics.json (same folder as index.html)
+  fetchWithDebug("/diagnostics.json")
 
   .then(res => res.json())
   .then(data => {
-    proxies = data;
-    console.log("✅ Loaded proxies data:", data);
+    diagnostics = data;
+    console.log("✅ Loaded diagnostics data:", data);
 
-    renderProxies(proxies);
+    renderDiagnostics(diagnostics);
   })
   .catch(err => {
-    console.error("Failed to load proxies:", err);
-    proxyGrid.innerHTML = `<p class="soft small">Error loading proxies.</p>`;
+    console.error("Failed to load diagnostics:", err);
+    diagnosticGrid.innerHTML = `<p class="soft small">Error loading diagnostics.</p>`;
   });
 
 
@@ -4398,7 +4398,7 @@ if (!h.copyandpase) {
 
 
 
-<!-- LINKS OVERLAY (paste into your main JS file near proxies/hacks) -->
+<!-- LINKS OVERLAY (paste into your main JS file near diagnostics/hacks) -->
 <style>
   /* Links overlay styles (scoped) */
   #linksOverlay {
@@ -4656,7 +4656,7 @@ function showHacksSection() {
     #continue,
     #new,
     #catDock,
-    #proxySection
+    #diagnosticSection
   `).forEach(el => el && (el.style.display = "none"));
 
   // Temporarily hide game panel if open
@@ -4717,7 +4717,7 @@ function hideHacks() {
     #continue,
     #new,
     #catDock,
-    #proxySection
+    #diagnosticSection
   `).forEach(el => el && (el.style.display = ""));
 
   // 🟢 Restore game panel if temporarily hidden
@@ -4856,7 +4856,7 @@ function hideHacks() {
 }
 
 /* 🎨 Highlight specific words dynamically */
-.color-proxies { color: #00d0ff; }
+.color-diagnostics { color: #00d0ff; }
 .color-games { color: #4dff91; }
 .color-visuals { color: #a040ff; }
 
@@ -4930,7 +4930,7 @@ addEventListener("resize", resizeStars);
 /* --- TYPEWRITER (HTML SAFE VERSION) --- */
 const el = document.getElementById("introType");
 const lines = [
-  'loading <span class="color-proxies">proxies</span>…',
+  'loading <span class="color-diagnostics">diagnostics</span>…',
   'loading <span class="color-games">games</span>…',
   'loading <span class="color-visuals">visuals</span>…',
   'initializing <span class="grad">Deblocked V4</span>…'
