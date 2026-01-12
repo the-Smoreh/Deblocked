@@ -16,11 +16,11 @@ document.body.appendChild(U);
 const cv=U.querySelector("#dwpp_bg"),cx=cv.getContext("2d"),note=U.querySelector("#dwpp_note"),risk=U.querySelector("#dwpp_risk");
 
 const freqs=[
-{hz:12000,txt:"Typical limit for 35+",risk:"🔴 Very High – easily heard by adults",rc:"#ff7070"},
+{hz:12000,txt:"Typical Limit",risk:"🔴 Very High – easily heard",rc:"#ff7070"},
 {hz:14000,txt:"30+ often can't hear",risk:"🟠 High – noticeable to many adults",rc:"#ffaa47"},
-{hz:16000,txt:"25+ lose sensitivity",risk:"🟡 Medium – some adults detect",rc:"#ffd84d"},
-{hz:17000,txt:"Mostly teens/young adults",risk:"🟢 Low – rare adult detection",rc:"#78ff9c"},
-{hz:18000,txt:"Under 20 hear clearly",risk:"🟢 Very Low – safe in most cases",rc:"#66ffc4"},
+{hz:16000,txt:"25+ lose sensitivity",risk:"🟡 Medium – ALOT of people detect",rc:"#ffd84d"},
+{hz:17000,txt:"Mostly teens/young adults",risk:"🟢 Low – CAN be Heard",rc:"#78ff9c"},
+{hz:18000,txt:"Under 20 hear clearly",risk:"🟢 Very Low – Not Hearable to Many",rc:"#66ffc4"},
 {hz:19000,txt:"Under 18 barely audible",risk:"🟢 Very Low – stealthy",rc:"#66ffc4"},
 {hz:20000,txt:"<17 yrs limit",risk:"🟣 Minimal – near ultrasonic",rc:"#a39dff"},
 {hz:21000,txt:"<15 yrs exceptional hearing",risk:"🟣 Stealth – ultrasonic edge",rc:"#a39dff"},
