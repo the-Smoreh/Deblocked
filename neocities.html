@@ -30,6 +30,8 @@
   })();
 </script>
 
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3316267910752334"
+     crossorigin="anonymous"></script>
 
 <style>
 /* ===============================================================
@@ -1644,17 +1646,17 @@ button.btn.primary {
   transform: translateY(1px); /* tiny optical alignment */
 }
 
-/* ===== Hacks Section ===== */
+/* ===== tools Section ===== */
 .page.hidden { display: none; }
 .page { display: block; padding: 20px 30px; max-width: 1400px; margin: auto; }
 
-.grid-hacks {
+.grid-tools {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 18px;
 }
 
-.hack-card {
+.tool-card {
   background: rgba(255,255,255,0.03);
   border-radius: 14px;
   padding: 14px;
@@ -1665,7 +1667,7 @@ button.btn.primary {
   box-shadow: 0 0 12px rgba(0,0,0,0.4);
 }
 
-.hack-thumb {
+.tool-thumb {
   width: 100%;
   height: 140px;
   object-fit: cover;
@@ -1673,20 +1675,20 @@ button.btn.primary {
   background: #0b0d11;
 }
 
-.hack-title {
+.tool-title {
   font-weight: 700;
   margin: 6px 0 0;
   font-size: 1.05rem;
   color: var(--accent1, #00d0ff);
 }
 
-.hack-desc {
+.tool-desc {
   font-size: 0.9rem;
   opacity: 0.85;
   margin: 0 0 6px 0;
 }
 
-.hack-actions {
+.tool-actions {
   display: flex;
   gap: 10px;
   margin-top: auto;
@@ -1713,12 +1715,12 @@ button.btn.primary {
 }
 
 @media (max-width:720px){
-  .grid-hacks{ grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); }
+  .grid-tools{ grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); }
 }
 
 
-/* ===== Hacks Section Layout — Deblocked Ultra Style ===== */
-#hacksSection {
+/* ===== tools Section Layout — Deblocked Ultra Style ===== */
+#toolsSection {
   width: 100%;
   padding: 40px 6vw;
   box-sizing: border-box;
@@ -1729,7 +1731,7 @@ button.btn.primary {
 }
 
 /* Title */
-#hacksSection h2, #hacksSection h3 {
+#toolsSection h2, #toolsSection h3 {
   font-size: 1.8rem;
   font-weight: 800;
   text-align: center;
@@ -1740,7 +1742,7 @@ button.btn.primary {
 }
 
 /* Filter bar (search + sort + random) */
-#hacksSection .filters {
+#toolsSection .filters {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1748,7 +1750,7 @@ button.btn.primary {
   flex-wrap: wrap;
   margin-bottom: 25px;
 }
-#hacksSection input[type="text"] {
+#toolsSection input[type="text"] {
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #fff;
@@ -1756,7 +1758,7 @@ button.btn.primary {
   border-radius: 10px;
   width: 220px;
 }
-#hacksSection select, #hacksSection button {
+#toolsSection select, #toolsSection button {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #fff;
@@ -1765,12 +1767,12 @@ button.btn.primary {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-#hacksSection button:hover, #hacksSection select:hover {
+#toolsSection button:hover, #toolsSection select:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* Hacks Grid Layout */
-#hacksGrid {
+/* tools Grid Layout */
+#toolsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 22px;
@@ -1778,8 +1780,8 @@ button.btn.primary {
   max-width: 1200px;
 }
 
-/* Individual Hack Cards */
-.hack-card {
+/* Individual tool Cards */
+.tool-card {
   background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
@@ -1787,35 +1789,35 @@ button.btn.primary {
   padding-bottom: 12px;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
-.hack-card:hover {
+.tool-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
-.hack-thumb {
+.tool-thumb {
   width: 100%;
   height: 150px;
   object-fit: cover;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.hack-title {
+.tool-title {
   font-size: 1rem;
   font-weight: 700;
   margin: 12px 14px 4px;
   color: #00cfff;
 }
-.hack-desc {
+.tool-desc {
   font-size: 0.85rem;
   margin: 0 14px 10px;
   color: rgba(255,255,255,0.8);
 }
-.hack-actions {
+.tool-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
   padding: 0 14px;
 }
-.hack-actions .btn {
+.tool-actions .btn {
   flex: 1;
   background: linear-gradient(90deg, #00cfff, #7f60f9);
   border: none;
@@ -1826,12 +1828,12 @@ button.btn.primary {
   cursor: pointer;
   transition: transform 0.15s ease;
 }
-.hack-actions .btn:hover {
+.tool-actions .btn:hover {
   transform: scale(1.05);
 }
 
-/* === Deblocked Hacks Section — Final Polished Look === */
-#hacksSection {
+/* === Deblocked tools Section — Final Polished Look === */
+#toolsSection {
   width: 100%;
   padding: 40px 6vw 100px;
   box-sizing: border-box;
@@ -1842,13 +1844,13 @@ button.btn.primary {
 }
 
 /* remove any default header text */
-#hacksSection h2,
-#hacksSection h3 {
+#toolsSection h2,
+#toolsSection h3 {
   display: none;
 }
 
 /* top filter bar */
-.hacks-header {
+.tools-header {
   width: 100%;
   max-width: 1200px;
   display: flex;
@@ -1856,7 +1858,7 @@ button.btn.primary {
   margin-bottom: 30px;
 }
 
-.hacks-header .filters {
+.tools-header .filters {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -1865,7 +1867,7 @@ button.btn.primary {
   justify-content: center;
 }
 
-#hacksSearch {
+#toolsSearch {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #fff;
@@ -1878,14 +1880,14 @@ button.btn.primary {
   backdrop-filter: blur(8px);
 }
 
-#hacksSearch:focus {
+#toolsSearch:focus {
   border-color: var(--accent, #7f60f9);
   box-shadow: 0 0 12px var(--accent, #7f60f9);
   outline: none;
   background: rgba(255, 255, 255, 0.1);
 }
 
-#hacksSort {
+#toolsSort {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: #fff;
@@ -1897,12 +1899,12 @@ button.btn.primary {
   backdrop-filter: blur(8px);
 }
 
-#hacksSort:hover {
+#toolsSort:hover {
   background: rgba(255, 255, 255, 0.12);
 }
 
 /* grid layout */
-#hacksGrid {
+#toolsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
   gap: 26px;
@@ -1910,8 +1912,8 @@ button.btn.primary {
   max-width: 1200px;
 }
 
-/* hack cards */
-.hack-card {
+/* tool cards */
+.tool-card {
   background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 18px;
@@ -1921,17 +1923,17 @@ button.btn.primary {
   position: relative;
   backdrop-filter: blur(8px);
 }
-.hack-card:hover {
+.tool-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
-.hack-thumb {
+.tool-thumb {
   width: 100%;
   height: 150px;
   object-fit: cover;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
-.hack-title {
+.tool-title {
   font-size: 1rem;
   font-weight: 700;
   margin: 12px 14px 4px;
@@ -1939,7 +1941,7 @@ button.btn.primary {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.hack-desc {
+.tool-desc {
   font-size: 0.85rem;
   margin: 0 14px 12px;
   color: rgba(255,255,255,0.8);
@@ -2093,7 +2095,7 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
   </svg>
   <span>Diagnostics</span>
 </a>
- <a href="#" data-filter="hacks"><i class="icon">⚙️</i> Tools </a>
+ <a href="#" data-filter="tools"><i class="icon">⚙️</i> Tools </a>
       
      
       <div class="sep"></div>
@@ -2172,17 +2174,17 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
 <div class="container">
 
     
- <section id="hacksSection" class="page hidden" aria-label="Tools">
-  <div class="hacks-header">
+ <section id="toolsSection" class="page hidden" aria-label="Tools">
+  <div class="tools-header">
     <div class="filters">
-      <input id="hacksSearch" type="text" placeholder="Search tools..." />
-      <select id="hacksSort">
+      <input id="toolsSearch" type="text" placeholder="Search tools..." />
+      <select id="toolsSort">
         <option value="alpha">A→Z</option>
         <option value="reverse">Z→A</option>
       </select>
     </div>
   </div>
-  <div id="hacksGrid"></div>
+  <div id="toolsGrid"></div>
 </section>
 
 
@@ -4035,9 +4037,9 @@ function showDiagnostics() {
 
   document.body.classList.remove("playing-game");
 
-  // hide hacks section if open
-  const hacks = document.getElementById("hacksSection");
-  if (hacks) hacks.style.display = "none";
+  // hide tools section if open
+  const tools = document.getElementById("toolsSection");
+  if (hacks) tools.style.display = "none";
 
   // show diagnostics section
   diagnosticSection.style.display = "block";
@@ -4067,9 +4069,9 @@ function hideDiagnostics() {
     gp.style.display = "";
   }
 
-  // restore hacks section if previously hidden
-  const hacks = document.getElementById("hacksSection");
-  if (hacks) hacks.style.display = "";
+  // restore tools section if previously hidden
+  const tools = document.getElementById("toolsSection");
+  if (hacks) tools.style.display = "";
 }
 
 
@@ -4087,17 +4089,17 @@ if (sidebar) {
 
     // 🟢 Route logic
     if (section === "diagnostics") {
-      hideHacks();       // hide hacks if open
+      hidetools();       // hide tools if open
       showDiagnostics();     // show diagnostics
     } 
-    else if (section === "hacks") {
+    else if (section === "tools") {
       hideDiagnostics();     // hide diagnostics if open
-      showHacksSection();// show hacks page
+      showtoolsSection();// show tools page
     } 
     else {
       // Default → go back home
       hideDiagnostics();
-      hideHacks();
+      hidetools();
 
       // show main/home sections again
       document.querySelectorAll(`
@@ -4207,14 +4209,14 @@ if (sidebar) {
 
 <script>
 (() => {
-  const HACKS_JSON = "/hacks.json"; // ✅ same-origin path (root)
-  const basePath = "/hacks/"; // ✅ folder with all hack files
-  const grid = document.getElementById("hacksGrid");
-  const searchInput = document.getElementById("hacksSearch");
-  const sortSel = document.getElementById("hacksSort");
-  const randomBtn = document.getElementById("hacksRandom");
+  const toolS_JSON = "/tools.json"; // ✅ same-origin path (root)
+  const basePath = "/tools/"; // ✅ folder with all tool files
+  const grid = document.getElementById("toolsGrid");
+  const searchInput = document.getElementById("toolsSearch");
+  const sortSel = document.getElementById("toolsSort");
+  const randomBtn = document.getElementById("toolsRandom");
 
-  let hacks = [];
+  let tools = [];
 
   function slugify(s) {
     return (s || "").toLowerCase().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
@@ -4229,7 +4231,7 @@ if (sidebar) {
     return h.minified ? `${base}.min.js` : `${base}.js`;
   }
 
-  // ✅ Wrap any fetched hack file into a valid bookmarklet
+  // ✅ Wrap any fetched tool file into a valid bookmarklet
   function buildBookmarkletFromText(fullCode) {
     if (!fullCode) return "";
     fullCode = fullCode.trim();
@@ -4247,7 +4249,7 @@ if (sidebar) {
     return `javascript:(function(){${fullCode}})();void(0);`;
   }
 
-  // ✅ Fetch full hack file and convert to bookmarklet
+  // ✅ Fetch full tool file and convert to bookmarklet
   async function resolveBookmarklet(h) {
     const fileName = fileFor(h);
     const url = basePath + fileName;
@@ -4269,20 +4271,20 @@ if (sidebar) {
     }
   }
 
-  // ✅ Render one hack card
+  // ✅ Render one tool card
   function renderCard(h) {
     const el = document.createElement("article");
-    el.className = "hack-card";
+    el.className = "tool-card";
     const thumb = h.thumb || h.game_image_icon || "https://via.placeholder.com/800x400?text=Tool";
     const desc = safeText(h.description || "No description available.");
     const title = safeText(h.title || "Untitled Tool");
 
     el.innerHTML = `
-      <img class="hack-thumb" src="${thumb}" alt="${title}" onerror="this.src='https://via.placeholder.com/800x400?text=Tool'">
-      <div class="hack-body">
-        <h4 class="hack-title" style="color:var(--accent,#43d0ff);">${title}</h4>
-        <p class="hack-desc">${desc}</p>
-        <div class="hack-actions" style="margin-top:8px;display:flex;gap:8px;">
+      <img class="tool-thumb" src="${thumb}" alt="${title}" onerror="this.src='https://via.placeholder.com/800x400?text=Tool'">
+      <div class="tool-body">
+        <h4 class="tool-title" style="color:var(--accent,#43d0ff);">${title}</h4>
+        <p class="tool-desc">${desc}</p>
+        <div class="tool-actions" style="margin-top:8px;display:flex;gap:8px;">
           ${
             h.copyandpase
               ? `<button class="btn small primary btn-copy">Copy Code</button>`
@@ -4343,7 +4345,7 @@ if (!h.copyandpase) {
     return el;
   }
 
-  // ✅ Render all hacks
+  // ✅ Render all tools
   function renderAll(list) {
     grid.innerHTML = "";
     if (!list.length) {
@@ -4353,19 +4355,19 @@ if (!h.copyandpase) {
     list.forEach((h) => grid.appendChild(renderCard(h)));
   }
 
-  // 🚀 Load hacks.json on start
+  // 🚀 Load tools.json on start
   (async function init() {
     try {
-      const res = await fetchWithDebug(HACKS_JSON, { cache: "no-store" });
-      if (!res.ok) throw new Error(`${res.status} loading hacks.json`);
+      const res = await fetchWithDebug(toolS_JSON, { cache: "no-store" });
+      if (!res.ok) throw new Error(`${res.status} loading tools.json`);
       const data = await res.json();
 
-      hacks = Array.isArray(data) ? data : [];
-      hacks.forEach((h) => (h.file = h.file || fileFor(h)));
+      tools = Array.isArray(data) ? data : [];
+      tools.forEach((h) => (h.file = h.file || fileFor(h)));
 
-      renderAll(hacks);
+      renderAll(tools);
     } catch (err) {
-      console.error("Failed to load hacks.json", err);
+      console.error("Failed to load tools.json", err);
       grid.innerHTML = `<p class="soft small">Failed to load tools list.</p>`;
     }
   })();
@@ -4373,7 +4375,7 @@ if (!h.copyandpase) {
   // 🔍 Filters
   searchInput?.addEventListener("input", (e) => {
     const q = e.target.value.toLowerCase().trim();
-    const filtered = hacks.filter(
+    const filtered = tools.filter(
       (h) => h.title.toLowerCase().includes(q) || h.description.toLowerCase().includes(q)
     );
     renderAll(filtered);
@@ -4381,15 +4383,15 @@ if (!h.copyandpase) {
 
   sortSel?.addEventListener("change", (e) => {
     const mode = e.target.value;
-    const arr = [...hacks];
+    const arr = [...tools];
     if (mode === "alpha") arr.sort((a, b) => a.title.localeCompare(b.title));
     else arr.reverse();
     renderAll(arr);
   });
 
   randomBtn?.addEventListener("click", () => {
-    if (!hacks.length) return;
-    const pick = hacks[Math.floor(Math.random() * hacks.length)];
+    if (!tools.length) return;
+    const pick = tools[Math.floor(Math.random() * tools.length)];
     renderAll([pick]);
   });
 })();
@@ -4398,7 +4400,7 @@ if (!h.copyandpase) {
 
 
 
-<!-- LINKS OVERLAY (paste into your main JS file near diagnostics/hacks) -->
+<!-- LINKS OVERLAY (paste into your main JS file near diagnostics/tools) -->
 <style>
   /* Links overlay styles (scoped) */
   #linksOverlay {
@@ -4645,8 +4647,8 @@ if (!h.copyandpase) {
 
 
 <script>
-// ===== HACKS ROUTER — FINAL LAYOUT-STABLE VERSION =====
-function showHacksSection() {
+// ===== toolS ROUTER — FINAL LAYOUT-STABLE VERSION =====
+function showtoolsSection() {
   // Hide home content
   document.querySelectorAll(`
     #hero,
@@ -4662,25 +4664,25 @@ function showHacksSection() {
   // Temporarily hide game panel if open
   const gamePanel = document.getElementById("gamePanel");
   if (gamePanel) {
-    gamePanel.classList.add("hidden-temp-hacks");
+    gamePanel.classList.add("hidden-temp-tools");
     gamePanel.style.display = "none";
     gamePanel.classList.remove("is-playing");
   }
 
   document.body.classList.remove("playing-game");
 
-  // Show Hacks section on top
-  const hacks = document.getElementById("hacksSection");
-  if (hacks) {
-    hacks.removeAttribute("hidden");
-    hacks.classList.remove("hidden");
-    hacks.style.display = "block";
-    hacks.style.position = "relative";
-    hacks.style.zIndex = "9999"; // 🟣 ensures it's on top
-    hacks.style.minHeight = "100vh";
-    hacks.style.opacity = "0";
-    hacks.style.transition = "opacity 0.3s ease";
-    requestAnimationFrame(() => (hacks.style.opacity = "1"));
+  // Show tools section on top
+  const tools = document.getElementById("toolsSection");
+  if (tools) {
+    tools.removeAttribute("hidden");
+    tools.classList.remove("hidden");
+    tools.style.display = "block";
+    tools.style.position = "relative";
+    tools.style.zIndex = "9999"; // 🟣 ensures it's on top
+    tools.style.minHeight = "100vh";
+    tools.style.opacity = "0";
+    tools.style.transition = "opacity 0.3s ease";
+    requestAnimationFrame(() => (tools.style.opacity = "1"));
   }
 
   // Dim widgets/HUD
@@ -4697,14 +4699,14 @@ function showHacksSection() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function hideHacks() {
-  const hacks = document.getElementById("hacksSection");
-  if (hacks) {
-    hacks.style.opacity = "0";
+function hidetools() {
+  const tools = document.getElementById("toolsSection");
+  if (tools) {
+    tools.style.opacity = "0";
     setTimeout(() => {
-      hacks.style.display = "none";
-      hacks.setAttribute("hidden", "");
-      hacks.style.zIndex = ""; // restore z-index
+      tools.style.display = "none";
+      tools.setAttribute("hidden", "");
+      tools.style.zIndex = ""; // restore z-index
     }, 250);
   }
 
@@ -4722,8 +4724,8 @@ function hideHacks() {
 
   // 🟢 Restore game panel if temporarily hidden
   const gp = document.getElementById("gamePanel");
-  if (gp && gp.classList.contains("hidden-temp-hacks")) {
-    gp.classList.remove("hidden-temp-hacks");
+  if (gp && gp.classList.contains("hidden-temp-tools")) {
+    gp.classList.remove("hidden-temp-tools");
     gp.style.display = "";
   }
 
