@@ -1,0 +1,4993 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Deblocked V4 </title>
+<meta name="theme-color" content="#0b0e12" />
+<link rel="stylesheet" href="/vendor/fredoka/fredoka.css" onerror="this.onerror=null;this.href='https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script>
+  (function () {
+    const cdnHref = "https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap";
+    function loadCdnFont() {
+      if (document.querySelector(`link[href=\"${cdnHref}\"]`)) return;
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = cdnHref;
+      document.head.appendChild(link);
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        if (!document.fonts.check("1em Fredoka")) {
+          loadCdnFont();
+        }
+      });
+    } else {
+      loadCdnFont();
+    }
+  })();
+</script>
+
+
+<style>
+/* ===============================================================
+   DEBLOCKED — V3 ULTRA (MOTION EDITION) — V3.3 FULL
+   Full stylesheet with fixes:
+   - Hero image/video always covers (object-fit:cover + overflow hidden)
+   - Sidebar/link underlines fully removed
+   - Hero brightness & clip tweaks
+   - Ticker line-height + smoother scroll
+   =============================================================== */
+
+/* ---------- RESET ---------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg);
+  color:var(--fg);
+  overflow-y:overlay;
+}
+/* Kill all underlines and keep inherited color everywhere */
+a, a:visited, a:hover,
+.nav a, .nav a:visited, .nav a:hover,
+.brand h1, .btn, .pill, .control, .title, .subtitle { text-decoration:none!important; color:inherit }
+
+/* ---------- TOKENS ---------- */
+:root{
+  --bg:#0b0e12; --bg-2:#0f141b; --panel:rgba(17,23,31,.72); --panel-solid:#111823;
+  --bg-image-url:url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1600&auto=format&fit=crop');
+  --fg:#eaf2fb; --muted:#a9b6c7; --line:rgba(255,255,255,.06);
+  --glow:#00d0ff; --glow2:#a040ff; --accent:var(--glow); --accent2:var(--glow2);
+  --radius:16px; --radius-lg:22px; --blur:blur(14px);
+  --gap:14px; --card-min:190px; --speed:.26s cubic-bezier(.22,.61,.36,1);
+  --card-bg:#0f1624; --card-border:1px solid rgba(255,255,255,.08);
+  --card-shadow:0 10px 26px rgba(0,0,0,.38);
+  --card-hover:translateY(-3px) scale(1.02);
+  --card-hover-shadow:0 30px 70px rgba(0,0,0,.5);
+}
+/* Light theme */
+body.theme-light{
+  --bg:#f6f8fc; --bg-2:#fff; --panel:rgba(255,255,255,.75); --panel-solid:#fff;
+  --fg:#0b1220; --muted:#5b6e88; --line:rgba(5,16,36,.08);
+  --card-bg:#fff; --card-border:1px solid rgba(5,16,36,.08);
+  --card-shadow:0 10px 26px rgba(0,15,30,.08);
+  --card-hover-shadow:0 30px 70px rgba(0,15,30,.12);
+}
+/* Card styles */
+body.card-flat{
+  --card-bg:#0f1622; --card-border:1px solid var(--line);
+  --card-shadow:none; --card-hover-shadow:0 16px 36px rgba(0,0,0,.38);
+}
+body.card-lifted{
+  --card-bg:#0f1624; --card-border:1px solid rgba(255,255,255,.08);
+  --card-shadow:0 10px 26px rgba(0,0,0,.38); --card-hover-shadow:0 30px 70px rgba(0,0,0,.5);
+}
+
+/* ---------- BG LAYERS ---------- */
+#bg-stars-1,#bg-stars-2,#bg-stars-3,#bg-gradient,#bg-image{
+  position:fixed;inset:0;z-index:0;pointer-events:none;transition:.4s ease;opacity:1
+}
+#bg-gradient{
+  background:
+    radial-gradient(50% 70% at 20% 20%, #0ff2 0%, transparent 60%),
+    radial-gradient(60% 80% at 70% 80%, #a4f2 0%, transparent 60%),
+    radial-gradient(80% 100% at 100% 0%, #fb03 0%, transparent 50%),
+    linear-gradient(180deg,#070a10,#0c1119 60%,#0a0e14);
+  filter:saturate(1.05);
+  background-size:200% 200%;
+  animation:bgDrift 60s linear infinite;
+}
+@keyframes bgDrift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+#bg-image{
+  background:var(--bg-image-url) center/cover no-repeat;
+  mix-blend-mode:lighten;opacity:.12
+}
+/* BG modes */
+.bg-mode-stars  #bg-gradient{opacity:.45}.bg-mode-stars  #bg-image{opacity:0}
+.bg-mode-gradient #bg-gradient{opacity:1}.bg-mode-gradient #bg-image{opacity:0}
+.bg-mode-image #bg-gradient{opacity:0}.bg-mode-image #bg-image{opacity:1;mix-blend-mode:normal}
+body.bg-mode-image{--bg:transparent}
+
+/* ---------- LAYOUT ---------- */
+.app{position:relative;z-index:1;min-height:100%;display:grid;grid-template-columns:264px 1fr}
+@media (max-width:980px){.app{grid-template-columns:84px 1fr}}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+  position:sticky;top:0;height:100dvh;padding:18px 12px;
+  background:linear-gradient(180deg,rgba(17,23,31,.92),rgba(17,23,31,.6));
+  backdrop-filter:var(--blur);border-right:1px solid var(--line);
+  overflow:hidden;
+  animation:fadeUp .8s .12s ease both;
+}
+.sidebar > *{position:relative;z-index:1}
+body.bg-mode-image .sidebar{
+  background:transparent;
+}
+body.bg-mode-image .sidebar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:var(--bg-image-url) center/cover no-repeat;
+  filter:blur(18px);
+  transform:scale(1.1);
+  opacity:0.95;
+  z-index:0;
+}
+.brand{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px}
+.brand .logo{
+  width:28px;height:28px;border-radius:8px;
+  background:radial-gradient(120% 120% at 28% 32%,var(--glow),transparent 60%),#061018;
+  outline:1px solid #0ff3;box-shadow:0 0 24px #0ff3 inset,0 0 22px #0ff2
+}
+.brand h1{margin:0;font:900 16px/1 Outfit,Inter;letter-spacing:.2px}
+.nav{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.nav a{
+  display:flex;align-items:center;gap:12px;padding:10px 12px;margin:6px 0;border-radius:12px;
+  color:var(--fg);opacity:.9;transition:var(--speed);text-decoration:none!important
+}
+.nav a:hover{background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);transform:translateY(-1px)}
+.nav svg{width:18px;height:18px;opacity:.9}
+.sep{margin:12px 0;border-top:1px solid var(--line)}
+.badge{margin-left:auto;font-size:12px;padding:2px 8px;border-radius:999px;background:linear-gradient(90deg,var(--glow),var(--glow2));color:#001018;font-weight:800;animation:accentPulse 6s ease-in-out infinite}
+@media (max-width:980px){.brand h1,.nav a span{display:none}}
+
+/* ---------- HEADER ---------- */
+.header{
+  position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;padding:14px 18px;
+  background:linear-gradient(180deg,rgba(8,12,16,.88),rgba(8,12,16,.45));backdrop-filter:var(--blur);border-bottom:1px solid var(--line);
+  animation:fadeUp .8s .18s ease both;
+}
+.search{flex:1;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;background:#0f1620;border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.search input{flex:1;border:0;background:transparent;color:var(--fg);font-size:15px;outline:none}
+.pill{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:#101722;border:1px solid var(--line);color:#b6c2d4;font-size:13px}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:#101722;color:#cfe3f8;display:grid;place-items:center;transition:var(--speed)}
+.icon-btn:hover{transform:translateY(-2px) rotate(8deg) scale(1.05);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.userbar{display:flex;align-items:center;gap:10px}.pfp{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:#0d1520}
+.username{color:#cfe3f8;font-weight:600}.login{border:1px solid var(--line);padding:8px 10px;background:#0f1622;border-radius:10px;color:#dce9f9;transition:var(--speed)}
+.login:hover{transform:translateY(-2px)}
+
+/* Ticker */
+.top-info{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 18px;margin-top:8px;animation:fadeUp .8s .26s ease both}
+.marquee{
+  overflow:hidden;white-space:nowrap;opacity:.95;border:1px solid var(--line);border-radius:999px;padding:8px 14px;background:#0d1420;
+  line-height:1.3; /* fix clipping */
+}
+.marquee span{display:inline-block;padding-left:100%;animation:marq 16s linear infinite;will-change:transform}
+@keyframes marq{100%{transform:translateX(-100%)}}
+.stats{color:var(--muted)}
+
+/* ---------- CONTAINER ---------- */
+.container{padding:18px;display:flex;flex-direction:column;gap:var(--gap)}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;overflow:hidden;border-radius:calc(var(--radius-lg) + 6px);background:#0a0f15;
+  min-height:320px;display:grid;grid-template-columns:1.1fr .9fr;border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.45);
+  animation:fadeUp .9s .32s ease both;
+}
+.hero.animating .copy, .hero.animating .visual{animation:heroSwap 1s ease both}
+@keyframes heroSwap{0%{opacity:0;filter:blur(6px);transform:scale(1.03)}100%{opacity:1;filter:blur(0);transform:none}}
+.hero .copy{padding:28px;display:flex;flex-direction:column;justify-content:center;gap:14px;position:relative;z-index:2}
+.title{margin:0;font:900 44px/1 Outfit,Inter;letter-spacing:-.02em}
+.title .grad{background:linear-gradient(90deg,var(--glow),var(--glow2));-webkit-background-clip:text;background-clip:text;color:transparent;animation:accentPulse 6s ease-in-out infinite;display:inline-block}
+@keyframes accentPulse{0%{filter:hue-rotate(0) brightness(1)}50%{filter:hue-rotate(18deg) brightness(1.08)}100%{filter:hue-rotate(0) brightness(1)}}
+.subtitle{color:#b8c7d8;max-width:64ch}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+.btn{padding:11px 16px;border-radius:999px;border:1px solid var(--line);background:#0e1520;color:#def2ff;box-shadow:0 8px 24px rgba(0,0,0,.35);font-weight:800;transition:var(--speed)}
+.btn:hover{transform:translateY(-2px) scale(1.05);filter:drop-shadow(0 0 6px var(--glow))}
+.btn.primary{border:0;color:#001018;background:linear-gradient(90deg,var(--glow),var(--glow2))}
+
+/* HERO VISUAL — FIXED: always cover and crop correctly */
+.hero .visual{position:relative;overflow:hidden;border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+.hero video,.hero .preview{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  opacity:.36;transition:opacity .6s ease, transform .8s ease;
+}
+.hero:hover video,.hero:hover .preview{transform:scale(1.02);opacity:.42}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,12,16,.25) 0%,rgba(8,12,16,0) 60%);z-index:1}
+.news{
+  position:absolute;right:18px;top:18px;width:320px;max-width:42vw;background:var(--panel);
+  border:1px solid var(--line);border-radius:14px;padding:14px;backdrop-filter:var(--blur);
+  box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:2;animation:fadeUp .8s .4s ease both
+}
+.news h3{margin:0 0 8px;font-size:14px;color:#bcd2ea}
+.news ul{margin:0;padding-left:18px;color:#cfe3f8}
+
+/* Hero dots */
+.hero-dots{position:absolute;left:28px;bottom:18px;display:flex;gap:8px;z-index:3}
+.hero-dots button{width:8px;height:8px;border-radius:999px;border:0;background:#ffffff33;transition:.2s ease}
+.hero-dots button.active{background:linear-gradient(90deg,var(--glow),var(--glow2));transform:scale(1.3)}
+
+/* ---------- CATEGORY DOCK ---------- */
+.cat-dock{display:flex;align-items:center;gap:8px;flex-wrap:wrap;animation:fadeUp .8s .5s ease both}
+.cat-dock button{border:1px solid var(--line);background:#0f1724;color:#cfe3f8;border-radius:999px;padding:8px 12px;transition:var(--speed)}
+.cat-dock button:hover{transform:translateY(-2px)}
+
+/* ---------- CAROUSEL ---------- */
+.carousel{position:relative;overflow:hidden;border-radius:var(--radius);background:#0f151d;border:1px solid var(--line);animation:fadeUp .8s .58s ease both}
+.row-scroll{display:flex;gap:14px;padding:14px;overflow:auto;scroll-snap-type:x mandatory}
+.row-scroll::-webkit-scrollbar{height:8px}.row-scroll::-webkit-scrollbar-thumb{background:#1c2733;border-radius:999px}
+.slide{flex:0 0 240px;scroll-snap-align:start;background:var(--card-bg);border:var(--card-border);border-radius:14px;overflow:hidden;transition:var(--speed);position:relative;box-shadow:var(--card-shadow)}
+.slide:hover{transform:translateY(-3px) scale(1.02);box-shadow:var(--card-hover-shadow)}
+.slide .thumb{aspect-ratio:16/9;position:relative;background:#0a0e12}
+.slide .thumb .img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.6s ease}
+.slide .thumb .vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease .2s}
+.slide:hover .thumb .img{opacity:0}.slide:hover .thumb .vid{opacity:1}
+.slide .meta{padding:10px 12px;display:flex;align-items:center;gap:10px}
+.slide .name{font-weight:800}
+.pill-tag{position:absolute;top:10px;left:10px;font-size:12px;padding:4px 8px;border-radius:999px;color:#03111a;font-weight:900;background:linear-gradient(90deg,#ffb300,#ff4d6d);box-shadow:0 4px 16px rgba(0,0,0,.4);animation:accentPulse 7s ease-in-out infinite}
+
+/* ---------- SECTIONS / GRID ---------- */
+.section h2{margin:4px 2px 10px;font:800 20px/1.2 Outfit,Inter;color:#cfe3f7;transform:translateY(22px);opacity:0;transition:.6s ease}
+.section.visible h2{transform:none;opacity:1}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.control{font-size:13px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);color:#bcd0e6;background:#0e1520;transition:var(--speed)}
+.control.active{outline:2px solid #0cf8}
+.grid{display:grid;gap:var(--gap);grid-template-columns:repeat(auto-fill,minmax(var(--card-min),1fr));opacity:0;transform:translateY(24px);transition:.6s ease}
+.section.visible .grid{opacity:1;transform:none}
+.card{background:var(--card-bg);border:var(--card-border);border-radius:14px;overflow:hidden;transition:var(--speed);position:relative;box-shadow:var(--card-shadow)}
+.card:hover{transform:var(--card-hover);box-shadow:var(--card-hover-shadow)}
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:var(--card-bg-image);
+  background-size:cover;
+  background-position:center;
+  filter:blur(12px) brightness(0.85);
+  opacity:0.35;
+  transform:scale(1.08);
+  z-index:0;
+}
+.card > *{
+  position:relative;
+  z-index:1;
+}
+.card .thumb{aspect-ratio:16/10;position:relative;background:#0a0e12}
+.card .thumb .img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.6s ease}
+.card .thumb .vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s ease .2s}
+.card:hover .thumb .img{opacity:0}.card:hover .thumb .vid{opacity:1}
+.card .body{padding:10px 12px;display:grid;gap:6px}
+.card .name{font-weight:800}
+.card .tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:4px 8px;border-radius:999px;background:#101b28;border:1px solid var(--line);color:#9cb7d3}
+.tag.hot{background:linear-gradient(90deg,#ff7b00,#ff3d66);color:#0c0c0c;border:0;font-weight:900}
+.tag.new{background:linear-gradient(90deg,#00f0ff,#00b4ff);color:#001318;border:0;font-weight:900}
+.fav{position:absolute;right:10px;bottom:10px;width:36px;height:36px;border-radius:999px;display:grid;place-items:center;background:#0f1724;border:1px solid var(--line);color:#9fb5cc;transition:var(--speed)}
+.fav.active{color:#ffe066;background:#2a1e00;border-color:#ffefb0}
+
+/* ---------- FOOTER & SOCIAL ---------- */
+.footer{opacity:.85;padding:28px 10px 40px;text-align:center;color:#9eb2c8}
+.social{position:fixed;left:14px;bottom:14px;z-index:6;display:flex;gap:8px;animation:fadeUp .8s .6s ease both}
+.social a,.social button{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:#101722;border:1px solid var(--line);color:#dfeaf7;transition:var(--speed)}
+.social button{cursor:pointer;padding:0;font:inherit}
+.social a:hover,.social button:hover{transform:translateY(-3px)}
+.social svg{width:18px;height:18px;display:block}
+
+.legal-overlay{
+  position:fixed;inset:0;display:none;z-index:999998;
+  background:rgba(3,8,14,.72);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:28px;
+}
+.legal-panel{
+  width:min(820px,94%);max-height:86vh;overflow:auto;border-radius:16px;
+  background:linear-gradient(180deg,rgba(12,16,22,.96),rgba(6,8,12,.96));padding:18px;
+  box-shadow:0 20px 80px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.06);
+}
+.legal-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.legal-body{display:grid;gap:12px;color:#cfe3f8}
+.legal-body h4{margin:10px 0 6px}
+.legal-body p,.legal-body li{color:#b8c7d8;line-height:1.6}
+
+/* ---------- SETTINGS MODAL ---------- */
+#settingsOverlay{position:fixed;inset:0;z-index:10;background:rgba(3,8,14,.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center}
+#settingsOverlay[aria-hidden="false"] #settingsPanel{animation:zoomIn .4s cubic-bezier(.2,.8,.3,1.2) both}
+#settingsPanel{width:min(940px,96vw);border-radius:22px;background:var(--panel-solid);border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.5);padding:18px;max-height:86vh;overflow:auto}
+@keyframes zoomIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+.set-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.set-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.opt{display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);background:#0e1520;padding:12px;border-radius:14px}
+.swatch{display:flex;gap:8px;flex-wrap:wrap}
+.swatch button{width:34px;height:34px;border-radius:999px;border:2px solid rgba(255,255,255,.12)}
+.inline{display:flex;gap:8px;flex-wrap:wrap}
+.control-btn{border:1px solid var(--line);background:#0f1724;color:#cfe3f8;border-radius:10px;padding:8px 12px;transition:var(--speed)}
+.control-btn.active{outline:2px solid #0cf8}
+
+/* ---------- CURSOR GLOW ---------- */
+.cursorGlow{
+  position:fixed;pointer-events:none;left:0;top:0;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle, var(--glow) 0%, transparent 70%);
+  mix-blend-mode:screen;opacity:.16;transform:translate(-9999px,-9999px);
+  transition:transform .08s linear, opacity .3s ease;
+}
+
+/* ---------- UTIL & ENTRANCE ---------- */
+.hidden{display:none!important}.small{font-size:12px;opacity:.8}.soft{color:var(--muted)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@media (max-width:840px){
+  .hero{grid-template-columns:1fr}
+  .news{position:static;width:auto;margin:12px}
+}
+
+/* === Disable hover video previews globally (no fade-to-black) === */
+.card .thumb .vid,
+.slide .thumb .vid {
+  display: none !important;       /* never show the video layer */
+  opacity: 0 !important;
+}
+
+.card:hover .thumb .img,
+.slide:hover .thumb .img {
+  opacity: 1 !important;          /* keep the image fully visible on hover */
+}
+
+/* (optional) keep a tiny pop without fading media */
+.card:hover,
+.slide:hover {
+  transform: var(--card-hover);
+  box-shadow: var(--card-hover-shadow);
+}
+
+/* Fill hero visual fully with repeated pattern */
+#heroPreview {
+  background-size: 200px 200px;          /* adjust density of tiles */
+  background-repeat: repeat;             /* make it tile evenly */
+  background-position: center;
+  filter: brightness(0.9) saturate(1.2); /* slight pop */
+  opacity: 0.5;                          /* balance with shade overlay */
+  transition: background 0.6s ease;
+}
+
+/* Extend hero background to full width behind text */
+.hero {
+  position: relative;
+  display: flex;
+}
+
+.hero .copy {
+  position: relative;
+  z-index: 2;
+  width: 50%;
+  padding: 40px;
+  background: linear-gradient(90deg, rgba(11,14,18,0.92) 30%, rgba(11,14,18,0.6) 60%, transparent);
+  border-top-left-radius: var(--radius-lg);
+  border-bottom-left-radius: var(--radius-lg);
+}
+
+.hero .visual {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+#heroPreview {
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  background-position: center;
+  filter: brightness(0.9) saturate(1.15);
+  opacity: 0.55;
+  animation: patternDrift 30s linear infinite;
+}
+
+@keyframes patternDrift {
+  from { background-position: 0 0; }
+  to { background-position: 600px 300px; }
+}
+
+/* Fix Settings button and header interactivity */
+.header,
+#openSettings,
+#settingsOverlay {
+  position: relative;
+  z-index: 10; /* bring above hero visual */
+}
+
+/* Ensure hero visuals never block clicks */
+.hero .visual {
+  pointer-events: none; /* background only, no blocking */
+  z-index: 1;
+}
+
+/* But allow hero buttons to still be clickable */
+.hero .copy {
+  position: relative;
+  z-index: 2;
+}
+
+/* 🔧 Ensure settings panel buttons are clickable again */
+#settingsOverlay {
+  pointer-events: auto !important;  /* Allow the overlay itself to detect clicks */
+}
+
+#settingsOverlay #settingsPanel {
+  pointer-events: all !important;   /* Let the panel and its buttons receive input */
+  position: relative;
+  z-index: 1000000;                 /* Above the blurred background */
+}
+
+/* ===============================================================
+   TRUE FROSTED GLASS FIX (Force Apply)
+   =============================================================== */
+
+body.ui-frosted {
+  --frost-bg: rgba(14, 20, 28, 0.55);
+  --frost-border: rgba(255, 255, 255, 0.08);
+  --frost-shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* ✅ Sidebar & Header (still glassy) */
+body.ui-frosted .sidebar,
+body.ui-frosted .header {
+  background: rgba(10, 15, 20, 0.7) !important;
+  backdrop-filter: blur(22px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.4) !important;
+  border: 1px solid var(--frost-border) !important;
+}
+
+/* 🎃 Update ticker / announcement bar */
+body.ui-frosted .news-ticker,
+body.ui-frosted .announcement-bar {
+  background: var(--frost-bg) !important;
+  backdrop-filter: blur(22px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.5) !important;
+  border-bottom: 1px solid var(--frost-border) !important;
+  box-shadow: 0 4px 24px var(--frost-shadow) !important;
+}
+
+/* 🎮 Featured game container (below hero) */
+body.ui-frosted .featured,
+body.ui-frosted .featured-section,
+body.ui-frosted #featured,
+body.ui-frosted .carouselRow,
+body.ui-frosted .carousel-row,
+body.ui-frosted .games-container,
+body.ui-frosted .game-section {
+  background: var(--frost-bg) !important;
+  backdrop-filter: blur(22px) saturate(1.5) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.5) !important;
+  border: 1px solid var(--frost-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 36px var(--frost-shadow) !important;
+  padding: 12px !important;
+}
+
+/* 🧊 Game cards */
+body.ui-frosted .card,
+body.ui-frosted .game-card,
+body.ui-frosted .gameCard,
+body.ui-frosted .game {
+  background: rgba(10, 15, 25, 0.65) !important;
+  backdrop-filter: blur(18px) saturate(1.3) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.3) !important;
+  border: 1px solid var(--frost-border) !important;
+  transition: background 0.25s ease, transform 0.25s ease !important;
+}
+body.ui-frosted .card:hover,
+body.ui-frosted .game-card:hover {
+  background: rgba(18, 26, 38, 0.75) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 🏷️ Pills / categories */
+body.ui-frosted .pill,
+body.ui-frosted .tag,
+body.ui-frosted .category-pill {
+  background: rgba(20, 28, 38, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid var(--frost-border) !important;
+}
+
+/* 🔹 Exclude hero (so it stays clean) */
+body.ui-frosted .hero,
+body.ui-frosted .hero .copy,
+body.ui-frosted .hero .visual {
+  background: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Smooth transition */
+body.ui-frosted * {
+  transition: background 0.35s ease, backdrop-filter 0.35s ease, border 0.35s ease !important;
+}
+
+/* ===== FROSTED GLASS MODE ===== */
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .section,
+body.ui-frosted .carousel,
+body.ui-frosted .card {
+  background: rgba(20, 26, 36, 0.4) !important;
+  backdrop-filter: blur(18px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* make it pop a bit more on hover */
+body.ui-frosted .card:hover {
+  background: rgba(26, 34, 46, 0.5) !important;
+}
+
+/* === FROSTED GLASS ENHANCEMENTS === */
+body.ui-frosted {
+  --glass-darkness: 0.4; /* default 40% opacity */
+}
+
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .section,
+body.ui-frosted .carousel,
+body.ui-frosted .card,
+body.ui-frosted .top-info .marquee {
+  background: rgba(20, 26, 36, var(--glass-darkness)) !important;
+  backdrop-filter: blur(18px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* keep Play Featured Game hero solid */
+.hero .copy,
+.hero .visual {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: none !important;
+}
+
+/* === GLASS DARKNESS & STYLED SLIDER === */
+body.ui-frosted {
+  --glass-darkness: 0.4;
+}
+
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .section,
+body.ui-frosted .carousel,
+body.ui-frosted .card,
+body.ui-frosted .top-info,
+body.ui-frosted .marquee {
+  background: rgba(20, 26, 36, var(--glass-darkness)) !important;
+  backdrop-filter: blur(18px) saturate(1.6) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  transition: background 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+/* ✅ Featured Hero stays solid */
+.hero .copy,
+.hero .visual {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: none !important;
+}
+
+/* Slider styling */
+.styled-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 160px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  outline: none;
+  cursor: pointer;
+  transition: filter 0.3s ease;
+}
+.styled-slider:hover {
+  filter: brightness(1.3);
+}
+.styled-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--glow);
+  box-shadow: 0 0 8px var(--glow);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.styled-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 14px var(--glow2);
+}
+
+/* Global default */
+:root {
+  --glass-darkness: 0.40; /* 0.00 - 1.00 */
+}
+
+/* Apply glass ONLY when enabled */
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .carousel,
+body.ui-frosted .row-scroll,
+body.ui-frosted .section,
+body.ui-frosted .card,
+body.ui-frosted .top-info,
+body.ui-frosted .marquee,
+body.ui-frosted .news,
+body.ui-frosted #featured .carousel {
+  background: rgba(20, 26, 36, var(--glass-darkness)) !important;
+  backdrop-filter: blur(18px) saturate(1.6) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.6) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  transition: background .25s ease, backdrop-filter .25s ease;
+}
+
+/* Hero stays solid (no glass) */
+.hero .copy,
+.hero .visual {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: none !important;
+}
+
+/* === Frosted glass global style === */
+:root {
+  --glass-darkness: 0.40; /* Slider controls this */
+}
+
+/* Enable frosted glass for most panels when class is active */
+body.ui-frosted .sidebar,
+body.ui-frosted .header,
+body.ui-frosted .carousel,
+body.ui-frosted .row-scroll,
+body.ui-frosted .section,
+body.ui-frosted .card,
+body.ui-frosted .top-info,
+body.ui-frosted .marquee,
+body.ui-frosted .news,
+body.ui-frosted #featured .carousel {
+  background: rgba(20, 26, 36, var(--glass-darkness)) !important;
+  backdrop-filter: blur(18px) saturate(1.6) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.6) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  transition: background .25s ease, backdrop-filter .25s ease;
+}
+
+/* ❌ Explicitly remove glass from the hero copy area */
+.hero .copy {
+  background: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Keep the right-side visual clean too */
+.hero .visual {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+#gameDetailView {
+  position: relative;
+  z-index: 5;
+  padding: 3rem;
+  backdrop-filter: blur(12px);
+  background: rgba(20, 20, 20, 0.8);
+  border-radius: 16px;
+  margin: 2rem;
+}
+#gameDetailView.hidden {
+  display: none;
+}
+.game-detail-container {
+  max-width: 900px;
+  margin: auto;
+}
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.detail-icon {
+  width: 160px;
+  height: 160px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.detail-info h1 {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+.play-now {
+  background: linear-gradient(90deg, #00aaff, #9d40ff);
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.close-btn {
+  position: absolute;
+  right: 1.5rem;
+  top: 1.5rem;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 1.4rem;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ===============================================================
+   GAME DETAIL + IFRAME OVERLAY STYLES
+   =============================================================== */
+#gameDetail {
+  padding: 28px;
+  animation: fadeUp 0.4s ease;
+}
+#gameDetail .detail-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  backdrop-filter: var(--blur);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+.detail-icon {
+  width: 160px;
+  height: 160px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+.detail-info h2 {
+  margin: 0;
+  font: 900 28px/1 Outfit, Inter;
+}
+#iframeOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,10,20,0.85);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 20px;
+}
+#iframeOverlay iframe {
+  flex: 1;
+  width: 100%;
+  height: 85vh;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #000;
+}
+.iframe-toolbar {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* === Overlay scrollbar polish === */
+#gameOverlay::-webkit-scrollbar {
+  width: 8px;
+}
+#gameOverlay::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+#gameOverlay::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Inline game detail panel (inside main) === */
+#gamePanel {
+  padding: 28px;
+  animation: fadeUp .4s ease;
+}
+#gamePanel .detail-card{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 300px;
+  gap:24px;
+  align-items:flex-start;
+  position:relative;
+  margin-top:-25px;
+  padding:24px 28px;
+  min-height:70vh;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  backdrop-filter:var(--blur);
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
+  overflow:hidden;
+}
+#gamePanel .detail-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:var(--detail-bg);
+  background-size:cover;
+  background-position:center;
+  filter:blur(26px);
+  transform:scale(1.1);
+  opacity:0.25;
+  z-index:0;
+}
+#gamePanel .detail-card > *{
+  position:relative;
+  z-index:1;
+}
+#gamePanel .detail-content{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-width:0;
+}
+#gamePanel .detail-ads{
+  display:flex;
+  justify-content:flex-end;
+}
+#gamePanel .detail-card img{
+  width:180px;height:180px;border-radius:14px;object-fit:cover;
+}
+#gamePanel .detail-card h2{
+  margin:0 0 8px;font:900 32px/1 Outfit,Inter;
+}
+#gamePanel .ad-slots{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+#gamePanel .ad-slot{
+  width:300px;
+  height:600px;
+  border-radius:14px;
+  border:1px dashed rgba(255,255,255,0.18);
+  background:rgba(10,16,26,0.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:var(--muted);
+  font-weight:600;
+  letter-spacing:.02em;
+  padding:16px;
+}
+#gamePanel .detail-ads .ad-slot{
+  max-width:100%;
+}
+@media (max-width: 980px) {
+  #gamePanel .detail-card{
+    grid-template-columns:1fr;
+  }
+  #gamePanel .detail-ads{
+    justify-content:flex-start;
+  }
+  #gamePanel .ad-slot{
+    width:100%;
+    max-width:300px;
+    height:600px;
+  }
+}
+#gamePanel .inline-exit-btn{
+  position:absolute;
+  top:18px;
+  right:18px;
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  border:1px solid rgba(207,227,248,0.18);
+  background:rgba(15,23,36,0.72);
+  color:#fff;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  transition:transform var(--speed),background .25s ease,box-shadow .25s ease;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+#gamePanel .inline-exit-btn:hover{
+  transform:scale(1.05);
+  background:rgba(15,23,36,0.85);
+  box-shadow:0 12px 30px rgba(0,0,0,0.28);
+}
+#gamePanel .inline-exit-btn:active{
+  transform:scale(0.96);
+}
+#gamePanel .detail-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+#gamePanel iframe{
+  width:100%;height:72vh;border:1px solid var(--line);
+  border-radius:16px;background:#000;margin-top:16px;
+}
+#gamePanel .toolbar{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+#gamePanel .close-btn{
+  position:absolute;right:14px;top:14px;background:rgba(255,255,255,.1);
+  border:0;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer
+}
+
+#gamePanel {
+  overflow-y: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#gamePanel .fullscreen-game{
+  position:relative;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  border-radius:20px;
+  overflow:hidden;
+  background:rgba(12,18,28,0.82);
+  border:1px solid var(--line);
+  box-shadow:0 24px 60px rgba(0,0,0,0.55);
+}
+
+#gamePanel .fullscreen-game iframe{
+  flex:1;
+  width:100%;
+  height:100%;
+  border:none;
+  background:#000;
+}
+
+#gamePanel .game-toolbar{
+  position:absolute;
+  top:18px;
+  right:22px;
+  display:flex;
+  gap:10px;
+  z-index:5;
+}
+
+#gamePanel .game-toolbar button{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(8,12,20,0.65);
+  color:#fff;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  backdrop-filter:blur(12px);
+  transition:transform .2s ease, background .2s ease;
+}
+
+#gamePanel .game-toolbar button:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,0.14);
+}
+
+#gamePanel .game-toolbar button:active{
+  transform:scale(0.94);
+}
+
+body.playing-game #hudTop,
+body.playing-game #hudSpacer{
+  display:none !important;
+}
+
+body.playing-game main{
+  margin-top:0;
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+}
+
+body.playing-game .container{
+  flex:1;
+  padding:0;
+  margin:0;
+  height:100%;
+}
+
+body.playing-game .container > *:not(#gamePanel){
+  display:none !important;
+}
+
+body.playing-game #gamePanel{
+  flex:1;
+  height:100%;
+  padding:0;
+  margin:0;
+}
+
+body.playing-game #gamePanel .fullscreen-game{
+  border-radius:0;
+  border:none;
+  box-shadow:none;
+  background:rgba(5,10,18,0.88);
+}
+
+body.playing-game #gamePanel .fullscreen-game iframe{
+  border-radius:0;
+}
+
+body.playing-game .social{
+  display:none !important;
+}
+
+/* HUD for in-game stats */
+.game-stats-hud{
+  position:absolute;
+  inset:0;
+  display:none;
+  pointer-events:none;
+  z-index:9990;
+}
+
+.game-stats-hud .hud-card{
+  position:absolute;
+  width:240px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(10,16,26,0.92);
+  box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04);
+  backdrop-filter:var(--blur);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  pointer-events:auto;
+}
+
+.game-stats-hud .hud-title{
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.game-stats-hud .hud-value{
+  font-weight:800;
+  font-size:18px;
+  color:var(--fg);
+}
+
+.battery-card{top:18px;left:18px;transform:scale(1.2);transform-origin:top left;}
+.fps-card{bottom:18px;left:18px;}
+.extra-card{bottom:18px;right:18px;}
+
+body.playing-game .game-stats-hud{
+  display:block;
+}
+
+#iframePreview img {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+#iframePreview img[src] {
+  opacity: 1;
+}
+
+.control-btn:hover {
+  background: rgba(255,255,255,0.16) !important;
+  transition: background 0.2s ease;
+}
+
+/* 🔧 Kill hero hover zoom */
+.hero:hover video,
+.hero:hover .preview {
+  transform: none !important;
+  opacity: .36 !important;   /* keep your default look */
+}
+
+/* also stop smooth zoom animation so it feels instant (no jitter) */
+.hero .visual video,
+.hero .preview {
+  transition: none !important;
+}
+
+/* Only disable fadeUp on hero */
+#hero .fadeUp,
+.hero.fadeUp {
+  transform: translateY(0px) !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+/* ✨ Smooth dimming hover effect for hero */
+#hero {
+  transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+  will-change: filter, opacity, transform;
+}
+
+#hero:hover {
+  filter: brightness(0.94); /* subtle dimming */
+  opacity: 0.98;            /* very gentle fade */
+  transform: scale(1.002);  /* barely perceptible zoom */
+  transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+}
+
+/* 🌙 Smooth, subtle hero hover transition */
+#hero,
+#hero .copy,
+.hero,
+.hero .copy {
+  transition: 
+    filter 0.6s ease-in-out,
+    opacity 0.6s ease-in-out,
+    transform 0.6s ease-in-out !important;
+  will-change: filter, opacity, transform;
+}
+
+/* Hover: slightly dim, soften, and breathe */
+#hero:hover,
+#hero:hover .copy,
+.hero:hover,
+.hero:hover .copy {
+  filter: brightness(0.94);
+  opacity: 0.98;
+  transform: scale(1.002);
+  transition: 
+    filter 0.6s ease-in-out,
+    opacity 0.6s ease-in-out,
+    transform 0.6s ease-in-out !important;
+}
+
+transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+
+/* Keep hero carousel but make transitions smooth */
+#hero.hero.animating {
+  animation: none !important;
+  transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+}
+
+/* Hide Featured & Trending visually (keep for JS references) */
+#featured,
+#trending {
+  display: none !important;
+}
+
+/* 🌐 Site Identity styling */
+.setting-group h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.preset-icons {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.icon-choice {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--ui-bg);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+.icon-choice img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  opacity: 0.85;
+  transition: opacity 0.25s ease;
+}
+.icon-choice:hover img { opacity: 1; }
+.icon-choice:hover { border-color: var(--glow); box-shadow: 0 0 6px var(--glow2); transform: translateY(-2px); }
+.icon-choice.active { border-color: var(--glow); box-shadow: 0 0 10px var(--glow2); }
+
+.upload-choice {
+  background: rgba(255,255,255,0.05);
+  color: var(--textColor);
+  font-weight: bold;
+  font-size: 22px;
+}
+.upload-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; height: 100%;
+  color: var(--textColor);
+  opacity: 0.6;
+}
+.upload-choice:hover .upload-placeholder { opacity: 1; }
+
+.icon-choice.active {
+  box-shadow: 0 0 10px var(--glow2);
+  border-color: var(--glow);
+  transform: scale(1.08);
+}
+.icon-choice img {
+  transition: all 0.3s ease;
+}
+.preset-icons .icon-choice.active {
+  outline: 2px solid var(--glow);
+  box-shadow: 0 0 0 3px #00000040;
+  border-radius: 12px;
+}
+.preset-icons .icon-choice img {
+  width: 44px; height: 44px; border-radius: 10px; display:block;
+}
+
+/* 🚫 Completely hide scrollbar but keep scrolling */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html, body {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE + Edge Legacy */
+  overflow-y: scroll;         /* still allow scrolling */
+}
+
+/* --- Sidebar Brand Styling --- */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 20px 16px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+
+
+
+.brand-title {
+  font-family: 'Outfit', Inter, sans-serif;
+  font-weight: 800;
+  font-size: 2rem; /* 🔹 slightly larger text */
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 12px rgba(255,255,255,0.1);
+}
+
+.sidebar .brand-title {
+  font-family: 'Outfit', Inter, sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem !important;  /* 🔥 Force size override */
+  letter-spacing: -0.01em;
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none; /* optional: removes subtle glow if you want fully flat text */
+  margin: 0;
+  padding: 0;
+}
+
+/* Pills look & feel */
+.pill.sys-pill{
+  display:flex; align-items:center; gap:10px;
+  padding:6px 12px; border-radius:14px;
+  background: rgba(255,255,255,.05);
+  box-shadow: inset 0 0 10px rgba(255,255,255,.03), 0 0 6px rgba(0,0,0,.45);
+  font-weight:600; letter-spacing:.3px;
+}
+.pill.sys-pill b{
+  background: linear-gradient(90deg,var(--glow),var(--glow2));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  font-weight:800;
+}
+#fpsPill .label{ opacity:.75 }
+
+/* Battery shimmer animation (runs when .charging class toggled in JS) */
+#batteryPill.charging #batteryShimmer{
+  opacity:.6;
+  animation: batteryShimmer 1.6s linear infinite;
+}
+@keyframes batteryShimmer{
+  from{ transform: translateX(0) }
+  to  { transform: translateX(192px) }
+}
+
+/* If your header pills are cramped, allow them to wrap nicely */
+.header{
+  gap:10px;
+  flex-wrap: wrap;
+}
+.pill.sys-pill {
+  display:flex;align-items:center;gap:8px;
+  padding:6px 12px;border-radius:12px;
+  background:rgba(255,255,255,.04);
+  backdrop-filter:blur(10px);
+  font-weight:600;
+  font-family:Inter,Outfit,sans-serif;
+  color:var(--textColor);
+  transition:.3s ease;
+}
+.pill.sys-pill:hover {background:rgba(255,255,255,.08);}
+.pill.sys-pill b{
+  background:linear-gradient(90deg,var(--glow),var(--glow2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+#batteryPill.charging svg{animation:pulse 1.2s infinite ease-in-out;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+
+/* 🕒 Time Widget (no glow version) */
+#timePill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--ui-bg);
+  border-radius: 999px;
+  padding: 5px 14px;
+  box-shadow: none; /* 🔥 disables glow */
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--textColor, #e6eaf2);
+  transition: all 0.3s ease;
+}
+
+#timePill:hover {
+  transform: none; /* no floating effect */
+  box-shadow: none; /* 🔥 disables hover glow */
+}
+
+#timeVal {
+  font-family: "Outfit", "Inter", sans-serif;
+  letter-spacing: 0.3px;
+}
+
+#dateVal {
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+#timeVal {
+  font-family: "Outfit", "Inter", sans-serif;
+  letter-spacing: 0.3px;
+  color: var(--accent, #00d0ff); /* Accent color */
+  font-weight: 700;
+}
+
+#timeVal small {
+  color: var(--textColor, #e6eaf2);
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* 🕒 Time Widget - perfectly matches FPS/Battery */
+#timePill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05); /* same as FPS */
+  border-radius: 8px;
+  padding: 4px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08); /* subtle depth */
+  height: 28px;
+  min-width: 130px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--textColor, #e6eaf2);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+#timePill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+#timeVal {
+  color: var(--accent, #00d0ff);
+  font-weight: 700;
+}
+
+#dateVal {
+  opacity: 0.7;
+  font-weight: 500;
+  color: var(--textColor, #e6eaf2);
+}
+
+#bg-stars-1,
+#bg-stars-2,
+#bg-stars-3 {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: transparent;
+}
+
+/* ================================
+   PROXY HUB SECTION — DEBLOCKED ULTRA
+   ================================ */
+#proxies {
+  background: radial-gradient(circle at 60% -10%, #121827, #090c12 80%);
+  padding: 30px 24px;
+  color: #e9efff;
+  font-family: "Fredoka", sans-serif;
+  min-height: 100vh;
+}
+
+#proxies h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #00d0ff, #7b5bff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 20px;
+}
+
+.proxy-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.proxy-controls input,
+.proxy-controls select {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: #e9efff;
+  font-size: 14px;
+  backdrop-filter: blur(6px);
+}
+
+.proxy-controls button {
+  background: linear-gradient(90deg, #00d0ff, #7b5bff);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-weight: 600;
+}
+
+.proxy-controls button:hover {
+  transform: translateY(-1px);
+}
+
+.proxy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.proxy-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: 0.3s ease;
+}
+.proxy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+}
+
+.proxy-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.proxy-card p {
+  font-size: 0.85rem;
+  color: #9fb1d4;
+}
+
+.proxy-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.proxy-card .tag {
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  font-size: 0.7rem;
+}
+
+.proxy-card button {
+  align-self: flex-start;
+  margin-top: auto;
+  background: linear-gradient(90deg, #00d0ff, #7b5bff);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.proxy-portal {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,10,14,0.9);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  display: none;
+}
+
+.proxy-portal iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  height: 85vh;
+  border-radius: 14px;
+  border: none;
+}
+
+.close-proxy {
+  position: fixed;
+  top: 18px;
+  right: 24px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.proxy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+}
+
+.proxy-card img {
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+.proxy-card:hover img {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 🔧 Normalize proxy action buttons */
+.proxy-card .btn,
+.proxy-card button {
+  min-width: 100px;               /* ensures both Launch / Visit Site stay balanced */
+  padding: 10px 18px;             /* identical vertical + horizontal padding */
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* optional: ensure gradient buttons keep consistent line height */
+.proxy-card .btn.primary {
+  line-height: 1.2;
+}
+
+/* --- Fix Play Now alignment --- */
+.btn.primary,
+button.btn.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  padding: 10px 18px !important;
+  line-height: 1;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+/* Match spacing and baseline with "Open in new tab" */
+.proxy-card .btn.primary {
+  margin-top: 0;
+  vertical-align: middle;
+  transform: translateY(1px); /* tiny optical alignment */
+}
+
+/* ===== Hacks Section ===== */
+.page.hidden { display: none; }
+.page { display: block; padding: 20px 30px; max-width: 1400px; margin: auto; }
+
+.grid-hacks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.hack-card {
+  background: rgba(255,255,255,0.03);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
+}
+
+.hack-thumb {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #0b0d11;
+}
+
+.hack-title {
+  font-weight: 700;
+  margin: 6px 0 0;
+  font-size: 1.05rem;
+  color: var(--accent1, #00d0ff);
+}
+
+.hack-desc {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin: 0 0 6px 0;
+}
+
+.hack-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+
+.btn.small {
+  padding: 6px 10px;
+  font-size: 0.86rem;
+  border-radius: 10px;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--accent1,#00d0ff), var(--accent2,#a040ff));
+  color: #fff;
+}
+
+.input-sm {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+@media (max-width:720px){
+  .grid-hacks{ grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); }
+}
+
+
+/* ===== Hacks Section Layout — Deblocked Ultra Style ===== */
+#hacksSection {
+  width: 100%;
+  padding: 40px 6vw;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--textColor, #fff);
+}
+
+/* Title */
+#hacksSection h2, #hacksSection h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 24px;
+  background: linear-gradient(90deg, #6ddcff, #7f60f9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Filter bar (search + sort + random) */
+#hacksSection .filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
+#hacksSection input[type="text"] {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  width: 220px;
+}
+#hacksSection select, #hacksSection button {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+#hacksSection button:hover, #hacksSection select:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Hacks Grid Layout */
+#hacksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 22px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Individual Hack Cards */
+.hack-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  padding-bottom: 12px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.hack-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.hack-thumb {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.hack-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 12px 14px 4px;
+  color: #00cfff;
+}
+.hack-desc {
+  font-size: 0.85rem;
+  margin: 0 14px 10px;
+  color: rgba(255,255,255,0.8);
+}
+.hack-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+}
+.hack-actions .btn {
+  flex: 1;
+  background: linear-gradient(90deg, #00cfff, #7f60f9);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 600;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.hack-actions .btn:hover {
+  transform: scale(1.05);
+}
+
+/* === Deblocked Hacks Section — Final Polished Look === */
+#hacksSection {
+  width: 100%;
+  padding: 40px 6vw 100px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--textColor, #fff);
+}
+
+/* remove any default header text */
+#hacksSection h2,
+#hacksSection h3 {
+  display: none;
+}
+
+/* top filter bar */
+.hacks-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.hacks-header .filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+}
+
+#hacksSearch {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 14px;
+  width: clamp(220px, 40%, 300px);
+  font-size: 0.95rem;
+  font-family: "Inter", "Nunito", sans-serif;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+#hacksSearch:focus {
+  border-color: var(--accent, #7f60f9);
+  box-shadow: 0 0 12px var(--accent, #7f60f9);
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#hacksSort {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+#hacksSort:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* grid layout */
+#hacksGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 26px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* hack cards */
+.hack-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  padding-bottom: 14px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  position: relative;
+  backdrop-filter: blur(8px);
+}
+.hack-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.hack-thumb {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.hack-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 12px 14px 4px;
+  background: linear-gradient(90deg, var(--accent, #00cfff), var(--accent2, #7f60f9));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hack-desc {
+  font-size: 0.85rem;
+  margin: 0 14px 12px;
+  color: rgba(255,255,255,0.8);
+
+/* Fixed HUD bar (Header + Info) */
+#hudTop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  background: rgba(12, 16, 24, 0.65);
+  backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.45);
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Keep the rest of the content pushed below */
+main, .container {
+  margin-top: 180px; /* adjust to fit your topbar height */
+}
+
+/* Optional: smooth scroll and subtle hover highlight */
+html {
+  scroll-behavior: smooth;
+}
+#hudTop:hover {
+  background: rgba(15,20,28,0.75);
+  backdrop-filter: blur(22px) saturate(180%);
+}
+
+/* === GLOBAL FONT OVERRIDE: FREDOKA === */
+html, body, * , *::before, *::after {
+  font-family: 'Fredoka', system-ui, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.25px !important;
+  font-style: normal !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Headings — slightly heavier for visual hierarchy */
+h1, h2, h3, h4, h5, h6, .brand-title, .section h2 {
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Buttons, pills, UI elements */
+button, .btn, .pill, input, select, textarea {
+  font-family: 'Fredoka', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+/* Ensure SVGs or counters using text also inherit Fredoka */
+svg text, canvas text, .counter, .stat, .marquee, #fpsVal, #batteryPct, #timeVal, #dateVal {
+  font-family: 'Fredoka', sans-serif !important;
+  font-weight: 500 !important;
+}
+
+/* Ensure Fredoka applies even if components use shadow DOM or isolates */
+:root {
+  --font-main: 'Fredoka', sans-serif;
+  --font-alt: 'Fredoka', sans-serif;
+}
+
+/* ===== FREDOKA GLOBAL OVERRIDE (NUCLEAR MODE) ===== */
+html, body, * , *::before, *::after {
+  font-family: 'Fredoka', sans-serif !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  line-height: 1.4 !important;
+}
+
+/* Force text inside SVGs, canvases, widgets */
+svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, input, button, select, textarea, marquee, span, div {
+  font-family: 'Fredoka', sans-serif !important;
+}
+
+/* Reinforce for pseudo and slotted elements */
+:root, :host, :host-context(*) {
+  font-family: 'Fredoka', sans-serif !important;
+}
+
+/* Prevent other CSS animations or imports from reverting font */
+@font-face {
+  font-family: 'Fredoka';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Fredoka');
+}
+
+/* ✅ Fix hero hover bug: stop unwanted grow/dim */
+#hero:hover,
+.hero:hover {
+  transform: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* 🧊 Stop hero dimming or brightness changes on hover */
+#hero:hover,
+.hero:hover,
+#hero:hover * {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+#catDock button.active {
+  background: linear-gradient(90deg, var(--glow), var(--glow2));
+  color: white;
+  box-shadow: 0 0 10px var(--glow);
+}
+
+</style>
+
+</head>
+<body class="bg-mode-stars card-lifted">
+<!-- BG layers -->
+<canvas id="bg-stars-1"></canvas>
+<canvas id="bg-stars-2"></canvas>
+<canvas id="bg-stars-3"></canvas>
+<div id="bg-gradient"></div>
+<div id="bg-image"></div>
+
+<!-- Cursor glow -->
+<div class="cursorGlow" id="cursorGlow"></div>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+  <img src="icon1.png" alt="Deblocked Logo" class="brand-logo">
+  <h1 class="brand-title">Deblocked</h1>
+</div>
+
+    <nav class="nav" id="sidebarNav">
+      <a href="#featured" data-filter="featured">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 4.84 5.34.78-3.86 3.76.91 5.32L12 14.77 6.22 16.7l.91-5.32L3.27 7.62l5.34-.78L12 2z"/></svg>
+        <span>Featured</span><span class="badge">New</span>
+      </a>
+      <a href="#proxies" data-filter="proxies">
+  <svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M4 4h16v4H4V4zm0 6h16v4H4v-4zm0 6h16v4H4v-4z"/>
+  </svg>
+  <span>Proxies</span>
+</a>
+ <a href="#" data-filter="hacks"><i class="icon">⚙️</i> Tools </a>
+      
+     
+      <div class="sep"></div>
+      <a href="#links"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 13.41a1.98 1.98 0 0 1 0-2.82l2-2a2 2 0 1 1 2.82 2.83l-1.17 1.17 1.41 1.41 1.17-1.17a4 4 0 0 0-5.66-5.66l-2 2a4 4 0 0 0 0 5.66l.61.61 1.41-1.41-.59-.62zM7 17l2-2 2 2-2 2-2-2z"/></svg><span>Links</span></a>
+     
+
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+  
+
+
+
+   <!-- ✅ FIXED HUD (header + marquee + stats) -->
+<div id="hudTop">
+  <!-- Header -->
+  <div class="header">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#98a9bd">
+        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1114 9.5 4.5 4.5 0 019.5 14z"/>
+      </svg>
+      <input id="searchInput" placeholder="Search games… (press / to focus)">
+    </div>
+
+    <div class="pill"><span id="gameCount">0</span> games</div>
+
+    <!-- TIME WIDGET -->
+    <div class="pill" id="timePill">
+      <b>🕒</b>
+      <span id="timeVal">--:-- --</span>
+      <span id="dateVal" class="soft" style="margin-left:6px;">-- ---</span>
+    </div>
+
+    <!-- System Stats (FPS + Battery) -->
+    <div class="pill sys-pill" id="fpsPill">
+      <span>FPS:</span> <b id="fpsVal">0</b>
+    </div>
+
+    <div class="pill sys-pill" id="batteryPill">
+      <svg width="80" height="24" viewBox="0 0 80 24">
+        <rect x="1" y="4" width="70" height="16" rx="6" ry="6"
+              fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+        <rect id="batteryFill" x="1" y="4" width="0" height="16" rx="6" ry="6"
+              fill="url(#batGrad)" />
+        <rect x="71" y="8" width="6" height="8" rx="2" ry="2" fill="rgba(255,255,255,0.2)"/>
+        <defs>
+          <linearGradient id="batGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="var(--glow)" />
+            <stop offset="100%" stop-color="var(--glow2)" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <b id="batteryPct">--%</b>
+    </div>
+
+    <button class="icon-btn" id="openSettings" title="Settings ⚙">⚙</button>
+  </div>
+
+  <!-- Info bar -->
+  <div class="top-info">
+    <div class="marquee">
+      <span>🎉 New Website Design! • 🧪 Realtime chat beta rolling out • 🕹️ Deblocked exclusives arriving next week • 💫May have bugssssss!</span>
+    </div>
+    <div class="stats">
+      <b>400+</b> games • <b>15.3k</b> plays • <span id="statUpdated">updated recently</span>
+    </div>
+  </div>
+</div>
+
+<!-- spacer so content starts below the fixed HUD -->
+<div id="hudSpacer" aria-hidden="true"></div>
+
+<!-- 🔽 everything else continues as-is -->
+<div class="container">
+
+    
+ <section id="hacksSection" class="page hidden" aria-label="Tools">
+  <div class="hacks-header">
+    <div class="filters">
+      <input id="hacksSearch" type="text" placeholder="Search tools..." />
+      <select id="hacksSort">
+        <option value="alpha">A→Z</option>
+        <option value="reverse">Z→A</option>
+      </select>
+    </div>
+  </div>
+  <div id="hacksGrid"></div>
+</section>
+
+
+      <!-- HERO -->
+      <section class="hero" id="hero">
+        <div class="copy">
+          <h2 class="title">Play <span class="grad" id="heroTitle">Featured Game</span></h2>
+          <p class="subtitle" id="heroDesc">Your favorite classics — fast loading, buttery smooth, and deblocked.</p>
+          <div class="cta">
+            <button class="btn primary" id="heroPlay">▶ Play Now</button>
+            
+            <span class="btn" id="heroTags">New · Action</span>
+          </div>
+        </div>
+        <div class="visual">
+          <video id="heroVideo" autoplay muted loop playsinline></video>
+          <div class="preview" id="heroPreview"></div>
+          <div class="shade"></div>
+          <aside class="news" id="news">
+            <h3>Latest Updates</h3>
+            <ul id="newsList">
+              <li>⚙️ Chat fixed for most users.</li>
+              <li>🕹️ Adding Deblocked exclusives.</li>
+              <li>🚀 Adding old stuff back</li>
+            </ul>
+          </aside>
+          <div class="hero-dots" id="heroDots"></div>
+        </div>
+      </section>
+      
+
+
+      <!-- Category dock -->
+      <div class="cat-dock" id="catDock">
+      <button data-cat="all" class="cat-btn active">All</button>
+        <button data-cat="action">🎯 Action</button>
+        <button data-cat="puzzle">🧩 Puzzle</button>
+        <button data-cat="racing">🚗 Racing</button>
+        <button data-cat="io">🌐 .io</button>
+        <button data-cat="2p">🎮 2 Player</button>
+        <button data-cat="casual">☕ Casual</button>
+        <button data-cat="sandbox">🧱 Sandbox</button>
+      </div>
+      
+      <!-- INLINE GAME PANEL (starts hidden) -->
+<section id="gamePanel" class="hidden"></section>
+
+
+      <!-- Featured carousel -->
+      <section class="section" id="featured">
+        <div class="controls">
+          <h2>Featured</h2>
+          <button class="control active" data-quick="all">All</button>
+          <button class="control" data-quick="action">Action</button>
+          <button class="control" data-quick="puzzle">Puzzle</button>
+          <button class="control" data-quick="casual">Casual</button>
+        </div>
+        <div class="carousel"><div class="row-scroll" id="carouselRow"></div></div>
+      </section>
+      
+<!-- Proxies -->
+<section class="section" id="proxies" style="display:none;">
+  <h2>Proxies</h2>
+
+  <div class="proxy-controls" style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 16px;">
+    <input id="proxySearch" type="text" placeholder="Search proxies…" style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1622;color:var(--fg)">
+    <select id="proxySort" style="padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1622;color:var(--fg)">
+      <option value="smart">Sort: Smart</option>
+      <option value="rating">Sort: Rating</option>
+      <option value="speed">Sort: Speed</option>
+      <option value="verified">Sort: Verified</option>
+    </select>
+    <button id="proxyRandom" class="btn primary">🎲 Random</button>
+  </div>
+
+  <div id="proxyGrid" class="proxy-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;"></div>
+
+  <!-- Fullscreen portal -->
+  <div id="proxyPortal" class="proxy-portal" style="position:fixed;inset:0;background:rgba(8,10,14,.9);backdrop-filter:blur(8px);z-index:9999;display:none;">
+    <iframe id="proxyFrame" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups"
+            style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90vw;height:85vh;border:none;border-radius:14px;background:#000"></iframe>
+    <button id="proxyClose" class="icon-btn" title="Close"
+            style="position:fixed;top:18px;right:24px;z-index:10000">✕</button>
+  </div>
+</section>
+
+
+
+      <!-- Trending -->
+      <section class="section" id="trending">
+        <h2>Trending now</h2>
+        <div class="grid" id="gridTrending"></div>
+      </section>
+      
+       <!-- Favorites -->
+      <section class="section hidden" id="favorites">
+        <h2>Your favorites</h2>
+        <div class="grid" id="gridFavs"></div>
+      </section>
+
+      <!-- Continue Playing -->
+      <section class="section" id="continue">
+        <h2>Continue Playing</h2>
+        <p class="soft small">We’ll remember your recent games here (localStorage-ready).</p>
+        <div class="grid small-cards" id="gridContinue"></div>
+      </section>
+
+      <!-- New -->
+      <section class="section" id="new">
+        <h2>Recently added</h2>
+        <div class="grid" id="gridNew"></div>
+      </section>
+
+     
+
+      <footer class="footer" id="siteFooter">
+  © 2025 Deblocked — Break limits. Play freely.
+</footer>
+
+    </div>
+  </main>
+</div>
+
+
+
+<!-- Social dock -->
+<div class="social" aria-label="Site links">
+  <button type="button" class="social-btn" data-legal="privacy" title="Privacy Policy" aria-label="Privacy Policy">🛡️</button>
+  <button type="button" class="social-btn" data-legal="terms" title="Terms of Use" aria-label="Terms of Use">📜</button>
+  <button type="button" class="social-btn" data-legal="contact" title="Contact" aria-label="Contact">✉️</button>
+  <a class="social-btn" href="https://discord.gg/22XBKVvatJ" target="_blank" rel="noopener" title="Discord" aria-label="Discord">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20 4.6a19.7 19.7 0 0 0-4.9-1.5l-.2.4a18 18 0 0 1 4.4 1.7 14.6 14.6 0 0 0-14.6 0A18 18 0 0 1 9 3.5l-.2-.4A19.7 19.7 0 0 0 4 4.6a17.8 17.8 0 0 0-2.9 11.8 19.7 19.7 0 0 0 6 3.1 14.3 14.3 0 0 0 1.3-2.1 11.6 11.6 0 0 1-2-.9l.5-.4a13.7 13.7 0 0 0 11.2 0l.5.4a11.6 11.6 0 0 1-2 .9 14.3 14.3 0 0 0 1.3 2.1 19.7 19.7 0 0 0 6-3.1A17.8 17.8 0 0 0 20 4.6zM9.3 15.4a2 2 0 0 1 0-4 2 2 0 0 1 0 4zm5.4 0a2 2 0 0 1 0-4 2 2 0 0 1 0 4z"/>
+    </svg>
+  </a>
+</div>
+
+<div id="legalOverlay" class="legal-overlay" aria-hidden="true">
+  <div class="legal-panel" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+    <div class="legal-header">
+      <h3 id="legalTitle" style="margin:0;font:900 20px/1 Outfit,Inter">Privacy Policy</h3>
+      <button class="icon-btn" id="closeLegal" title="Close">✕</button>
+    </div>
+    <div class="legal-body">
+      <section data-legal-section="privacy">
+        <p>Deblocked keeps things lightweight. We do not require accounts, and we only store basic preferences (like favorites or theme) in your browser storage when you use those features.</p>
+        <p>Deblocked is a static website, which means the pages are delivered as-is and do not run server-side account or tracking systems for visitors.</p>
+        <h4>What we collect</h4>
+        <ul>
+          <li>Local preferences saved in your browser (device-only).</li>
+          <li>Basic, anonymous usage data if you interact with third-party services.</li>
+        </ul>
+        <h4>Third-party links</h4>
+        <p>External games, proxies, and tools may have their own privacy policies. Review them before using those sites.</p>
+      </section>
+      <section data-legal-section="terms" hidden>
+        <p>By using Deblocked, you agree to use the site responsibly and comply with all applicable rules at your location.</p>
+        <h4>Fair use</h4>
+        <ul>
+          <li>Do not misuse tools or content to harm other users or services.</li>
+          <li>Respect the terms of any third-party content you access.</li>
+        </ul>
+        <h4>Availability</h4>
+        <p>Features can change or be removed at any time to keep the site safe and stable.</p>
+      </section>
+      <section data-legal-section="contact" hidden>
+        <p>Need help, have feedback, or want to report an issue? Reach us on Discord.</p>
+        <p><a href="https://discord.gg/22XBKVvatJ" target="_blank" rel="noopener">discord.gg/22XBKVvatJ</a></p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const overlay = document.getElementById("legalOverlay");
+  const title = document.getElementById("legalTitle");
+  const closeBtn = document.getElementById("closeLegal");
+  const sections = Array.from(document.querySelectorAll("[data-legal-section]"));
+
+  if (!overlay || !title || !closeBtn || !sections.length) return;
+
+  const labels = {
+    privacy: "Privacy Policy",
+    terms: "Terms of Use",
+    contact: "Contact"
+  };
+
+  function openLegal(kind) {
+    sections.forEach(section => {
+      const match = section.getAttribute("data-legal-section") === kind;
+      section.hidden = !match;
+    });
+    title.textContent = labels[kind] || "Info";
+    overlay.style.display = "flex";
+    overlay.setAttribute("aria-hidden", "false");
+    overlay.scrollTop = 0;
+  }
+
+  function closeLegal() {
+    overlay.style.display = "none";
+    overlay.setAttribute("aria-hidden", "true");
+  }
+
+  document.querySelectorAll("[data-legal]").forEach(btn => {
+    btn.addEventListener("click", () => openLegal(btn.getAttribute("data-legal")));
+  });
+
+  closeBtn.addEventListener("click", closeLegal);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeLegal();
+  });
+});
+</script>
+
+<!-- Settings modal -->
+<div id="settingsOverlay" aria-hidden="true">
+  <div id="settingsPanel">
+    <div class="set-header">
+      <h2 style="margin:0;font:900 20px/1 Outfit,Inter">Settings</h2>
+      <button class="icon-btn" id="closeSettings" title="Close">✕</button>
+    </div>
+    <div class="set-grid">
+      <div class="opt">
+        <b>Theme</b>
+        <div class="inline">
+          <button class="control-btn" data-theme="dark">Dark</button>
+          <button class="control-btn" data-theme="light">Dont click this used to be Light Mode </button>
+        </div>
+        <span class="soft small">Light mode is fully functional(Or is it? Might Absolutly not work)</span>
+      </div>
+<!-- 🧩 Site Identity -->
+<section class="setting-group" id="siteIdentityGroup">
+  <h3 class="setting-title">Site Identity</h3>
+
+  <div class="setting-row" style="display:flex;flex-direction:column;gap:14px;">
+
+    <!-- Title input -->
+    <div class="setting-subrow">
+      <label class="setting-label" for="customTabName">Tab Title</label>
+      <input id="customTabName" class="setting-input"
+             placeholder="Enter custom tab name..."
+             style="width:100%;padding:8px 12px;border-radius:10px;
+                    border:1px solid var(--line);
+                    background:var(--ui-bg);
+                    color:var(--textColor);
+                    transition:0.25s;">
+    </div>
+
+    <!-- Preset icons -->
+    <div class="preset-icons" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;">
+      <button class="icon-choice" data-icon="icon1.png" title="Deblocked">
+        <img src="icon1.png" alt="Deblocked">
+      </button>
+      <button class="icon-choice" data-icon="icon.png" title="Sign In">
+        <img src="icon.png" alt="Skyward">
+      </button>
+      <button class="icon-choice" data-icon="icon2.png" title="Google Classroom">
+        <img src="icon2.png" alt="Classroom">
+      </button>
+      <button class="icon-choice" data-icon="icon20.png" title="My Apps">
+        <img src="icon20.png" alt="My Apps">
+      </button>
+      <button class="icon-choice" data-icon="icon15.png" title="Google Drive">
+        <img src="icon15.png" alt="Drive">
+      </button>
+
+      <!-- Upload your own -->
+      <label class="icon-choice upload-choice" for="customIconUpload" title="Upload your own">
+        <input type="file" id="customIconUpload" accept="image/*" hidden>
+        <div class="upload-placeholder">＋</div>
+      </label>
+    </div>
+
+    <!-- Apply button -->
+    <button id="applyIdentityBtn" class="btn primary" style="margin-top:8px;align-self:flex-start;">
+      Apply Changes
+    </button>
+  </div>
+</section>
+
+
+      <div class="opt">
+        <b>Accent</b>
+        <div class="swatch">
+          <button data-accent="#00d0ff,#a040ff" style="background:linear-gradient(90deg,#00d0ff,#a040ff)"></button>
+          <button data-accent="#6a5cff,#ff3df0" style="background:linear-gradient(90deg,#6a5cff,#ff3df0)"></button>
+          <button data-accent="#FFD000,#FF4D6D" style="background:linear-gradient(90deg,#FFD000,#FF4D6D)"></button>
+          <button data-accent="#7CFF00,#00D1FF" style="background:linear-gradient(90deg,#7CFF00,#00D1FF)"></button>
+        </div>
+        <span class="soft small">Used in titles, buttons, and badges.</span>
+      </div>
+      <div class="opt">
+  <b>Background</b>
+  <div class="inline">
+    <button class="control-btn" data-bg="stars">Stars</button>
+    <button class="control-btn" data-bg="gradient">Gradient</button>
+    <button class="control-btn" data-bg="image">Image</button>
+  </div>
+  <div class="inline" style="margin-top:8px;">
+  <button class="control-btn" id="toggleGlass">Toggle Frosted Glass</button>
+</div>
+<span class="soft small">(Works best with a Custom Background for Contrast)</span>
+<div class="opt" id="glassOptions" style="margin-top:10px;">
+  <b>Frosted Glass Settings</b>
+  <div class="inline">
+    <label for="glassDarkness" style="font-size:13px;color:#bcd0e6;">Darkness:</label>
+    <input type="range" id="glassDarkness" min="0" max="100" value="40" class="styled-slider">
+    <span id="glassDarkValue" style="font-size:13px;color:#bcd0e6;">40%</span>
+  </div>
+  <span class="soft small">Adjusts transparency of the glass panels and cards.</span>
+  
+</div>
+
+
+
+  <!-- Custom image input (hidden unless bg=image) -->
+  <div id="customImageControls" style="display:none;flex-direction:column;gap:8px;margin-top:10px;">
+    <input type="text" id="customImageURL" placeholder="Enter image URL" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);">
+    <label class="soft small">or upload</label>
+    <input type="file" id="customImageUpload" accept="image/*" style="font-size:13px;">
+    <button id="applyCustomImage" class="control-btn" style="width:max-content;">Apply</button>
+  </div>
+
+  <span class="soft small">All local & performant.</span>
+</div>
+
+      <div class="opt">
+        <b>Layout Density</b>
+        <div class="inline">
+          <button class="control-btn" data-density="cozy">Cozy</button>
+          <button class="control-btn" data-density="compact">Compact</button>
+        </div>
+        <span class="soft small">Adjusts gaps & card min-size.</span>
+      </div>
+      <div class="opt">
+        <b>Card Style</b>
+        <div class="inline">
+          <button class="control-btn" data-style="flat">Flat</button>
+          <button class="control-btn" data-style="lifted">Lifted</button>
+        </div>
+        <span class="soft small">Switch between subtle dashboard vs 3D pop.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="heroTracker" style="display:none;"></div>
+
+
+
+<script>
+const isNeocitiesHost = /(^|\.)neocities\.org$/i.test(location.hostname);
+let neocitiesErrorBox = null;
+
+function ensureNeocitiesErrorBox() {
+  if (!isNeocitiesHost) return null;
+  if (neocitiesErrorBox) return neocitiesErrorBox;
+  neocitiesErrorBox = document.createElement("div");
+  neocitiesErrorBox.id = "neocitiesErrorBox";
+  neocitiesErrorBox.style.cssText = [
+    "position:sticky",
+    "top:0",
+    "z-index:1000000",
+    "background:#ff4d6d",
+    "color:#fff",
+    "padding:12px 16px",
+    "font:600 14px/1.4 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial",
+    "box-shadow:0 8px 24px rgba(0,0,0,0.35)",
+    "display:none"
+  ].join(";");
+  neocitiesErrorBox.innerHTML = "<div style=\"font-weight:700;\">Neocities Debug Mode</div>";
+  document.body.prepend(neocitiesErrorBox);
+  return neocitiesErrorBox;
+}
+
+function showNeocitiesError(error, url) {
+  if (!isNeocitiesHost) return;
+  console.error("Neocities debug error:", error);
+  const box = ensureNeocitiesErrorBox();
+  if (!box) return;
+  const msg = error && error.message ? error.message : String(error);
+  const fullUrl = url || (error && error.url) || "";
+  const row = document.createElement("div");
+  row.style.cssText = "margin-top:8px;font-weight:500;";
+  const msgEl = document.createElement("div");
+  msgEl.textContent = `Error: ${msg}`;
+  row.appendChild(msgEl);
+  if (fullUrl) {
+    const urlEl = document.createElement("div");
+    urlEl.textContent = `URL: ${fullUrl}`;
+    row.appendChild(urlEl);
+  }
+  box.appendChild(row);
+  box.style.display = "block";
+}
+
+function fetchWithDebug(input, init) {
+  const url = input instanceof Request
+    ? input.url
+    : input instanceof URL
+      ? input.toString()
+      : input;
+  return fetch(input, init)
+    .then((res) => {
+      if (!res.ok) {
+        showNeocitiesError(new Error(`HTTP ${res.status} ${res.statusText}`.trim()), res.url || url);
+      }
+      return res;
+    })
+    .catch((err) => {
+      showNeocitiesError(err, url);
+      throw err;
+    });
+}
+
+function runNeocitiesInit(fn) {
+  if (!isNeocitiesHost) return fn();
+  try {
+    const result = fn();
+    if (result && typeof result.catch === "function") {
+      return result.catch((err) => {
+        showNeocitiesError(err);
+        throw err;
+      });
+    }
+    return result;
+  } catch (err) {
+    showNeocitiesError(err);
+  }
+}
+</script>
+
+
+
+
+<script>
+/* ===============================================================
+   JS — Motion Edition (with embeddedgames.json integration)
+   =============================================================== */
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+
+/* ===============================================================
+   LOAD GAMES FROM embeddedgames.json — FIXED VERSION
+   =============================================================== */
+let GAMES = [];
+runNeocitiesInit(() => {
+  console.log("🚀 Starting fetch embeddedgames.json...");
+
+  fetchWithDebug("/embeddedgames.json")
+    .then(res => {
+      console.log("🌐 Fetch response:", res.status);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      console.log("📦 JSON loaded successfully:", data.length);
+      GAMES = data.map(g => ({
+        id: g.title.toLowerCase().replace(/\s+/g, '-'),
+        name: g.title,
+        tags: [
+          ...(g.tags || []),
+          g.featured ? "featured" : "",
+          g.trending ? "trending" : "",
+          g.new ? "new" : ""
+        ].filter(Boolean),
+        featured: g.featured === true,
+        cover: g.game_image_icon,
+        thumb: g.game_image_icon,
+        preview: g.game_preview_image || g.game_image_icon,
+
+        vid: "",
+        desc: g.description || "No description provided.",
+        url: g.url,
+        added: g.added || new Date().toISOString().split('T')[0]
+      }));
+
+      console.log("✅ Loaded games:", GAMES.length);
+      console.log("⭐ Featured games found:", GAMES.filter(g => g.featured).map(g => g.title));
+
+      const featuredGames = GAMES.filter(g => g.featured);
+
+      // Render everything else first
+      renderAll();
+      
+      
+
+  // ✅ Apply hero rotation AFTER rendering — with small delay to ensure DOM ready
+  setTimeout(() => {
+    initHeroRotation();
+  }, 500);
+
+
+    })
+    .catch(err => {
+      console.error("❌ Error loading embeddedgames.json:", err);
+      $("#carouselRow").innerHTML = `<p class='soft small'>⚠️ Couldn't load games (check console)</p>`;
+    });
+});
+
+
+
+
+
+
+/* ---------- Utility functions ---------- */
+function since(s){
+  const d=new Date(s),diff=Date.now()-d.getTime(),days=Math.round(diff/86400000);
+  if(days<1)return"today";if(days===1)return"1 day ago";return`${days} days ago`;
+}
+function setText(sel,txt){const el=typeof sel==="string"?$(sel):sel;if(el)el.textContent=txt;}
+
+/* ---------- Game HUD (battery + FPS) ---------- */
+let fpsLoopId=null;
+let batteryCleanup=null;
+let gameHud=null;
+
+function ensureGameHud(container){
+  if(!gameHud){
+    const hud=document.createElement("div");
+    hud.id="gameStatsHud";
+    hud.className="game-stats-hud";
+    hud.innerHTML=`
+      <div class="hud-card battery-card">
+        <div class="hud-title">Battery</div>
+        <div class="hud-value" data-hud-battery>--</div>
+      </div>
+      <div class="hud-card fps-card">
+        <div class="hud-title">Performance</div>
+        <div class="hud-value" data-hud-fps>-- FPS</div>
+      </div>
+      <div class="hud-card extra-card">
+        <div class="hud-title">Extra</div>
+        <div class="hud-value" data-hud-extra>Ready</div>
+      </div>
+    `;
+    gameHud=hud;
+  }
+
+  if(container && gameHud.parentElement!==container){
+    container.appendChild(gameHud);
+  }
+
+  return gameHud;
+}
+
+function stopGameHud(){
+  if(fpsLoopId){
+    cancelAnimationFrame(fpsLoopId);
+    fpsLoopId=null;
+  }
+  if(batteryCleanup){
+    batteryCleanup();
+    batteryCleanup=null;
+  }
+}
+
+function startFpsMonitor(target){
+  let frames=0;
+  let last=performance.now();
+  const loop=(now)=>{
+    frames++;
+    if(now-last>=1000){
+      const fps=Math.round(frames*1000/(now-last));
+      setText(target,`${fps} FPS`);
+      frames=0;
+      last=now;
+    }
+    fpsLoopId=requestAnimationFrame(loop);
+  };
+  fpsLoopId=requestAnimationFrame(loop);
+}
+
+function startBatteryMonitor(target){
+  if(!navigator.getBattery){
+    setText(target,"N/A");
+    return;
+  }
+
+  navigator.getBattery()
+    .then(manager=>{
+      const update=()=>{
+        const level=Math.round(manager.level*100);
+        const status=manager.charging?" (charging)":"";
+        setText(target,`${level}%${status}`);
+      };
+
+      update();
+      manager.addEventListener("levelchange",update);
+      manager.addEventListener("chargingchange",update);
+      batteryCleanup=()=>{
+        manager.removeEventListener("levelchange",update);
+        manager.removeEventListener("chargingchange",update);
+      };
+    })
+    .catch(()=>setText(target,"N/A"));
+}
+
+function startGameHud(){
+  const container=document.querySelector("#gamePanel .fullscreen-game");
+  if(!container) return;
+
+  const hud=ensureGameHud(container);
+  stopGameHud();
+  const batteryEl=hud.querySelector('[data-hud-battery]');
+  const fpsEl=hud.querySelector('[data-hud-fps]');
+  const extraEl=hud.querySelector('[data-hud-extra]');
+  setText(batteryEl,"--");
+  setText(fpsEl,"-- FPS");
+  setText(extraEl,"HUD active");
+  startBatteryMonitor(batteryEl);
+  startFpsMonitor(fpsEl);
+}
+
+/* ---------- Favorites ---------- */
+const favKey="deblocked:favorites";
+let favorites=new Set(JSON.parse(localStorage.getItem(favKey)||"[]"));
+function toggleFav(id){
+  favorites.has(id)?favorites.delete(id):favorites.add(id);
+  localStorage.setItem(favKey,JSON.stringify([...favorites]));
+  renderAll();
+}
+
+/* ---------- Continue Playing via Local Storage ---------- */
+const continueKey = "deblocked:continue";
+let continueGames = JSON.parse(localStorage.getItem(continueKey) || "[]");
+
+function addContinueGame(gameId) {
+  if (!gameId) return;
+
+  // Normalize ID
+  const id = gameId.trim().toLowerCase();
+
+  // Get existing list from localStorage
+  let list = JSON.parse(localStorage.getItem("deblocked:continue") || "[]");
+
+  // Remove duplicates
+  list = list.filter(x => x.toLowerCase() !== id);
+
+  // Add newest game first
+  list.unshift(id);
+
+  // Keep only the latest 10
+  if (list.length > 10) list = list.slice(0, 10);
+
+  // Save it
+  localStorage.setItem("deblocked:continue", JSON.stringify(list));
+
+  // Update global variable
+  if (typeof continueGames !== "undefined") continueGames = list;
+
+  console.log("✅ Updated Continue Playing:", list);
+
+  // 🟢 NEW: Instantly refresh the visible grid
+  if (typeof renderContinue === "function") renderContinue();
+}
+
+
+
+
+/* ---------- Hero rotation ---------- */
+let heroIndex = 0;
+let heroList = [];
+
+function heroAnimate() {
+  const hero = $("#hero");
+  hero.classList.remove("animating");
+  void hero.offsetWidth;
+  hero.classList.add("animating");
+}
+
+function mountHero(i) {
+  if (!heroList.length) return;
+  const g = heroList[i % heroList.length];
+  setText("#heroTitle", g.name);
+  setText("#heroDesc", g.desc);
+  setText(
+    "#heroTags",
+    (g.tags.slice(0, 2).map(t => t[0].toUpperCase() + t.slice(1)).join(" · ")) ||
+    "Featured"
+  );
+  $("#heroPreview").style.backgroundImage = `url('${g.cover}')`;
+  const hv = $("#heroVideo");
+  if (g.vid) {
+    hv.src = g.vid;
+    hv.style.opacity = 0.28;
+  } else {
+    hv.removeAttribute("src");
+    hv.load?.();
+  }
+ const playBtn = document.querySelector("#heroPlay");
+if (playBtn)
+  playBtn.onclick = () => {
+    addContinueGame(g.id); // track it like other games
+    location.hash = encodeURIComponent(g.id); // open overlay, NOT full play mode
+  };
+
+
+
+const detailsBtn = document.querySelector("#heroDetails");
+if (detailsBtn) detailsBtn.onclick = () => alert(`${g.name}\n\n${g.desc}`);
+
+  const dots = $("#heroDots");
+  dots.innerHTML = heroList
+    .map(
+      (_, idx) => `<button class="${idx === i ? "active" : ""}" data-idx="${idx}"></button>`
+    )
+    .join("");
+  heroAnimate();
+  
+  document.getElementById("heroTracker").dataset.active = g.name;
+}
+
+let heroTimer = null;
+
+function startHeroRotation() {
+  // Stop any previous rotation to avoid multiple timers
+  if (heroTimer) {
+    clearInterval(heroTimer);
+    heroTimer = null;
+  }
+
+  if (heroList.length > 1) {
+    console.log("🎬 Starting hero rotation for", heroList.length, "games");
+    heroTimer = setInterval(() => {
+      heroIndex = (heroIndex + 1) % heroList.length;
+      console.log("➡️ Switching to hero index:", heroIndex);
+      mountHero(heroIndex);
+    }, 8000);
+  } else {
+    console.warn("⚠️ Not enough featured games to rotate.");
+  }
+}
+
+
+$("#heroDots")?.addEventListener("click", e => {
+  const b = e.target.closest("button[data-idx]");
+  if (!b) return;
+  heroIndex = +b.dataset.idx;
+  mountHero(heroIndex);
+});
+
+function initHeroRotation() {
+  const featuredGames = GAMES.filter(g => g.featured);
+  if (featuredGames.length > 0) {
+    heroList = featuredGames;
+    heroIndex = 0;
+    mountHero(heroIndex);
+    startHeroRotation();
+  } else {
+    console.warn("⚠️ No featured games found!");
+  }
+}
+
+
+
+
+
+/* ---------- Card + Carousel Rendering ---------- */
+function slideHTML(g){return`
+<article class="slide">
+  <span class="pill-tag">${g.tags.includes("new")?"New":g.tags.includes("hot")?"Hot":"Featured"}</span>
+  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"></div>
+  <div class="meta"><div class="name">${g.name}</div><span class="small soft">· ${since(g.added)}</span></div>
+</article>`;}
+function renderCarousel(tag){
+  const row=$("#carouselRow");
+  if(!GAMES.length){row.innerHTML="<p class='soft small'>Loading...</p>";return;}
+  const list=GAMES.filter(g=>g.featured&&(!tag||g.tags.includes(tag)));
+  row.innerHTML=list.map(slideHTML).join("");
+}
+
+function cardHTML(g){
+  const favActive=favorites.has(g.id)?"active":"";
+  const badge=g.tags.includes("hot")?"hot":g.tags.includes("new")?"new":"";
+  return`
+<article class="card" data-id="${g.id}" style="--card-bg-image:url('${g.thumb}')">
+  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"></div>
+  <div class="body">
+    <div class="name">${g.name}</div>
+    <div class="tags">
+      ${badge?`<span class="tag ${badge}">${badge==="hot"?"🔥 Hot":"✨ New"}</span>`:""}
+      ${g.tags.filter(t=>t!=="hot"&&t!=="new").slice(0,3).map(t=>`<span class="tag">${t}</span>`).join("")}
+    </div>
+    <div class="small soft">Added ${since(g.added)}</div>
+  </div>
+  <button class="fav ${favActive}" title="Favorite">${favActive?"★":"☆"}</button>
+</article>`;}
+function renderGrid(sel,filterFn){
+  const el=$(sel);
+  if(!GAMES.length){el.innerHTML="<p class='soft small'>Loading...</p>";return;}
+  const items=GAMES.filter(filterFn);
+  el.innerHTML=items.map(cardHTML).join("");
+  el.querySelectorAll(".card").forEach(card=>{
+    const id=card.getAttribute("data-id");
+    card.querySelector(".thumb").onclick = () => {
+  const game = GAMES.find(g => g.id === id);
+  if (!game) return;
+  window.location.hash = encodeURIComponent(game.id); // change URL
+  showGameOverlay(game); // open overlay instantly
+};
+
+    card.querySelector(".fav").onclick=e=>{e.stopPropagation();toggleFav(id);}
+  });
+}
+
+// ✅ Continue Playing Renderer
+function renderContinue() {
+  const el = $("#gridContinue");
+  if (!el) return;
+
+  // get last played ids
+  const ids = JSON.parse(localStorage.getItem("deblocked:continue") || "[]");
+
+  // find those games from GAMES
+  const list = ids
+    .map(id => GAMES.find(g => g.id.toLowerCase() === id.toLowerCase()))
+    .filter(Boolean)
+    .slice(0, 4); // only show last 4 played
+
+  if (list.length === 0) {
+    el.innerHTML = `<p class="soft small">You haven’t played anything yet — try a game!</p>`;
+    return;
+  }
+
+  el.innerHTML = list.map(cardHTML).join("");
+
+  // rebind click and favorite actions like other grids
+  el.querySelectorAll(".card").forEach(card => {
+    const id = card.getAttribute("data-id");
+
+    card.querySelector(".thumb").onclick = () => {
+      const game = GAMES.find(g => g.id === id);
+      if (!game) return;
+      addContinueGame(game.id);
+      window.location.hash = encodeURIComponent(game.id);
+      showGameOverlay(game);
+    };
+
+    card.querySelector(".fav").onclick = e => {
+      e.stopPropagation();
+      toggleFav(id);
+    };
+  });
+}
+
+/* ---------- Search + categories ---------- */
+let currentQuery="";
+function applyQuery(list){
+  if(!currentQuery)return list;
+  const q=currentQuery.toLowerCase();
+  return list.filter(g=>g.name.toLowerCase().includes(q)||g.tags.some(t=>t.includes(q)));
+}
+$("#searchInput").addEventListener("input",e=>{
+  currentQuery=e.target.value.trim();
+  renderAll();
+});
+/* ---------- Categories with keyword maps ---------- */
+const CATEGORY_KEYWORDS = {
+  all: [],
+
+  action: [
+    "fight","battle","pvp","1v1","arena","combat","war","soldier","gun","defense","box","physics",
+    "gladihoppers","shoot","tank","warfare","sniper","stick","brawl","rage","assault","hunter",
+    "knife","army","weapon","bullet","ninja","platformer","clash"
+  ],
+
+  puzzle: [
+    "crossy","road","mario","run","runner","duck","life","island","connect","cut","rope","fireboy",
+    "watergirl","flappy","geo","gear","escape","hobo","lol","legend","riddle","maze","block","logic",
+    "brain","smart","think","portal","tile","stack","slide","match"
+  ],
+
+  racing: [
+    "rocket","league","rush","drive","drift","king","earn","die","funny","mad","truck","gta","car",
+    "hill","climb","madalin","kart","mario","race","moto","poly","track","racer","turbo","dash",
+    "pako","parking","runway","speed","bike","quad"
+  ],
+
+  io: [
+    "io","i.o","online","multiplayer","balls","sim","craft","eagler","minecraft","metroid","recoil",
+    "rooftop","league","lol","yoh","battle","agar","worm","diep","slither","paper","zombs","gun",
+    "fight","arena"
+  ],
+
+  "2 player": [
+    "2","3","4","5","6","7","duo","friends","friend","team","league","lol","squad","shoot","1v1",
+    "pvp","coop","battle","versus","multi","play","pair","pong"
+  ],
+
+  casual: [
+    "drift","sim","dance","ice","fire","fireboy","watergirl","spiderman","among","basketball","stars",
+    "fnaf","craft","mine","minecraft","clicker","fun","idle","relax","simple","tap","casual","chill",
+    "easy","cute","paint","draw","memory"
+  ],
+
+  sandbox: [
+    "mario","sonic","minecraft","eagler","gta","lol","escape","flee","poly","slope","skibidi","toilet",
+    "legend","shooter","simulator","doom","free","creative","build","craft","sandbox","world","map",
+    "editor","physics","test","funny"
+  ]
+};
+
+let currentCategory = "all";
+
+$("#catDock").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-cat]");
+  if (!btn) return;
+
+  $$("#catDock button").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  
+  currentCategory = btn.dataset.cat;
+  renderAll();
+});
+
+function applyCategory(list) {
+  if (currentCategory === "all") return list;
+  const keywords = CATEGORY_KEYWORDS[currentCategory] || [];
+  return list.filter(g => {
+    const n = (g.name + " " + g.tags.join(" ")).toLowerCase();
+    return keywords.some(k => n.includes(k));
+  });
+}
+
+/* ---------- Controls ---------- */
+$$(".control").forEach(btn=>btn.addEventListener("click",()=>{
+  $$(".control").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const tag=btn.dataset.quick;
+  renderCarousel(tag==="all"?null:tag);
+}));
+$("#sidebarNav").addEventListener("click",e=>{
+  const a=e.target.closest("a[data-filter]");
+  if(!a)return;
+  $("#favorites").classList.toggle("hidden",a.dataset.filter!=="favorites");
+});
+
+/* ---------- Intersection animations ---------- */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting)en.target.classList.add("visible");
+  });
+},{threshold:.12});
+$$(".section").forEach(sec=>io.observe(sec));
+
+/* ---------- Render all ---------- */
+function renderAll() {
+  if (!GAMES.length) return;
+
+  // 🧩 Apply both search and category filters safely
+  let visibleGames = applyQuery(GAMES);
+  visibleGames = applyCategory(visibleGames);
+
+  // 🧮 Update stats
+  setText("#gameCount", visibleGames.length);
+  const mostRecent = visibleGames.reduce((a, b) => (a.added > b.added ? a : b)).added;
+  setText("#lastUpdated", since(mostRecent));
+  setText("#statUpdated", since(mostRecent));
+
+  // 🧭 Handle carousel (uses quick buttons)
+  const active = $(".control.active");
+  const tag = active ? active.dataset.quick : null;
+  renderCarousel(tag && tag !== "all" ? tag : null);
+
+  // 🧱 Render grids with the filtered list
+  renderGrid("#gridTrending", g => visibleGames.includes(g) && g.tags.includes("trending"));
+  renderGrid("#gridNew", g =>
+    visibleGames.includes(g) &&
+    (g.tags.includes("new") ||
+      since(g.added) === "today" ||
+      since(g.added).includes("day"))
+  );
+  renderContinue();
+
+  renderGrid("#gridFavs", g => favorites.has(g.id) && visibleGames.includes(g));
+
+  // 🩵 Toggle favorites section
+  $("#favorites").classList.toggle("hidden", $("#gridFavs").children.length === 0);
+
+  // 🪩 Keep hero up to date
+  mountHero(heroIndex);
+}
+
+
+// ===== CLICK BLOCK DIAGNOSTIC (temporary) =====
+window.addEventListener("click", (e) => {
+  const el = e.target;
+  const top = document.elementFromPoint(e.clientX, e.clientY);
+  if (el !== top) {
+    console.log("⚠️ Click blocked! Element above card:", top);
+  }
+});
+
+// ✅ Global delegated click handler for all game cards
+document.addEventListener("click", (e) => {
+  const card = e.target.closest(".card[data-id]");
+  if (!card) return;
+
+  const id = card.getAttribute("data-id");
+  const game = GAMES.find(g => g.id === id);
+  if (!game) return;
+
+  e.preventDefault();
+  window.location.hash = encodeURIComponent(game.id);
+  showGameOverlay(game);
+});
+
+
+
+/* ===============================================================
+   INLINE GAME PANEL ROUTER (keeps sidebar/header visible)
+   =============================================================== */
+
+// Helper: find a game by hash
+function getGameFromHashInline() {
+  const raw = decodeURIComponent(location.hash.replace('#','')).trim().toLowerCase();
+  if (!raw) return null;
+  return GAMES.find(g =>
+    g.id.toLowerCase() === raw ||
+    g.name.replace(/\s+/g,'').toLowerCase() === raw.replace(/\s+/g,'')
+  ) || null;
+}
+
+// Hide homepage sections
+function hideHomeSections() {
+  $("#hero")?.classList.add("hidden");
+  $("#featured")?.classList.add("hidden");
+  $("#trending")?.classList.add("hidden");
+  $("#continue")?.classList.add("hidden");
+  $("#new")?.classList.add("hidden");
+  $("#favorites")?.classList.add("hidden");
+  $("#catDock")?.classList.add("hidden");   // 🟢 NEW — hides category bar
+  document.querySelector('.social')?.classList.add('hidden');
+}
+
+
+// Show homepage sections
+function showHomeSections() {
+  $("#hero")?.classList.remove("hidden");
+  $("#featured")?.classList.remove("hidden");
+  $("#trending")?.classList.remove("hidden");
+  $("#continue")?.classList.remove("hidden");
+  $("#new")?.classList.remove("hidden");
+  const favs = $("#gridFavs");
+  $("#favorites")?.classList.toggle("hidden", !favs || !favs.children.length);
+  $("#catDock")?.classList.remove("hidden"); // 🟢 NEW — shows category bar again
+  document.querySelector('.social')?.classList.remove('hidden');
+}
+
+
+// Render the panel HTML
+function renderGamePanel(game) {
+  const panel = $("#gamePanel");
+  if (!panel) return;
+
+  // 🔧 Build game info and preview layout
+ panel.innerHTML = `
+  <div class="detail-card" style="--detail-bg:url('${game.thumb}')">
+      <button class="inline-exit-btn" id="closeGamePanel" title="Exit">✕</button>
+
+      <div class="detail-content">
+        <!-- Game icon -->
+        <img src="${game.thumb}" alt="${game.name}" 
+             style="width:180px;height:180px;border-radius:12px;object-fit:cover;">
+
+        <div style="flex:1;">
+        <h2>${game.name}</h2>
+        <p class="soft small" style="margin:0 0 8px;">${(game.tags || []).join(" • ")}</p>
+        <p class="soft" style="margin:0 0 12px;">${game.desc || "No description provided."}</p>
+
+        <!-- Action buttons -->
+        <div class="detail-actions" style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn primary" id="playEmbeddedBtn">▶ Play Now</button>
+          
+        </div>
+
+        <!-- 🟢 Preview image shows first -->
+        <div class="iframePreview" id="iframePreview" style="margin-top:14px;">
+          <img id="previewImage" 
+               src="${game.preview || game.thumb}" 
+               alt="${game.name} preview"
+               style="width:100%;border-radius:16px;object-fit:cover;max-height:70vh;">
+        </div>
+
+        <!-- 🕹️ Iframe starts hidden -->
+        <iframe id="gameIframe" allowfullscreen 
+                style="display:none;width:100%;height:80vh;border:1px solid var(--line);border-radius:16px;background:#000;margin-top:10px;"></iframe>
+      </div>
+      </div>
+
+      <aside class="detail-ads" aria-label="Advertisement slots">
+        <div class="ad-slots">
+          <div class="ad-slot">Ads are Placed here</div>
+          <div class="ad-slot">Ads are Placed here</div>
+          <div class="ad-slot">Ads are Placed here</div>
+        </div>
+      </aside>
+    </div>
+  `;
+
+  // 🔗 Controls
+  $("#closeGamePanel").onclick = () => { location.hash = ""; };
+
+// ▶ Play button — go to /Play route
+$("#playEmbeddedBtn").onclick = () => {
+  addContinueGame(game.id); // track it
+  location.hash = encodeURIComponent(game.id) + "/Play";
+};
+
+}
+
+// Show panel
+function showPanelForGame(game) {
+  document.body.classList.remove("playing-game");
+  stopGameHud();
+  renderGamePanel(game);
+  hideHomeSections();
+  const panel = $("#gamePanel");
+  if (panel) {
+    panel.classList.remove("hidden");
+    panel.classList.remove("is-playing");
+  }
+  window.scrollTo(0,0);
+}
+
+function showGameOnly(game) {
+  const panel = $("#gamePanel");
+  if (!panel) return;
+
+  hideHomeSections();
+  document.body.classList.add("playing-game");
+  panel.classList.remove("hidden");
+  panel.classList.add("is-playing");
+  window.scrollTo(0,0);
+
+  panel.innerHTML = `
+    <div class="fullscreen-game">
+      <div class="game-toolbar">
+        <button class="control-btn" id="iframeRefreshBtn" title="Refresh">⟳</button>
+        <button class="control-btn" id="iframeFsBtn" title="Fullscreen">⛶</button>
+        <button class="control-btn" id="closeGamePanel" title="Exit">✕</button>
+      </div>
+      <iframe id="gameIframe" src="${game.url}" allowfullscreen></iframe>
+    </div>
+  `;
+
+
+  // Controls
+  $("#closeGamePanel").onclick = () => {
+    document.body.classList.remove("playing-game");
+    location.hash = encodeURIComponent(game.id);
+  };
+  $("#iframeRefreshBtn").onclick = () => {
+    const iframe = $("#gameIframe");
+    if (iframe.src) iframe.src = iframe.src;
+  };
+  $("#iframeFsBtn").onclick = () => $("#gameIframe").requestFullscreen?.();
+
+  startGameHud();
+}
+
+
+// Hide panel
+function hidePanel() {
+  const panel = $("#gamePanel");
+  if (panel) {
+    panel.classList.add("hidden");
+    panel.classList.remove("is-playing");
+    panel.innerHTML = "";
+  }
+  stopGameHud();
+  document.body.classList.remove("playing-game");
+  showHomeSections();
+}
+
+// --- Router: handles both #Game and #Game/Play
+window.addEventListener("hashchange", () => {
+  const raw = decodeURIComponent(location.hash.replace('#','')).trim();
+  const playMode = raw.toLowerCase().endsWith('/play');
+  const baseId = raw.replace(/\/play$/i, '');
+  const g = GAMES.find(x =>
+    x.id.toLowerCase() === baseId.toLowerCase() ||
+    x.name.replace(/\s+/g,'').toLowerCase() === baseId.replace(/\s+/g,'').toLowerCase()
+  );
+
+  if (!g) return hidePanel();
+  if (playMode) showGameOnly(g);
+  else showPanelForGame(g);
+
+  // 🔄 Rebind overlay click events after switching back
+  if (document.querySelector("#gridTrending") || document.querySelector("#gridNew")) {
+    document.querySelectorAll(".card .thumb").forEach(card => {
+      card.onclick = () => {
+        const id = card.closest(".card").dataset.id;
+        const game = GAMES.find(g => g.id === id);
+        if (game) showGameOverlay(game);
+      };
+    });
+  }
+});
+
+
+
+// --- Auto-load correct view on refresh
+window.addEventListener("DOMContentLoaded", () => {
+  const raw = decodeURIComponent(location.hash.replace('#','')).trim();
+  const playMode = raw.toLowerCase().endsWith('/play');
+  const baseId = raw.replace(/\/play$/i, '');
+  const g = GAMES.find(x =>
+    x.id.toLowerCase() === baseId.toLowerCase() ||
+    x.name.replace(/\s+/g,'').toLowerCase() === baseId.replace(/\s+/g,'').toLowerCase()
+  );
+
+  if (!g) return;
+  if (playMode) showGameOnly(g);
+  else showPanelForGame(g);
+});
+
+
+
+
+/* ---------- Intercept game card clicks (router only) ---------- */
+document.addEventListener('click', (e) => {
+  const card = e.target.closest('[data-id], .card, .slide, .game-card');
+  if (!card) return;
+
+  const id = card.dataset.id || card.dataset.game || card.querySelector('.name')?.textContent?.trim();
+  if (!id) return;
+
+  const match = GAMES.find(g => 
+    g.name.replace(/\s+/g, '').toLowerCase() === id.replace(/\s+/g, '').toLowerCase()
+  );
+  if (!match) return;
+
+  e.preventDefault();
+  window.location.hash = encodeURIComponent(match.name);
+});
+
+
+
+/* ===============================================================
+   FINAL SETTINGS OVERLAY FIX — overrides all stacking/context bugs
+   =============================================================== */
+(() => {
+  const overlay = document.getElementById('settingsOverlay');
+  const btn = document.getElementById('openSettings');
+  const closeBtn = document.getElementById('closeSettings');
+
+  if (!overlay || !btn || !closeBtn) {
+    console.warn("⚠️ Settings elements missing");
+    return;
+  }
+
+  // 🔧 force top-level z-index and fix stacking isolation
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.right = 0;
+  overlay.style.bottom = 0;
+  overlay.style.display = 'none';
+  overlay.style.zIndex = '999999';          // on top of everything
+  overlay.style.pointerEvents = 'auto';
+  overlay.style.background = 'rgba(3,8,14,.55)';
+  overlay.style.backdropFilter = 'blur(10px)';
+
+  // 🔹 open handler
+  btn.onclick = () => {
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden'; // prevent background scroll
+  };
+
+  // 🔹 close handler
+  closeBtn.onclick = () => {
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  // 🔹 close if clicking outside panel
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeBtn.click();
+  });
+
+  console.log("✅ Settings overlay fully patched and active");
+})();
+
+/* ===============================================================
+   SETTINGS INTERACTIVITY — THEME, ACCENT, BACKGROUND, ETC.
+   =============================================================== */
+(() => {
+  const root = document.documentElement;
+  const body = document.body;
+
+  // ---------- THEME ----------
+  $("[data-theme='dark']").onclick = () => {
+    body.classList.remove("theme-light");
+    body.classList.add("theme-dark");
+    localStorage.setItem("deblocked:theme", "dark");
+  };
+  $("[data-theme='light']").onclick = () => {
+    body.classList.remove("theme-dark");
+    body.classList.add("theme-light");
+    localStorage.setItem("deblocked:theme", "light");
+  };
+
+  // ---------- ACCENT ----------
+  $$(".swatch button").forEach(btn => {
+    btn.onclick = () => {
+      const colors = btn.dataset.accent.split(",");
+      root.style.setProperty("--glow", colors[0]);
+      root.style.setProperty("--glow2", colors[1]);
+      localStorage.setItem("deblocked:accent", JSON.stringify(colors));
+    };
+  });
+
+  // ---------- BACKGROUND ----------
+  $$(".control-btn[data-bg]").forEach(btn => {
+    btn.onclick = () => {
+      const mode = btn.dataset.bg;
+      body.classList.remove("bg-mode-stars", "bg-mode-gradient", "bg-mode-image");
+      body.classList.add(`bg-mode-${mode}`);
+      localStorage.setItem("deblocked:bgMode", mode);
+
+      // UI active highlight
+      $$(".control-btn[data-bg]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      if (mode === "stars" && typeof window.initStars === "function") {
+        if (!document.body.dataset.starsInit) {
+          window.initStars();
+          document.body.dataset.starsInit = "1";
+        }
+      }
+    };
+  });
+  // ---------- SITE TAB: Favicon + Title (Presets + Upload) ----------
+  function applyFavicon(href) {
+    // remove old <link rel="icon"> tags
+    document.querySelectorAll("link[rel*='icon']").forEach(n => n.remove());
+    // add new
+    const link = document.createElement("link");
+    link.rel = "icon";
+    link.href = href;
+    document.head.appendChild(link);
+    // persist
+    localStorage.setItem("deblocked:siteIcon", href);
+  }
+  function applySiteTitle(title) {
+    document.title = title;
+    localStorage.setItem("deblocked:siteTitle", title);
+  }
+  function markActiveIcon(href) {
+    $$(".preset-icons .icon-choice").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.icon === href);
+    });
+  }
+
+  // Preset clicks — now updates favicon, tab title, and title input box
+$$(".preset-icons .icon-choice:not(.upload-choice)").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const icon = btn.dataset.icon;
+    const title = btn.dataset.title || btn.title || document.title;
+
+    // Apply favicon + title
+    applyFavicon(icon);
+    applySiteTitle(title);
+    markActiveIcon(icon);
+
+    // Also update the title input box if it exists
+    const titleInput = $("#customTabName");
+    if (titleInput) titleInput.value = title;
+  });
+});
+
+
+  // Custom icon upload (keeps current title as-is)
+  const customIconInput = $("#customIconUpload");
+  if (customIconInput) {
+    customIconInput.addEventListener("change", () => {
+      const f = customIconInput.files?.[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const dataUrl = e.target.result;
+        applyFavicon(dataUrl);
+        markActiveIcon(""); // no preset selected
+      };
+      reader.readAsDataURL(f);
+    });
+  }
+
+  // ---------- Restore on load ----------
+  (function restoreTabBranding(){
+    const savedIcon = localStorage.getItem("deblocked:siteIcon");
+    const savedTitle = localStorage.getItem("deblocked:siteTitle");
+
+    if (savedIcon) {
+      applyFavicon(savedIcon);
+      markActiveIcon(savedIcon);
+    }
+    if (savedTitle) {
+      document.title = savedTitle;
+    }
+  })();
+
+  // ---------- CARD STYLE ----------
+  $$(".control-btn[data-style]").forEach(btn => {
+    btn.onclick = () => {
+      const style = btn.dataset.style;
+      body.classList.remove("card-flat", "card-lifted");
+      body.classList.add(`card-${style}`);
+      localStorage.setItem("deblocked:cardStyle", style);
+
+      $$(".control-btn[data-style]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    };
+  });
+
+  // ---------- LAYOUT DENSITY ----------
+  $$(".control-btn[data-density]").forEach(btn => {
+    btn.onclick = () => {
+      const density = btn.dataset.density;
+      root.style.setProperty("--gap", density === "compact" ? "8px" : "14px");
+      root.style.setProperty("--card-min", density === "compact" ? "160px" : "190px");
+      localStorage.setItem("deblocked:density", density);
+
+      $$(".control-btn[data-density]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    };
+  });
+
+  // ---------- INITIAL LOAD ----------
+  const theme = localStorage.getItem("deblocked:theme");
+  if (theme === "light") body.classList.add("theme-light");
+
+  const accent = JSON.parse(localStorage.getItem("deblocked:accent") || "null");
+  if (accent) {
+    root.style.setProperty("--glow", accent[0]);
+    root.style.setProperty("--glow2", accent[1]);
+  }
+
+const bgMode = localStorage.getItem("deblocked:bgMode");
+if (bgMode) {
+  body.classList.remove("bg-mode-stars", "bg-mode-gradient", "bg-mode-image");
+  body.classList.add(`bg-mode-${bgMode}`);
+  const activeBtn = $(`[data-bg='${bgMode}']`);
+  if (activeBtn) activeBtn.classList.add("active");
+
+  // ★ Add this tiny hook:
+  if (bgMode === "stars" && typeof window.initStars === "function") {
+    // prevent double-init across navigations
+    if (!document.body.dataset.starsInit) {
+      window.initStars();
+      document.body.dataset.starsInit = "1";
+    }
+  }
+}
+
+  const cardStyle = localStorage.getItem("deblocked:cardStyle");
+  if (cardStyle) {
+    body.classList.remove("card-flat", "card-lifted");
+    body.classList.add(`card-${cardStyle}`);
+    const activeBtn = $(`[data-style='${cardStyle}']`);
+    if (activeBtn) activeBtn.classList.add("active");
+  }
+
+  const density = localStorage.getItem("deblocked:density");
+  if (density) {
+    root.style.setProperty("--gap", density === "compact" ? "8px" : "14px");
+    root.style.setProperty("--card-min", density === "compact" ? "160px" : "190px");
+    const activeBtn = $(`[data-density='${density}']`);
+    if (activeBtn) activeBtn.classList.add("active");
+  }
+
+  console.log("🎨 Settings interactivity loaded successfully");
+})();
+
+/* ===============================================================
+   CUSTOM SITE IDENTITY — TAB TITLE & ICON (PRESETS + UPLOAD)
+   =============================================================== */
+(() => {
+  const titleInput = document.getElementById("customTabName");
+  const presetButtons = document.querySelectorAll(".icon-choice[data-icon]");
+  const uploadInput = document.getElementById("customIconUpload");
+  const applyBtn = document.getElementById("applyIdentityBtn");
+
+  // --- Utility to set favicon dynamically
+  function setFavicon(url) {
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.href = url;
+  }
+
+  // --- Restore saved values on load
+  const savedTitle = localStorage.getItem("deblocked:customTitle");
+  const savedIcon = localStorage.getItem("deblocked:customIcon");
+  const savedIconType = localStorage.getItem("deblocked:customIconType");
+
+  if (savedTitle) {
+    document.title = savedTitle;
+    if (titleInput) titleInput.value = savedTitle;
+  }
+
+  if (savedIcon) {
+    setFavicon(savedIcon);
+    // Highlight preset if matched
+    presetButtons.forEach(btn => {
+      if (savedIconType === btn.dataset.icon) btn.classList.add("active");
+    });
+  }
+
+  // --- Handle preset icon clicks
+  presetButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      presetButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const iconPath = btn.dataset.icon;
+      setFavicon(iconPath);
+      localStorage.setItem("deblocked:customIcon", iconPath);
+      localStorage.setItem("deblocked:customIconType", iconPath);
+    });
+  });
+
+  // --- Handle custom icon upload
+  uploadInput?.addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = evt => {
+      const base64URL = evt.target.result;
+      setFavicon(base64URL);
+      localStorage.setItem("deblocked:customIcon", base64URL);
+      localStorage.setItem("deblocked:customIconType", "custom-upload");
+      // Clear preset highlight
+      presetButtons.forEach(b => b.classList.remove("active"));
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // --- Apply button saves the title
+  applyBtn?.addEventListener("click", () => {
+    const newTitle = titleInput.value.trim() || "Deblocked";
+    document.title = newTitle;
+    localStorage.setItem("deblocked:customTitle", newTitle);
+
+    applyBtn.textContent = "✅ Saved!";
+    setTimeout(() => (applyBtn.textContent = "Apply Changes"), 1200);
+  });
+})();
+
+/* ===============================================================
+   CUSTOM BACKGROUND + FROSTED GLASS SETTINGS
+   =============================================================== */
+(() => {
+  const body = document.body;
+  const root = document.documentElement;
+  const customControls = $("#customImageControls");
+  const urlInput = $("#customImageURL");
+  const fileInput = $("#customImageUpload");
+  const applyBtn = $("#applyCustomImage");
+  const toggleFrost = $("#toggleFrosted");
+  const bgImage = $("#bg-image");
+
+  // --- Watch for background mode change ---
+  $$(".control-btn[data-bg]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.bg === "image") {
+        customControls.style.display = "flex";
+      } else {
+        customControls.style.display = "none";
+      }
+    });
+  });
+
+  // --- Apply custom image (URL or file) ---
+  applyBtn.addEventListener("click", () => {
+    let url = urlInput.value.trim();
+    if (fileInput.files[0]) {
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+      reader.onload = e => {
+        url = e.target.result;
+        applyCustomBackground(url);
+      };
+      reader.readAsDataURL(file);
+    } else if (url) {
+      applyCustomBackground(url);
+    }
+  });
+
+  function applyCustomBackground(url) {
+    bgImage.style.backgroundImage = `url('${url}')`;
+    root.style.setProperty("--bg-image-url", `url('${url}')`);
+    body.classList.remove("bg-mode-stars", "bg-mode-gradient");
+    body.classList.add("bg-mode-image");
+    localStorage.setItem("deblocked:customImage", url);
+    console.log("🖼️ Custom background applied:", url);
+  }
+
+  // --- Frosted UI toggle ---
+  toggleFrost.addEventListener("click", () => {
+    body.classList.toggle("ui-frosted");
+    const active = body.classList.contains("ui-frosted");
+    localStorage.setItem("deblocked:frosted", active ? "1" : "0");
+    toggleFrost.classList.toggle("active", active);
+  });
+
+  // --- Restore saved settings ---
+  const savedImage = localStorage.getItem("deblocked:customImage");
+  if (savedImage) {
+    bgImage.style.backgroundImage = `url('${savedImage}')`;
+    root.style.setProperty("--bg-image-url", `url('${savedImage}')`);
+  }
+
+  const frosted = localStorage.getItem("deblocked:frosted") === "1";
+  if (frosted) {
+    body.classList.add("ui-frosted");
+    toggleFrost.classList.add("active");
+  }
+
+  console.log("🧊 Custom image & frosted UI logic active");
+})();
+// ===== FROSTED GLASS TOGGLE =====
+const glassBtn = document.getElementById("toggleGlass");
+
+if (glassBtn) {
+  glassBtn.addEventListener("click", () => {
+    document.body.classList.toggle("ui-frosted");
+    const on = document.body.classList.contains("ui-frosted");
+    glassBtn.textContent = on ? "Disable Frosted Glass" : "Enable Frosted Glass";
+    localStorage.setItem("deblocked:glass", on ? "1" : "0");
+  });
+
+  // restore saved state on load
+  if (localStorage.getItem("deblocked:glass") === "1") {
+    document.body.classList.add("ui-frosted");
+    glassBtn.textContent = "Disable Frosted Glass";
+  }
+}
+
+// Ensure frosted class is applied (so changes are visible)
+document.body.classList.add('ui-frosted');
+
+// Slider wiring
+const darknessSlider = document.getElementById('glassDarkness');
+const glassDarkValue = document.getElementById('glassDarkValue');
+
+// Restore and apply
+(function initGlassSlider(){
+  if (!darknessSlider || !glassDarkValue) return;
+
+  const saved = localStorage.getItem('deblocked:glassDark') ?? '40';
+  darknessSlider.value = saved;
+  glassDarkValue.textContent = `${saved}%`;
+  // Apply to :root so all components see it
+  document.documentElement.style.setProperty('--glass-darkness', (saved/100).toString());
+
+  darknessSlider.addEventListener('input', (e) => {
+    const val = String(e.target.value);
+    document.documentElement.style.setProperty('--glass-darkness', (Number(val)/100).toString());
+    glassDarkValue.textContent = `${val}%`;
+    localStorage.setItem('deblocked:glassDark', val);
+  });
+})();
+
+(function initSystemStats(){
+  function onReady(fn){
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once:true });
+    } else {
+      fn();
+    }
+  }
+
+  onReady(() => {
+  
+  
+  });
+})();
+
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const fpsVal = document.getElementById("fpsVal");
+  let last = performance.now(), frames = 0, fps = 0, smoothFps = 0;
+
+  function loop(now) {
+    frames++;
+    const delta = now - last;
+    if (delta >= 150) { // update about 6-7 times per second
+      fps = Math.round((frames * 1000) / delta);
+      smoothFps = Math.round(smoothFps * 0.7 + fps * 0.3); // smoothing magic ✨
+      fpsVal.textContent = smoothFps.toString();
+      frames = 0;
+      last = now;
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+  // --- BATTERY COUNTER ---
+  const battPct = document.getElementById("batteryPct");
+  const fill = document.getElementById("batteryFill");
+  const pill = document.getElementById("batteryPill");
+  const maxWidth = 70;
+
+  async function updateBattery() {
+    try {
+      const b = await navigator.getBattery();
+      const apply = () => {
+        const pct = Math.round(b.level * 100);
+        battPct.textContent = pct + "%";
+        fill.setAttribute("width", (b.level * maxWidth).toFixed(1));
+        pill.classList.toggle("charging", b.charging);
+        if (b.charging) battPct.textContent += " ⚡";
+      };
+      apply();
+      b.addEventListener("levelchange", apply);
+      b.addEventListener("chargingchange", apply);
+    } catch {
+      battPct.textContent = "N/A";
+    }
+  }
+  updateBattery();
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const timeEl = document.getElementById("timeVal");
+  const dateEl = document.getElementById("dateVal");
+
+  function updateTime() {
+    const now = new Date();
+
+    // Format time
+    let hours = now.getHours();
+    const mins = now.getMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    timeEl.textContent = `${hours}:${mins} ${ampm}`;
+
+    // Format date
+    const day = now.toLocaleString("en-US", { weekday: "short" });
+    const month = now.toLocaleString("en-US", { month: "short" });
+    const date = now.getDate();
+    dateEl.textContent = `${day}, ${month} ${date}`;
+  }
+
+  updateTime();
+  setInterval(updateTime, 1000); // Update every second
+});
+</script>
+<!-- ⭐ Star background script -->
+<script>
+function initStars() {
+  if (window.starCanvasInit) return;
+  window.starCanvasInit = true;
+
+  const layers = [
+    { id: "bg-stars-1", count: 60, speed: 0.3 },
+    { id: "bg-stars-2", count: 90, speed: 0.6 },
+    { id: "bg-stars-3", count: 130, speed: 1.1 }
+  ];
+
+  layers.forEach(layer => {
+    const canvas = document.getElementById(layer.id);
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let stars = [];
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stars = Array.from({ length: layer.count }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.3,
+      }));
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(255,255,255,0.8)";
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fill();
+        star.y += layer.speed;
+        if (star.y > canvas.height) star.y = 0;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  });
+}
+</script>
+
+<script>
+// ===== PROXIES HOOKUP (non-destructive) =====
+(() => {
+  const proxySection = document.getElementById("proxies");
+  const proxyGrid    = document.getElementById("proxyGrid");
+  const proxyPortal  = document.getElementById("proxyPortal");
+  const proxyFrame   = document.getElementById("proxyFrame");
+  const proxyClose   = document.getElementById("proxyClose");
+  const proxySearch  = document.getElementById("proxySearch");
+  const proxySort    = document.getElementById("proxySort");
+  const proxyRandom  = document.getElementById("proxyRandom");
+  const sidebar      = document.getElementById("sidebarNav");
+
+  if (!proxySection) return; // if you haven't added the section yet, exit
+
+  // Keep these sections visible when not in Proxies
+  const HOME_SECTIONS = ["#hero","#featured","#trending","#favorites","#continue","#new","#catDock"];
+
+  const gamePanel = document.getElementById("gamePanel");
+if (gamePanel) gamePanel.classList.add("hidden-temp");
+
+
+function showProxies() {
+  if (!proxySection) return;
+
+  // hide home sections
+  if (HOME_SECTIONS && Array.isArray(HOME_SECTIONS)) {
+    HOME_SECTIONS.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.style.display = "none";
+    });
+  }
+
+  // temporarily hide inline game panel if open
+  const gamePanel = document.getElementById("gamePanel");
+  if (gamePanel) {
+    gamePanel.classList.add("hidden-temp");
+    gamePanel.style.display = "none";
+    gamePanel.classList.remove("is-playing");
+  }
+
+  document.body.classList.remove("playing-game");
+
+  // hide hacks section if open
+  const hacks = document.getElementById("hacksSection");
+  if (hacks) hacks.style.display = "none";
+
+  // show proxies section
+  proxySection.style.display = "block";
+  window.scrollTo(0, 0);
+}
+
+function hideProxies() {
+  if (!proxySection) return;
+
+  // hide proxies
+  proxySection.style.display = "none";
+  proxyPortal.style.display = "none";
+  proxyFrame.src = "";
+
+  // restore home sections
+  if (HOME_SECTIONS && Array.isArray(HOME_SECTIONS)) {
+    HOME_SECTIONS.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (el) el.style.display = "";
+    });
+  }
+
+  // restore game panel if temporarily hidden
+  const gp = document.getElementById("gamePanel");
+  if (gp && gp.classList.contains("hidden-temp")) {
+    gp.classList.remove("hidden-temp");
+    gp.style.display = "";
+  }
+
+  // restore hacks section if previously hidden
+  const hacks = document.getElementById("hacksSection");
+  if (hacks) hacks.style.display = "";
+}
+
+
+
+ // ===== SIDEBAR ROUTING (FINAL PATCHED VERSION) =====
+if (sidebar) {
+  sidebar.addEventListener("click", (e) => {
+    const link = e.target.closest("a[data-filter]");
+    if (!link) return;
+
+    const section = link.getAttribute("data-filter");
+    e.preventDefault();
+
+    console.log("Sidebar clicked:", section);
+
+    // 🟢 Route logic
+    if (section === "proxies") {
+      hideHacks();       // hide hacks if open
+      showProxies();     // show proxies
+    } 
+    else if (section === "hacks") {
+      hideProxies();     // hide proxies if open
+      showHacksSection();// show hacks page
+    } 
+    else {
+      // Default → go back home
+      hideProxies();
+      hideHacks();
+
+      // show main/home sections again
+      document.querySelectorAll(`
+        #hero,
+        #featured,
+        #trending,
+        #favorites,
+        #continue,
+        #new,
+        #catDock,
+        #searchArea,
+        #searchContainer,
+        #searchBar,
+        #searchInput,
+        #widgets,
+        .social
+      `).forEach(el => el && (el.style.display = ""));
+    }
+  });
+}
+
+
+  // Data + rendering
+  let proxies = [];
+
+ function renderProxies(list) {
+  proxyGrid.innerHTML = list.map(p => `
+    <article class="proxy-card" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:0.3s;">
+      <div style="position:relative;">
+        <img src="${p.thumb || 'https://via.placeholder.com/400x200?text=Proxy+Preview'}" 
+             alt="${p.name || 'Proxy'}" 
+             style="width:100%;height:160px;object-fit:cover;opacity:0.9;">
+        <div style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);padding:4px 8px;border-radius:8px;font-size:12px;color:#fff;">${(p.tags || []).slice(0,2).join(" • ")}</div>
+      </div>
+      <div style="padding:14px;display:flex;flex-direction:column;gap:6px;">
+        <h3 style="margin:0;font-size:1.1rem;font-weight:700;">${p.name || "Untitled Proxy"}</h3>
+        <p style="font-size:0.85rem;opacity:0.85;margin:0;">${p.desc || "No description available."}</p>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+  <button class="btn primary" data-url="${p.url}">Launch</button>
+</div>
+
+      </div>
+    </article>
+  `).join("");
+
+  // Hook up launch buttons
+  proxyGrid.querySelectorAll("button[data-url]").forEach(btn => {
+    btn.addEventListener("click", () => openProxy(btn.getAttribute("data-url")));
+  });
+}
+
+
+  function openProxy(url) {
+  window.open(url, "_blank");
+}
+
+
+  proxyClose?.addEventListener("click", () => {
+    proxyPortal.style.display = "none";
+    proxyFrame.src = "";
+  });
+
+  proxySearch?.addEventListener("input", (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    const filtered = proxies.filter(p =>
+      (p.name||"").toLowerCase().includes(q) ||
+      (p.desc||"").toLowerCase().includes(q) ||
+      (p.tags||[]).join(" ").toLowerCase().includes(q)
+    );
+    renderProxies(filtered);
+  });
+
+  proxySort?.addEventListener("change", (e) => {
+    const mode = e.target.value;
+    let arr = [...proxies];
+    if (mode === "rating") arr.sort((a,b) => (b.rating||0)-(a.rating||0));
+    else if (mode === "speed") arr.sort((a,b) => (b.speed||0)-(a.speed||0));
+    else if (mode === "verified") arr.sort((a,b) => (b.verified?1:0)-(a.verified?1:0));
+    else arr.sort((a,b) => a.name.localeCompare(b.name));
+    renderProxies(arr);
+  });
+
+  proxyRandom?.addEventListener("click", () => {
+    if (!proxies.length) return;
+    const item = proxies[Math.floor(Math.random()*proxies.length)];
+    openProxy(item.url);
+  });
+
+  // Fetch proxies.json (same folder as index.html)
+  fetchWithDebug("/proxies.json")
+
+  .then(res => res.json())
+  .then(data => {
+    proxies = data;
+    console.log("✅ Loaded proxies data:", data);
+
+    renderProxies(proxies);
+  })
+  .catch(err => {
+    console.error("Failed to load proxies:", err);
+    proxyGrid.innerHTML = `<p class="soft small">Error loading proxies.</p>`;
+  });
+
+
+})();
+</script>
+
+<script>
+(() => {
+  const HACKS_JSON = "/hacks.json"; // ✅ same-origin path (root)
+  const basePath = "/hacks/"; // ✅ folder with all hack files
+  const grid = document.getElementById("hacksGrid");
+  const searchInput = document.getElementById("hacksSearch");
+  const sortSel = document.getElementById("hacksSort");
+  const randomBtn = document.getElementById("hacksRandom");
+
+  let hacks = [];
+
+  function slugify(s) {
+    return (s || "").toLowerCase().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "");
+  }
+  function safeText(s) {
+    return (s || "").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+  }
+
+  function fileFor(h) {
+    if (h.file) return h.file;
+    const base = slugify(h.title);
+    return h.minified ? `${base}.min.js` : `${base}.js`;
+  }
+
+  // ✅ Wrap any fetched hack file into a valid bookmarklet
+  function buildBookmarkletFromText(fullCode) {
+    if (!fullCode) return "";
+    fullCode = fullCode.trim();
+
+    // Already a bookmarklet
+    if (fullCode.startsWith("javascript:")) return fullCode;
+
+    // Likely an IIFE or function
+    const looksLikeFunc = /^(?:\(?function\b|!\s*function|\(\s*\)\s*=>|\(async\s+function)/.test(fullCode);
+    if (looksLikeFunc) {
+      return `javascript:${fullCode.replace(/\s*;?\s*$/, "")};void(0);`;
+    }
+
+    // Default → wrap in anonymous IIFE
+    return `javascript:(function(){${fullCode}})();void(0);`;
+  }
+
+  // ✅ Fetch full hack file and convert to bookmarklet
+  async function resolveBookmarklet(h) {
+    const fileName = fileFor(h);
+    const url = basePath + fileName;
+
+    try {
+      const res = await fetchWithDebug(url, { cache: "no-store" });
+      const text = await res.text();
+
+      // Detect if Neocities returned 404 HTML
+      if (text.includes("<!DOCTYPE html")) {
+        console.warn(`⚠️ ${fileName} returned HTML (likely 404)`);
+        return 'javascript:alert("⚠️ Tool file not found or mislocated!");';
+      }
+
+      return buildBookmarkletFromText(text);
+    } catch (err) {
+      console.error("❌ Fetch failed for:", fileName, err);
+      return 'javascript:alert("Error loading tool file!");';
+    }
+  }
+
+  // ✅ Render one hack card
+  function renderCard(h) {
+    const el = document.createElement("article");
+    el.className = "hack-card";
+    const thumb = h.thumb || h.game_image_icon || "https://via.placeholder.com/800x400?text=Tool";
+    const desc = safeText(h.description || "No description available.");
+    const title = safeText(h.title || "Untitled Tool");
+
+    el.innerHTML = `
+      <img class="hack-thumb" src="${thumb}" alt="${title}" onerror="this.src='https://via.placeholder.com/800x400?text=Tool'">
+      <div class="hack-body">
+        <h4 class="hack-title" style="color:var(--accent,#43d0ff);">${title}</h4>
+        <p class="hack-desc">${desc}</p>
+        <div class="hack-actions" style="margin-top:8px;display:flex;gap:8px;">
+          ${
+            h.copyandpase
+              ? `<button class="btn small primary btn-copy">Copy Code</button>`
+              : `<a href="#" class="btn small primary btn-drag" draggable="true">Drag to Bookmarks</a>`
+          }
+        </div>
+      </div>
+    `;
+
+    // 📋 Copy button
+    if (h.copyandpase) {
+      const btn = el.querySelector(".btn-copy");
+      btn.addEventListener("click", async () => {
+        const url = basePath + fileFor(h);
+        try {
+          const r = await fetchWithDebug(url);
+          const text = await r.text();
+
+          // Detect HTML fallback
+          if (text.includes("<!DOCTYPE html")) {
+            alert("⚠️ Tool file not found or mislocated!");
+            return;
+          }
+
+          await navigator.clipboard.writeText(text);
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy Code"), 1200);
+        } catch (err) {
+          alert("❌ Could not copy code. Check console.");
+          console.error(err);
+        }
+      });
+    }
+
+ // 🧲 Bookmarklet drag/click
+if (!h.copyandpase) {
+  const dragEl = el.querySelector(".btn-drag");
+
+  // ✅ Give link a working bookmarklet href (so drag → javascript:... works)
+  resolveBookmarklet(h).then(href => dragEl.setAttribute("href", href));
+
+  dragEl.addEventListener("dragstart", async (e) => {
+    const href = await resolveBookmarklet(h);
+    e.dataTransfer.setData("text/uri-list", href);
+    e.dataTransfer.setData("text/plain", href);
+    e.dataTransfer.setData("text/html", `<a href="${href}">${h.title}</a>`);
+  });
+
+  dragEl.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const href = await resolveBookmarklet(h);
+    await navigator.clipboard.writeText(href);
+    alert(`✅ Copied full bookmarklet for "${h.title}". You can paste or drag it into your bookmarks bar.`);
+  });
+}
+
+
+    return el;
+  }
+
+  // ✅ Render all hacks
+  function renderAll(list) {
+    grid.innerHTML = "";
+    if (!list.length) {
+      grid.innerHTML = `<p class="soft small">No tools found.</p>`;
+      return;
+    }
+    list.forEach((h) => grid.appendChild(renderCard(h)));
+  }
+
+  // 🚀 Load hacks.json on start
+  (async function init() {
+    try {
+      const res = await fetchWithDebug(HACKS_JSON, { cache: "no-store" });
+      if (!res.ok) throw new Error(`${res.status} loading hacks.json`);
+      const data = await res.json();
+
+      hacks = Array.isArray(data) ? data : [];
+      hacks.forEach((h) => (h.file = h.file || fileFor(h)));
+
+      renderAll(hacks);
+    } catch (err) {
+      console.error("Failed to load hacks.json", err);
+      grid.innerHTML = `<p class="soft small">Failed to load tools list.</p>`;
+    }
+  })();
+
+  // 🔍 Filters
+  searchInput?.addEventListener("input", (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    const filtered = hacks.filter(
+      (h) => h.title.toLowerCase().includes(q) || h.description.toLowerCase().includes(q)
+    );
+    renderAll(filtered);
+  });
+
+  sortSel?.addEventListener("change", (e) => {
+    const mode = e.target.value;
+    const arr = [...hacks];
+    if (mode === "alpha") arr.sort((a, b) => a.title.localeCompare(b.title));
+    else arr.reverse();
+    renderAll(arr);
+  });
+
+  randomBtn?.addEventListener("click", () => {
+    if (!hacks.length) return;
+    const pick = hacks[Math.floor(Math.random() * hacks.length)];
+    renderAll([pick]);
+  });
+})();
+</script>
+
+
+
+
+<!-- LINKS OVERLAY (paste into your main JS file near proxies/hacks) -->
+<style>
+  /* Links overlay styles (scoped) */
+  #linksOverlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 999998;
+    background: rgba(3,8,14,0.72);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+  }
+  #linksOverlay .panel {
+    width: min(1100px, 96%);
+    max-height: 86vh;
+    overflow: auto;
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(12,16,22,0.96), rgba(6,8,12,0.96));
+    padding: 18px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+  }
+  #linksOverlay .intro {
+    display:flex;
+    gap:14px;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    padding: 28px;
+    text-align:center;
+  }
+  #linksOverlay .intro .choices { display:flex; gap:12px; margin-top: 12px; }
+  #linksOverlay .choices button { padding:10px 18px; border-radius:12px; border:none; cursor:pointer; font-weight:600; }
+  #linksOverlay .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:12px; margin-top:14px; }
+  .link-card { background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; min-height:150px; }
+  .link-card img { width:100%; height:130px; object-fit:cover; display:block; }
+  .link-body { padding:10px; display:flex; gap:8px; flex-direction:column; flex:1; }
+  .link-title { font-weight:700; font-size:1rem; color:var(--accent,#43d0ff); }
+  .link-desc { font-size:0.9rem; opacity:0.85; margin-top:4px; flex:1; }
+  .link-actions { display:flex; gap:8px; margin-top:8px; }
+  .btn-small { padding:8px 10px; border-radius:10px; border:none; cursor:pointer; font-weight:600; }
+  #linksOverlay .topRow { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  #linksOverlay .closeBtn { background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.06); padding:8px 10px; border-radius:10px; cursor:pointer; }
+  #linksFilter { width:280px; padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:inherit; }
+</style>
+
+<div id="linksOverlay" aria-hidden="true">
+  <div class="panel" role="dialog" aria-modal="true">
+    <div class="topRow">
+      <div>
+        <h3 style="margin:0 0 6px;">External Links</h3>
+        <div style="opacity:.85;font-size:.95rem">Choose filtering to continue.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input id="linksFilter" placeholder="Filter (search name/desc/tags)" />
+        <button class="closeBtn" id="closeLinksOverlay">Close</button>
+      </div>
+    </div>
+
+    <div id="linksIntro" class="intro">
+      <div style="max-width:720px;">
+        <p style="margin:0 0 8px;">Content Keeper Filtering — choose a safety level.</p>
+        <div class="choices">
+          <button id="linksChoiceMedium" class="btn-small" style="background:linear-gradient(90deg,var(--glow,#00d0ff),var(--glow2,#a040ff)); color:#fff">Medium</button>
+          <button id="linksChoiceAggressive" class="btn-small" style="background:rgba(255,255,255,0.06); color:#fff">Aggressive (hide Neocities)</button>
+        </div>
+        <p style="opacity:.8; margin-top:10px; font-size:.92rem;">Medium shows everything from <code>gamelinks.json</code>. Aggressive hides links whose URL contains <code>neocities</code>.</p>
+      </div>
+    </div>
+
+    <div id="linksGridWrap" style="display:none;">
+      <div id="linksGrid" class="grid"></div>
+      <div style="margin-top:12px;display:flex;justify-content:center;">
+        <button id="linksCloseFooter" class="closeBtn">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const overlay = document.getElementById('linksOverlay');
+  const intro = document.getElementById('linksIntro');
+  const gridWrap = document.getElementById('linksGridWrap');
+  const grid = document.getElementById('linksGrid');
+  const btnClose = document.getElementById('closeLinksOverlay');
+  const btnCloseFooter = document.getElementById('linksCloseFooter');
+  const choiceMedium = document.getElementById('linksChoiceMedium');
+  const choiceAgg = document.getElementById('linksChoiceAggressive');
+  const filterInput = document.getElementById('linksFilter');
+
+  let links = [];       // raw loaded list
+  let currentList = []; // currently displayed
+
+  // Load gamelinks.json once
+  async function loadLinks() {
+    if (links.length) return links;
+    try {
+      const res = await fetchWithDebug('/gamelinks.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Failed loading gamelinks.json');
+      const data = await res.json();
+      links = Array.isArray(data) ? data : [];
+      // normalize: ensure fields exist
+      links = links.map(l => ({
+        title: l.title || 'Untitled',
+        url: l.url || '#',
+        description: l.description || '',
+        thumb: l.thumb || '',
+        tags: Array.isArray(l.tags) ? l.tags : (l.tags ? [l.tags] : [])
+      }));
+      return links;
+    } catch (err) {
+      console.error('gamelinks.json load error', err);
+      links = [];
+      return links;
+    }
+  }
+
+  function renderCards(list) {
+    grid.innerHTML = list.map(l => `
+      <article class="link-card" data-url="${l.url}">
+        ${l.thumb ? `<img src="${l.thumb}" alt="${l.title}">` : `<div style="height:130px;background:linear-gradient(180deg,#0b0e12,#081018);display:flex;align-items:center;justify-content:center;color:#999">No image</div>`}
+        <div class="link-body">
+          <div class="link-title">${escapeHtml(l.title)}</div>
+          <div class="link-desc">${escapeHtml(l.description)}</div>
+          <div class="link-actions">
+            <button class="btn-small" data-action="open">Open</button>
+            <a class="btn-small" data-action="newtab" href="${escapeAttr(l.url)}" target="_blank" rel="noopener">Open in new tab</a>
+          </div>
+        </div>
+      </article>
+    `).join('');
+
+    // add event handlers
+    grid.querySelectorAll('.link-card').forEach(card => {
+      const url = card.dataset.url;
+      card.querySelector('[data-action="open"]').onclick = () => {
+        // open inside overlay portal: we'll just open in new tab to keep things simple
+        // if you want an iframe inside overlay replace this with iframe loading logic
+        window.open(url, '_blank');
+      };
+    });
+  }
+
+  // Utility HTML escaping
+  function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+  function escapeAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+
+  // Filtering modes
+  function applyMode(list, mode) {
+    if (!list || !list.length) return [];
+    if (mode === 'aggressive') {
+      return list.filter(l => !/neocities/i.test(l.url));
+    }
+    return list.slice(); // medium => everything
+  }
+
+  // Search filter
+  function applySearch(list, q) {
+    if (!q) return list;
+    q = q.toLowerCase();
+    return list.filter(l => {
+      const hay = (l.title + ' ' + l.description + ' ' + (l.tags || []).join(' ')).toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  // Show overlay (used by sidebar or manual triggers)
+  async function showLinksOverlay(opts={mode:'medium'}) {
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden','false');
+    // ensure data loaded
+    await loadLinks();
+    // show intro if mode not chosen
+    if (!opts.forceMode) {
+      intro.style.display = 'block';
+      gridWrap.style.display = 'none';
+      filterInput.value = '';
+      return;
+    }
+    // else go directly to grid
+    const mode = opts.mode || 'medium';
+    currentList = applyMode(links, mode);
+    currentList = applySearch(currentList, '');
+    renderCards(currentList);
+    intro.style.display = 'none';
+    gridWrap.style.display = 'block';
+    overlay.scrollTop = 0;
+  }
+
+  function hide() {
+    overlay.style.display = 'none';
+    overlay.setAttribute('aria-hidden','true');
+  }
+
+  // Intro buttons
+  choiceMedium.addEventListener('click', async () => {
+    await loadLinks();
+    currentList = applyMode(links, 'medium');
+    currentList = applySearch(currentList, filterInput.value.trim());
+    renderCards(currentList);
+    intro.style.display = 'none';
+    gridWrap.style.display = 'block';
+  });
+  choiceAgg.addEventListener('click', async () => {
+    await loadLinks();
+    currentList = applyMode(links, 'aggressive');
+    currentList = applySearch(currentList, filterInput.value.trim());
+    renderCards(currentList);
+    intro.style.display = 'none';
+    gridWrap.style.display = 'block';
+  });
+
+  // close buttons
+  btnClose.addEventListener('click', hide);
+  btnCloseFooter.addEventListener('click', hide);
+
+  // filter input live
+  filterInput.addEventListener('input', (e)=>{
+    const q = e.target.value.trim();
+    const filtered = applySearch(currentList.length ? currentList : links, q);
+    renderCards(filtered);
+  });
+
+  // click outside panel closes
+  overlay.addEventListener('click', (e)=>{
+    if (e.target === overlay) hide();
+  });
+
+  // Expose showLinksOverlay to global so you can call it from other handlers
+  window.showLinksOverlay = showLinksOverlay;
+
+  // Hook sidebar nav if you have an <a data-filter="links"> or similar
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-filter="links"], button[data-filter="links"], [data-open-links]');
+    if (!a) return;
+    e.preventDefault();
+    // show intro so user picks mode
+    showLinksOverlay({ forceMode:false });
+  });
+
+})();
+</script>
+
+
+<script>
+// ===== HACKS ROUTER — FINAL LAYOUT-STABLE VERSION =====
+function showHacksSection() {
+  // Hide home content
+  document.querySelectorAll(`
+    #hero,
+    #featured,
+    #trending,
+    #favorites,
+    #continue,
+    #new,
+    #catDock,
+    #proxySection
+  `).forEach(el => el && (el.style.display = "none"));
+
+  // Temporarily hide game panel if open
+  const gamePanel = document.getElementById("gamePanel");
+  if (gamePanel) {
+    gamePanel.classList.add("hidden-temp-hacks");
+    gamePanel.style.display = "none";
+    gamePanel.classList.remove("is-playing");
+  }
+
+  document.body.classList.remove("playing-game");
+
+  // Show Hacks section on top
+  const hacks = document.getElementById("hacksSection");
+  if (hacks) {
+    hacks.removeAttribute("hidden");
+    hacks.classList.remove("hidden");
+    hacks.style.display = "block";
+    hacks.style.position = "relative";
+    hacks.style.zIndex = "9999"; // 🟣 ensures it's on top
+    hacks.style.minHeight = "100vh";
+    hacks.style.opacity = "0";
+    hacks.style.transition = "opacity 0.3s ease";
+    requestAnimationFrame(() => (hacks.style.opacity = "1"));
+  }
+
+  // Dim widgets/HUD
+  document.querySelectorAll(`#widgets, #statusDock, #bottomDock, #footer`)
+    .forEach(el => {
+      if (el) {
+        el.style.filter = "blur(2px)";
+        el.style.opacity = "0.5";
+        el.style.pointerEvents = "none";
+      }
+    });
+
+  document.body.style.overflow = "auto";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function hideHacks() {
+  const hacks = document.getElementById("hacksSection");
+  if (hacks) {
+    hacks.style.opacity = "0";
+    setTimeout(() => {
+      hacks.style.display = "none";
+      hacks.setAttribute("hidden", "");
+      hacks.style.zIndex = ""; // restore z-index
+    }, 250);
+  }
+
+  // Restore main content
+  document.querySelectorAll(`
+    #hero,
+    #featured,
+    #trending,
+    #favorites,
+    #continue,
+    #new,
+    #catDock,
+    #proxySection
+  `).forEach(el => el && (el.style.display = ""));
+
+  // 🟢 Restore game panel if temporarily hidden
+  const gp = document.getElementById("gamePanel");
+  if (gp && gp.classList.contains("hidden-temp-hacks")) {
+    gp.classList.remove("hidden-temp-hacks");
+    gp.style.display = "";
+  }
+
+  // Restore widgets/HUD
+  document.querySelectorAll(`#widgets, #statusDock, #bottomDock, #footer`)
+    .forEach(el => {
+      if (el) {
+        el.style.filter = "";
+        el.style.opacity = "";
+        el.style.pointerEvents = "";
+      }
+    });
+
+  document.body.style.overflow = "";
+}
+
+</script>
+
+
+
+<style id="force-fredoka">
+  html, body, * {
+    font-family: 'Fredoka', sans-serif !important;
+  }
+</style>
+
+<script>
+  // Force inject after all styles load (beats CSS cascade)
+  window.addEventListener("load", () => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      html, body, *, *::before, *::after {
+        font-family: 'Fredoka', sans-serif !important;
+      }
+    `;
+    document.head.appendChild(style);
+    console.log("✅ Fredoka forced globally.");
+  });
+</script>
+
+<!-- 🌌 Deblocked V4 Intro Overlay -->
+<div id="introOverlay">
+  <canvas id="introStars"></canvas>
+  <div class="introGlow"></div>
+  <div class="introContent">
+    <h1>Deblocked <span class="grad">V4</span></h1>
+    <h2 id="introType"></h2>
+    <button id="skipIntro">Skip</button>
+
+  </div>
+</div>
+
+<style>
+/* --- INTRO OVERLAY STYLING --- */
+#introOverlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, #0e1220 0%, #06080d 100%);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Fredoka', sans-serif;
+  color: #fff;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+/* ✨ Fade-out animation */
+#introOverlay.fade-out {
+  opacity: 0;
+  transform: none;
+  pointer-events: none;
+}
+
+/* ✨ Background stars */
+#introStars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* 🌈 Center glow behind text */
+.introGlow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle at center, rgba(0,208,255,0.12), rgba(160,64,255,0.1), rgba(0,0,0,0) 70%);
+  filter: blur(120px);
+  border-radius: 50%;
+  z-index: 1;
+  pointer-events: none;
+  animation: glowPulse 3s ease-in-out infinite alternate;
+}
+@keyframes glowPulse {
+  from { opacity: 0.6; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1.05); }
+}
+
+/* 🌌 Content */
+.introContent {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  transition: opacity 0.5s ease;
+}
+
+#introOverlay h1 {
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  background: linear-gradient(90deg, #00d0ff, #a040ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  margin: 0 0 10px;
+  letter-spacing: -1px;
+}
+
+#introOverlay h1 .grad {
+  background: linear-gradient(90deg, #00d0ff, #a040ff, #ff2fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#introType {
+  font-size: 1.4rem;
+  opacity: 0.9;
+  letter-spacing: 1px;
+}
+
+/* 🎨 Highlight specific words dynamically */
+.color-proxies { color: #00d0ff; }
+.color-games { color: #4dff91; }
+.color-visuals { color: #a040ff; }
+
+/* 🟢 SKIP BUTTON — now centered under the text */
+#skipIntro {
+  position: relative;
+  display: inline-block;
+  margin-top: 22px;
+  background: linear-gradient(90deg, var(--glow, #00d0ff), var(--glow2, #a040ff));
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 10px 28px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 20;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+#skipIntro.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#skipIntro:hover {
+  transform: scale(1.05);
+  box-shadow: none;
+}
+
+
+</style>
+
+
+<script>
+/* --- STARS --- */
+const introCanvas = document.getElementById("introStars");
+const ictx = introCanvas.getContext("2d");
+let stars = [];
+
+function resizeStars() {
+  introCanvas.width = innerWidth;
+  introCanvas.height = innerHeight;
+  stars = Array.from({length: 160}, () => ({
+    x: Math.random()*innerWidth,
+    y: Math.random()*innerHeight,
+    r: Math.random()*1.8+0.3,
+    s: Math.random()*0.2+0.05
+  }));
+}
+resizeStars();
+addEventListener("resize", resizeStars);
+
+(function drawStars(){
+  ictx.clearRect(0,0,introCanvas.width,introCanvas.height);
+  ictx.fillStyle="#fff";
+  for (const s of stars){
+    ictx.globalAlpha = Math.random()*0.9;
+    ictx.beginPath();
+    ictx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ictx.fill();
+    s.y += s.s;
+    if(s.y > introCanvas.height) s.y = 0;
+  }
+  requestAnimationFrame(drawStars);
+})();
+
+/* --- TYPEWRITER (HTML SAFE VERSION) --- */
+const el = document.getElementById("introType");
+const lines = [
+  'loading <span class="color-proxies">proxies</span>…',
+  'loading <span class="color-games">games</span>…',
+  'loading <span class="color-visuals">visuals</span>…',
+  'initializing <span class="grad">Deblocked V4</span>…'
+];
+
+let t = 0;
+let c = 0;
+function typeHTML(line) {
+  if (line[c] === "<") {
+    const close = line.indexOf(">", c);
+    el.innerHTML += line.slice(c, close + 1);
+    c = close + 1;
+  } else {
+    el.innerHTML += line[c++];
+  }
+
+  if (c < line.length) {
+    setTimeout(() => typeHTML(line), 55);
+  } else {
+    t++;
+    if (t < lines.length) {
+      setTimeout(() => {
+        el.innerHTML = "";
+        c = 0;
+        typeHTML(lines[t]);
+      }, 500);
+    } else {
+      // Finished all lines → start fade-out
+      setTimeout(() => {
+        document.getElementById("introOverlay").classList.add("fade-out");
+      }, 700);
+      // Remove after fade completes
+      setTimeout(() => {
+        document.getElementById("introOverlay").remove();
+      }, 2200);
+    }
+  }
+}
+typeHTML(lines[t]);
+</script>
+
+<script>
+/* --- Skip Button Logic --- */
+const skipBtn = document.getElementById("skipIntro");
+
+// Make it fade in after ~2 seconds
+setTimeout(() => skipBtn.classList.add("visible"), 2000);
+
+skipBtn.addEventListener("click", () => {
+  const intro = document.getElementById("introOverlay");
+  intro.classList.add("fade-out");
+  setTimeout(() => intro.remove(), 900);
+});
+</script>
+
+
+
+
+</body>
+</html>
