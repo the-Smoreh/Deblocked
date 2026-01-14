@@ -130,7 +130,7 @@
     }
   },
    {
-    "title": "Website Ghostifier",
+    "title": "Website Transparency ",
     "description": "Copy The code, put it in Inspect Console, And put in any link, and it will display it in your website, and Pressing + or - changes the Visibility, Made to Counter Screen Viewers ",
     "copyandpase": true,
     "url": "https://example.com/hack8",
@@ -143,16 +143,17 @@
     }
   },
   {
-    "title": "Curipod Hacks",
-    "description": "Work-in-progress — drag/copy will be available once the full script is uploaded.",
+    "title": "Website Unviewable STILL TESTING VERY HIGH CHANCE OF NOT WORKING ",
+    "description": "This makes any website into about:blank which apparently makes your screen unviewable, BUT ITS UNCONFIRMED, HIGH CHANCE OF NOT WORKING",
     "copyandpase": true,
-    "url": "https://example.com/hack9",
-    "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/Screenshot%202025-05-27%20110002.png",
-    "file": "curipod-hacks.js",
-    "tags": ["bookmarklet","curipod"],
+    "url": "https://example.com/hack8",
+    "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc8.alamy.com%2Fcomp%2FH3R5D5%2Fin-progress-sign-displays-ongoing-or-happening-now-H3R5D5.jpg&f=1&nofb=1&ipt=65f49201223bc0252965f42eeb14779f7eb61df176a76e7aa6164106826c17f8",
+    "file": "viewer.js",
+    "tags": ["bookmarklet","quiz"],
     "added": "2025-10-20",
     "attribute": {
-      "cnp": "alert('Nearpod enhanced')"
+      "cnp": "alert('Gimkit turbo activated')"
     }
+  
   }
 ]
