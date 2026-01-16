@@ -37,6 +37,15 @@
         "url": "https://www.solarsystemscope.com/iframe"
     },
      {
+        "title": "Black Hole Simulatio ",
+        "description": "Cool",
+        "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd.sciencetimes.com%2Fen%2Ffull%2F1726089%2Fblack-hole.jpg&f=1&nofb=1&ipt=2f9143883589dee33eb2e3d1760041781261f53e5d1bc1c2a42e778a72fe39e7",
+        "category": "Arcade",
+        "tags": [],
+        "featured": true,
+        "url": "https://interactive-3d-black-hole-merger-production.up.railway.app/"
+    },
+     {
         "title": "Cuphead",
         "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
         "game_image_icon": "https://user-images.githubusercontent.com/53346722/66120658-fa659480-e5a0-11e9-9c6a-247a1605159e.jpg",
