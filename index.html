@@ -65,6 +65,11 @@ body.card-lifted{
   --card-bg:#0f1624; --card-border:1px solid rgba(255,255,255,.08);
   --card-shadow:0 10px 26px rgba(0,0,0,.38); --card-hover-shadow:0 30px 70px rgba(0,0,0,.5);
 }
+body.card-icon{
+  --card-bg:#0f1622; --card-border:1px solid var(--line);
+  --card-shadow:0 10px 24px rgba(0,0,0,.35); --card-hover-shadow:0 26px 60px rgba(0,0,0,.45);
+  --card-hover:translateY(-2px) scale(1.02);
+}
 
 /* ---------- BG LAYERS ---------- */
 #bg-stars-1,#bg-stars-2,#bg-stars-3,#bg-gradient,#bg-image{
@@ -269,6 +274,23 @@ body.bg-mode-image .sidebar::before{
 .tag.new{background:linear-gradient(90deg,#00f0ff,#00b4ff);color:#001318;border:0;font-weight:900}
 .fav{position:absolute;right:10px;bottom:10px;width:36px;height:36px;border-radius:999px;display:grid;place-items:center;background:#0f1724;border:1px solid var(--line);color:#9fb5cc;transition:var(--speed)}
 .fav.active{color:#ffe066;background:#2a1e00;border-color:#ffefb0}
+body.card-icon .card{
+  border-radius:28%;
+}
+body.card-icon .card::before{
+  border-radius:inherit;
+}
+body.card-icon .card .thumb{
+  aspect-ratio:1/1;
+  border-radius:inherit;
+  overflow:hidden;
+}
+body.card-icon .card .body{
+  padding:8px 10px;
+}
+body.card-icon .card .name{
+  display:none;
+}
 
 /* ---------- FOOTER & SOCIAL ---------- */
 .footer{opacity:.85;padding:28px 10px 40px;text-align:center;color:#9eb2c8}
@@ -2499,6 +2521,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="inline">
           <button class="control-btn" data-style="flat">Flat</button>
           <button class="control-btn" data-style="lifted">Lifted</button>
+          <button class="control-btn" data-style="icon">Icon</button>
         </div>
         <span class="soft small">Switch between subtle dashboard vs 3D pop.</span>
       </div>
