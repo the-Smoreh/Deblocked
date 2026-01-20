@@ -72,10 +72,10 @@ body.card-lifted{
 }
 #bg-gradient{
   background:
-    radial-gradient(50% 70% at 20% 20%, #0ff2 0%, transparent 60%),
-    radial-gradient(60% 80% at 70% 80%, #a4f2 0%, transparent 60%),
-    radial-gradient(80% 100% at 100% 0%, #fb03 0%, transparent 50%),
-    linear-gradient(180deg,#070a10,#0c1119 60%,#0a0e14);
+    radial-gradient(60% 75% at 20% 15%, rgba(0, 200, 255, 0.18) 0%, transparent 60%),
+    radial-gradient(70% 85% at 75% 80%, rgba(120, 90, 255, 0.2) 0%, transparent 65%),
+    radial-gradient(90% 110% at 100% 0%, rgba(0, 120, 180, 0.2) 0%, transparent 55%),
+    linear-gradient(180deg,#060a12,#0b111b 55%,#070b12);
   filter:saturate(1.05);
   background-size:200% 200%;
   animation:bgDrift 60s linear infinite;
@@ -89,6 +89,15 @@ body.card-lifted{
 .bg-mode-stars  #bg-gradient{opacity:.45}.bg-mode-stars  #bg-image{opacity:0}
 .bg-mode-gradient #bg-gradient{opacity:1}.bg-mode-gradient #bg-image{opacity:0}
 .bg-mode-image #bg-gradient{opacity:0}.bg-mode-image #bg-image{opacity:1;mix-blend-mode:normal}
+.bg-mode-stars #bg-stars-1,
+.bg-mode-stars #bg-stars-2,
+.bg-mode-stars #bg-stars-3{opacity:1}
+.bg-mode-gradient #bg-stars-1,
+.bg-mode-gradient #bg-stars-2,
+.bg-mode-gradient #bg-stars-3,
+.bg-mode-image #bg-stars-1,
+.bg-mode-image #bg-stars-2,
+.bg-mode-image #bg-stars-3{opacity:0}
 body.bg-mode-image{--bg:transparent}
 
 /* ---------- LAYOUT ---------- */
@@ -2465,18 +2474,6 @@ document.addEventListener("DOMContentLoaded", () => {
   <button class="control-btn" id="toggleGlass">Toggle Frosted Glass</button>
 </div>
 <span class="soft small">(Works best with a Custom Background for Contrast)</span>
-<div class="opt" id="glassOptions" style="margin-top:10px;">
-  <b>Frosted Glass Settings</b>
-  <div class="inline">
-    <label for="glassDarkness" style="font-size:13px;color:#bcd0e6;">Darkness:</label>
-    <input type="range" id="glassDarkness" min="0" max="100" value="40" class="styled-slider">
-    <span id="glassDarkValue" style="font-size:13px;color:#bcd0e6;">40%</span>
-  </div>
-  <span class="soft small">Adjusts transparency of the glass panels and cards.</span>
-  
-</div>
-
-
 
   <!-- Custom image input (hidden unless bg=image) -->
   <div id="customImageControls" style="display:none;flex-direction:column;gap:8px;margin-top:10px;">
@@ -3520,20 +3517,27 @@ $$(".preset-icons .icon-choice:not(.upload-choice)").forEach(btn => {
     root.style.setProperty("--glow2", accent[1]);
   }
 
-const bgMode = localStorage.getItem("deblocked:bgMode");
-if (bgMode) {
-  body.classList.remove("bg-mode-stars", "bg-mode-gradient", "bg-mode-image");
-  body.classList.add(`bg-mode-${bgMode}`);
-  const activeBtn = $(`[data-bg='${bgMode}']`);
-  if (activeBtn) activeBtn.classList.add("active");
+const storedBgMode = localStorage.getItem("deblocked:bgMode");
+const resolvedBgMode = storedBgMode
+  || (body.classList.contains("bg-mode-image")
+    ? "image"
+    : body.classList.contains("bg-mode-gradient")
+      ? "gradient"
+      : "stars");
 
-  // ★ Add this tiny hook:
-  if (bgMode === "stars" && typeof window.initStars === "function") {
-    // prevent double-init across navigations
-    if (!document.body.dataset.starsInit) {
-      window.initStars();
-      document.body.dataset.starsInit = "1";
-    }
+body.classList.remove("bg-mode-stars", "bg-mode-gradient", "bg-mode-image");
+body.classList.add(`bg-mode-${resolvedBgMode}`);
+const activeBtn = $(`[data-bg='${resolvedBgMode}']`);
+if (activeBtn) activeBtn.classList.add("active");
+if (resolvedBgMode === "image") {
+  const customControls = $("#customImageControls");
+  if (customControls) customControls.style.display = "flex";
+}
+
+if (resolvedBgMode === "stars" && typeof window.initStars === "function") {
+  if (!document.body.dataset.starsInit) {
+    window.initStars();
+    document.body.dataset.starsInit = "1";
   }
 }
 
@@ -3643,7 +3647,6 @@ if (bgMode) {
   const urlInput = $("#customImageURL");
   const fileInput = $("#customImageUpload");
   const applyBtn = $("#applyCustomImage");
-  const toggleFrost = $("#toggleFrosted");
   const bgImage = $("#bg-image");
 
   // --- Watch for background mode change ---
@@ -3678,17 +3681,13 @@ if (bgMode) {
     root.style.setProperty("--bg-image-url", `url('${url}')`);
     body.classList.remove("bg-mode-stars", "bg-mode-gradient");
     body.classList.add("bg-mode-image");
+    localStorage.setItem("deblocked:bgMode", "image");
     localStorage.setItem("deblocked:customImage", url);
+    $$(".control-btn[data-bg]").forEach(b => b.classList.remove("active"));
+    const imageBtn = $("[data-bg='image']");
+    if (imageBtn) imageBtn.classList.add("active");
     console.log("🖼️ Custom background applied:", url);
   }
-
-  // --- Frosted UI toggle ---
-  toggleFrost.addEventListener("click", () => {
-    body.classList.toggle("ui-frosted");
-    const active = body.classList.contains("ui-frosted");
-    localStorage.setItem("deblocked:frosted", active ? "1" : "0");
-    toggleFrost.classList.toggle("active", active);
-  });
 
   // --- Restore saved settings ---
   const savedImage = localStorage.getItem("deblocked:customImage");
@@ -3697,13 +3696,7 @@ if (bgMode) {
     root.style.setProperty("--bg-image-url", `url('${savedImage}')`);
   }
 
-  const frosted = localStorage.getItem("deblocked:frosted") === "1";
-  if (frosted) {
-    body.classList.add("ui-frosted");
-    toggleFrost.classList.add("active");
-  }
-
-  console.log("🧊 Custom image & frosted UI logic active");
+  console.log("🖼️ Custom image logic active");
 })();
 // ===== FROSTED GLASS TOGGLE =====
 const glassBtn = document.getElementById("toggleGlass");
@@ -3722,31 +3715,6 @@ if (glassBtn) {
     glassBtn.textContent = "Disable Frosted Glass";
   }
 }
-
-// Ensure frosted class is applied (so changes are visible)
-document.body.classList.add('ui-frosted');
-
-// Slider wiring
-const darknessSlider = document.getElementById('glassDarkness');
-const glassDarkValue = document.getElementById('glassDarkValue');
-
-// Restore and apply
-(function initGlassSlider(){
-  if (!darknessSlider || !glassDarkValue) return;
-
-  const saved = localStorage.getItem('deblocked:glassDark') ?? '40';
-  darknessSlider.value = saved;
-  glassDarkValue.textContent = `${saved}%`;
-  // Apply to :root so all components see it
-  document.documentElement.style.setProperty('--glass-darkness', (saved/100).toString());
-
-  darknessSlider.addEventListener('input', (e) => {
-    const val = String(e.target.value);
-    document.documentElement.style.setProperty('--glass-darkness', (Number(val)/100).toString());
-    glassDarkValue.textContent = `${val}%`;
-    localStorage.setItem('deblocked:glassDark', val);
-  });
-})();
 
 (function initSystemStats(){
   function onReady(fn){
@@ -3884,6 +3852,19 @@ function initStars() {
     draw();
   });
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const storedMode = localStorage.getItem("deblocked:bgMode");
+  const mode = storedMode
+    || (document.body.classList.contains("bg-mode-image")
+      ? "image"
+      : document.body.classList.contains("bg-mode-gradient")
+        ? "gradient"
+        : "stars");
+  if (mode === "stars") {
+    initStars();
+    document.body.dataset.starsInit = "1";
+  }
+});
 </script>
 
 <script>
