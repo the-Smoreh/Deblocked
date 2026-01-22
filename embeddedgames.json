@@ -18,6 +18,15 @@
         "featured": false,
         "url": "https://temporarygames.netlify.app/games/retrobowl/index.html"
     },
+    {
+        "title": "Friday Night Funkin",
+        "description": "No description available yet.",
+        "game_image_icon": "https://temporarygames.netlify.app/games/fridaynightfunkin/favicon.png",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://temporarygames.netlify.app/games/fridaynightfunkin/index.html"
+    },
      {
         "title": "Tiny Fishing",
         "description": "No description available yet.",
@@ -1389,15 +1398,6 @@
         "tags": [],
         "featured": false,
         "url": "https://temporarygames.netlify.app/games/fort/index.html"
-    },
-    {
-        "title": "Friday Night Funkin",
-        "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/fridaynightfunkin/favicon.png",
-        "category": "Arcade",
-        "tags": [],
-        "featured": false,
-        "url": "https://temporarygames.netlify.app/games/fridaynightfunkin/index.html"
     },
     {
         "title": "Frogger",
