@@ -9,14 +9,14 @@
         "featured": false,
         "url": "https://forms.gle/dVMtwaFZj7GiPv6v9"
     },
-    {
-        "title": "Deblocked Chat",
-        "description": "Il make this its own section, this is temporrary",
-        "game_image_icon": "https://www.cq-partners.com/images/chat.jpg",
+ {
+        "title": "Retro Bowl(WORKING)",
+        "description": "No description available yet.",
+        "game_image_icon": "https://temporarygames.netlify.app/games/retrobowl/img/icon.jpg",
         "category": "Arcade",
         "tags": [],
         "featured": false,
-        "url": "https://deblocked-chat2-production.up.railway.app/"
+        "url": "https://temporarygames.netlify.app/games/retrobowl/index.html"
     },
      {
         "title": "Bendy and the Ink Machine",
@@ -2612,15 +2612,6 @@
         "tags": [],
         "featured": false,
         "url": "https://temporarygames.netlify.app/games/redball4vol3/index.html"
-    },
-    {
-        "title": "Retro Bowl",
-        "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/retrobowl/img/icon.jpg",
-        "category": "Arcade",
-        "tags": [],
-        "featured": false,
-        "url": "https://temporarygames.netlify.app/games/retrobowl/index.html"
     },
     {
         "title": "Retro Bowl College",
