@@ -28,6 +28,15 @@
         "url": "https://temporarygames.netlify.app/games/tinyfishing/index.html"
     },
      {
+        "title": "HexGL",
+        "description": "No description available yet.",
+        "game_image_icon": "https://temporarygames.netlify.app/games/hexgl/icon_128.png",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://temporarygames.netlify.app/games/hexgl/index.html"
+    },
+     {
         "title": "Bendy and the Ink Machine",
         "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
         "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsDZD08LE1j2nyQrTVL6VFOilI52_JTqEHb_jZfoK43_ed320zTRNNKcgcFAQkPcOPk-g&usqp=CAU",
@@ -1769,15 +1778,7 @@
         "featured": false,
         "url": "https://temporarygames.netlify.app/games/stealingthediamond/index.html"
     },
-    {
-        "title": "HexGL",
-        "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/hexgl/icon_128.png",
-        "category": "Arcade",
-        "tags": [],
-        "featured": false,
-        "url": "https://temporarygames.netlify.app/games/hexgl/index.html"
-    },
+   
     {
         "title": "Hextris",
         "description": "No description available yet.",
