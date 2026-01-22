@@ -18,6 +18,15 @@
         "featured": false,
         "url": "https://temporarygames.netlify.app/games/retrobowl/index.html"
     },
+     {
+        "title": "1v1.lol (WORKING)",
+        "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
+        "game_image_icon": "https://temporarygames.netlify.app/games/1v1lol/splash.png",
+        "category": "Arcade",
+        "tags": [],
+        "featured": true,
+        "url": "https://temporarygames.netlify.app/games/1v1lol/index.html"
+    },
     {
         "title": "Friday Night Funkin",
         "description": "No description available yet.",
@@ -237,15 +246,7 @@
         "featured": true,
         "url": "https://temporarygames.netlify.app/games/weavesilk/index.html"
     },
-    {
-        "title": "1v1.lol",
-        "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
-        "game_image_icon": "https://temporarygames.netlify.app/games/1v1lol/splash.png",
-        "category": "Arcade",
-        "tags": [],
-        "featured": true,
-        "url": "https://temporarygames.netlify.app/games/1v1lol/index.html"
-    },
+   
     {
         "title": "Basketball Stars",
         "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
