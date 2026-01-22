@@ -304,7 +304,7 @@
     {
         "title": "1 on 1 Soccer",
         "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/1on1soccer/logo.jpg",
+        "game_image_icon": "https://temporarygames.netlify.app/games/1on1soccer/flavicon.ico",
         "category": "Arcade",
         "tags": [],
         "featured": false,
@@ -583,7 +583,7 @@
     {
         "title": "Bike Champ 2",
         "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/bikechamp2/logo.jpg",
+        "game_image_icon": "https://temporarygames.netlify.app/games/bikechamp2/flavicon.ico",
         "category": "Arcade",
         "tags": [],
         "featured": false,
@@ -655,7 +655,7 @@
     {
         "title": "Bloons Tower Defense 4",
         "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/btd4/logo.jpg",
+        "game_image_icon": "https://temporarygames.netlify.app/games/btd4/flavicon.ico",
         "category": "Arcade",
         "tags": [],
         "featured": false,
@@ -1990,7 +1990,7 @@
     {
         "title": "Learn to Fly 2",
         "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/learntofly2/logo.jpg",
+        "game_image_icon": "https://temporarygames.netlify.app/games/learntofly2/flavicon.ico",
         "category": "Arcade",
         "tags": [],
         "featured": false,
@@ -2487,7 +2487,7 @@
     {
         "title": "Pokemon",
         "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/pokemon/logo.jpg",
+        "game_image_icon": "https://temporarygames.netlify.app/games/pokemon/flavicon.ico",
         "category": "Arcade",
         "tags": [],
         "featured": false,
@@ -3230,7 +3230,7 @@
     {
         "title": "Super Smash Bros",
         "description": "No description available yet.",
-        "game_image_icon": "https://temporarygames.netlify.app/games/supersmashbros/logo.jpg",
+        "game_image_icon": "https://temporarygames.netlify.app/games/supersmashbros/flavicon.ico",
         "category": "Arcade",
         "tags": [],
         "featured": false,
