@@ -265,6 +265,15 @@
         "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/fnaf4/index.html"
     },
+     {
+        "title": "Fnaf 5",
+        "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
+        "game_image_icon": "https://algebra.somgelida.net/resources/semag/fnaf5/project/splash.webp",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://algebra.somgelida.net/resources/semag/fnaf5/index.html"
+    },
     {
         "title": "Baldi's Basics",
         "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
