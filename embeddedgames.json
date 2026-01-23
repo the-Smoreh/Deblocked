@@ -194,7 +194,7 @@
     {
         "title": "Slope",
         "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
-        "game_image_icon": "https://ik.imagekit.io/yyjyznrctj/7513_4-78266017-logo.avif",
+        "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fsloperun.org%2Fdata%2Fimage%2Fposts%2Fslope-image.jpg&f=1&nofb=1&ipt=4d8f1ee1c1861ab829c5bf338f75d03662df04c6b730de500331e7eafe9a5291",
         "category": "Arcade",
         "tags": [],
         "featured": true,
@@ -241,7 +241,7 @@
     {
         "title": "Fnaf 2",
         "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
-        "game_image_icon": "https://algebra.somgelida.net/resources/semag/fnaf2/project/splash.webp",
+        "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Ff2%2F57%2Feb%2Ff257eb50874698d6dbeccbabad7d1718.gif&f=1&nofb=1&ipt=5a34a30ff2aff275bf6764c06559a6d4a6db87ca6cb5f4ccd1ed5dc7d7d1b4d5",
         "category": "Arcade",
         "tags": [],
         "featured": true,
@@ -250,7 +250,7 @@
     {
         "title": "Fnaf 3",
         "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
-        "game_image_icon": "https://algebra.somgelida.net/resources/semag/fnaf3/project/splash.webp",
+        "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2Ffa%2F70%2F84%2Ffa70846c2e28da478d1a7fa0247d5b2f.gif&f=1&nofb=1&ipt=ef273c013ceb5c9820d1d2345e4e10347019ab705144759eeacb2d0cdd785e9b",
         "category": "Arcade",
         "tags": [],
         "featured": false,
@@ -264,15 +264,6 @@
         "tags": [],
         "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/fnaf4/index.html"
-    },
-     {
-        "title": "Fnaf 5",
-        "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
-        "game_image_icon": "https://algebra.somgelida.net/resources/semag/fnaf5/project/splash.webp",
-        "category": "Arcade",
-        "tags": [],
-        "featured": false,
-        "url": "https://algebra.somgelida.net/resources/semag/fnaf5/index.html"
     },
     {
         "title": "Baldi's Basics",
