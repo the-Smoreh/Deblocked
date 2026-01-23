@@ -27,6 +27,15 @@
         "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/bendy/index.html"
     },
+    {
+        "title": "R.E.P.O",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic0.gamerantimages.com%2Fwordpress%2Fwp-content%2Fuploads%2F2025%2F03%2Fr-e-p-o-tag-page-cover-art.jpg&f=1&nofb=1&ipt=33e4c4ea2892dbd6bfe6cca4fa767143dfb8906463325d6c738a041d3d309d95",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://algebra.somgelida.net/resources/semag/repo/index.html"
+    },
      {
         "title": "Amanda the Adventurer",
         "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
@@ -53,15 +62,6 @@
         "tags": [],
         "featured": true,
         "url": "https://www.solarsystemscope.com/iframe"
-    },
-     {
-        "title": "Black Hole Simulatio ",
-        "description": "Cool",
-        "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fd.sciencetimes.com%2Fen%2Ffull%2F1726089%2Fblack-hole.jpg&f=1&nofb=1&ipt=2f9143883589dee33eb2e3d1760041781261f53e5d1bc1c2a42e778a72fe39e7",
-        "category": "Arcade",
-        "tags": [],
-        "featured": true,
-        "url": "https://interactive-3d-black-hole-merger-production.up.railway.app/"
     },
      {
         "title": "Cuphead",
@@ -282,6 +282,15 @@
         "tags": [],
         "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/fnaf4/index.html"
+    },
+    {
+        "title": "Fnaf Sister Location",
+        "description": "A sample game from Deblocked, test your skills in this interactive scenario!",
+        "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.wikia.nocookie.net%2Ffnaf-sister-location%2Fimages%2F3%2F39%2FSite-community-image%2Frevision%2Flatest%3Fcb%3D20230428125220&f=1&nofb=1&ipt=414b05a094402b17a046c95d9bf869b78c7186909c709561d4d00651b22a7ed4",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://algebra.somgelida.net/resources/semag/fnaf-sl/index.html"
     },
     {
         "title": "Baldi's Basics",
