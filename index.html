@@ -4942,6 +4942,33 @@ skipBtn.addEventListener("click", () => {
   setTimeout(() => intro.remove(), 900);
 });
 </script>
+<script>
+    function openAboutBlank() {
+        const newTab = window.open('about:blank', '_blank');
+        if (newTab) {
+            newTab.document.write(`
+                <html>
+                <head>
+                    <title>New Tab</title>
+                    <script>
+                        function receiveMessage(event) {
+                            document.body.innerHTML += '<h2>Message from original page: ' + event.data + '</h2>';
+                        }
+                        window.addEventListener('message', receiveMessage, false);
+                    <\/script>
+                </head>
+                <body>
+                    <h1>This is an about:blank tab!</h1>
+                </body>
+                </html>
+            `);
+            newTab.document.close();
+            newTab.opener.postMessage('Hello from the original page!', '*');
+        } else {
+            alert('Please allow pop-ups for this website to use this feature.');
+        }
+    }
+</script>
 
 
 
