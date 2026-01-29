@@ -2529,6 +2529,13 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
         <span class="soft small">Switch between subtle dashboard vs 3D pop.</span>
       </div>
+      <div class="opt">
+        <b>Open in About:Blank</b>
+        <div class="inline">
+          <button class="control-btn" id="openAboutBlank">Open</button>
+        </div>
+        <span class="soft small">Launches Deblocked in an about:blank tab.</span>
+      </div>
     </div>
   </div>
 </div>
@@ -3616,6 +3623,57 @@ $$(".preset-icons .icon-choice:not(.upload-choice)").forEach(btn => {
       btn.classList.add("active");
     };
   });
+
+  // ---------- ABOUT:BLANK CLOAK ----------
+  const aboutBlankBtn = $("#openAboutBlank");
+  if (aboutBlankBtn) {
+    aboutBlankBtn.addEventListener("click", () => {
+      const targetUrl = window.location.href;
+      const popup = window.open("about:blank", "_blank");
+      if (!popup) {
+        alert("Popup blocked. Please allow popups to use About:Blank.");
+        return;
+      }
+      const safeTargetUrl = JSON.stringify(targetUrl);
+      popup.document.open();
+      popup.document.write(`<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Deblocked</title>
+    <style>
+      *{margin:0;padding:0;border:none;box-sizing:border-box;}
+      body,iframe{height:100vh;width:100vw;background:#0b111a;color:#fff;font-family:Inter,Outfit,system-ui;}
+      header{display:flex;align-items:center;justify-content:center;height:40px;gap:12px;background:#0f1724;border-bottom:1px solid rgba(255,255,255,0.08);}
+      button{height:28px;width:28px;border-radius:8px;background:#1b2433;background-size:cover;cursor:pointer;}
+      #frame{height:calc(100vh - 40px);width:100vw;}
+      #reload{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z'/%3E%3C/svg%3E");}
+      #goHome{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'%3E%3Cpath d='M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z'/%3E%3C/svg%3E");}
+    </style>
+  </head>
+  <body>
+    <header>
+      <button id="goHome" title="Home"></button>
+      <button id="reload" title="Reload"></button>
+    </header>
+    <iframe id="frame" referrerpolicy="no-referrer"></iframe>
+    <script>
+      const targetUrl = ${safeTargetUrl};
+      const frame = document.getElementById("frame");
+      frame.src = targetUrl;
+      document.getElementById("goHome").addEventListener("click", () => {
+        frame.src = targetUrl;
+      });
+      document.getElementById("reload").addEventListener("click", () => {
+        frame.contentWindow.location.reload();
+      });
+    <\/script>
+  </body>
+</html>`);
+      popup.document.close();
+      window.location.href = "https://google.com";
+    });
+  }
 
   // ---------- INITIAL LOAD ----------
   const theme = localStorage.getItem("deblocked:theme");
