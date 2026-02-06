@@ -27,6 +27,42 @@
         "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/bendy/index.html"
     },
+     {
+        "title": "Cookie Clicker",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://play-lh.googleusercontent.com/7QdF1mILpUj-xtZGzNwECuVHaVKJHobvYh45z9q7hGvCbmjH1oD_ZfRxbEqbB_yb6Dk",
+        "category": "Arcade",
+        "tags": [],
+        "featured": true,
+        "url": "https://algebra.somgelida.net/resources/semag/cookieclicker/index.html"
+    },
+     {
+        "title": "Getting Over It",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNw9ye_URmWBYf9z2z-VH3DkskFEUgU7jdyw&s",
+        "category": "Arcade",
+        "tags": [],
+        "featured": true,
+        "url": "https://algebra.somgelida.net/resources/semag/getting-over-it/index.html"
+    },
+     {
+        "title": "Deltarune",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/deltarune.jpeg",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://algebra.somgelida.net/resources/semag/deltarune/index.html"
+    },
+      {
+        "title": "Football Bros",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRobLtyKqzknSHGbE1RI6OaUsaCVCLoGVjblQ&s",
+        "category": "Arcade",
+        "tags": [],
+        "featured": true,
+        "url": "https://algebra.somgelida.net/resources/semag/footballbros/index.html"
+    },
     {
         "title": "R.E.P.O",
         "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
@@ -225,7 +261,7 @@
         "game_image_icon": "https://weavesilk.s3.amazonaws.com/v4/uploads/thumb/kba4s6cb5t.png",
         "category": "Arcade",
         "tags": [],
-        "featured": true,
+        "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/weavesilk/index.html"
     },
     {
@@ -316,7 +352,7 @@
         "game_image_icon": "https://algebra.somgelida.net/resources/semag/baldis-basics/splash.png",
         "category": "Arcade",
         "tags": [],
-        "featured": true,
+        "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/baldis-basics/index.html"
     },
     {
@@ -325,7 +361,7 @@
         "game_image_icon": "https://algebra.somgelida.net/resources/semag/death-run-3d/img/death.png",
         "category": "Arcade",
         "tags": [],
-        "featured": true,
+        "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/death-run-3d/index.html"
     },
     {
@@ -1513,7 +1549,7 @@
         "game_image_icon": "https://algebra.somgelida.net/resources/semag/gdlite/logo.png",
         "category": "Arcade",
         "tags": [],
-        "featured": false,
+        "featured": true,
         "url": "https://algebra.somgelida.net/resources/semag/gdlite/index.html"
     },
     {
@@ -3837,7 +3873,7 @@
         "game_image_icon": "https://algebra.somgelida.net/resources/semag/yohoho/cover.png",
         "category": "Arcade",
         "tags": [],
-        "featured": false,
+        "featured": true,
         "url": "https://algebra.somgelida.net/resources/semag/yohoho/index.html"
     },
     {
