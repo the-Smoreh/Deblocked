@@ -37,6 +37,15 @@
         "url": "https://algebra.somgelida.net/resources/semag/cookieclicker/index.html"
     },
      {
+        "title": "Slender",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://static.tvtropes.org/pmwiki/pub/images/slender.png",
+        "category": "Arcade",
+        "tags": [],
+        "featured": true,
+        "url": "https://algebra.somgelida.net/resources/semag/slender/index.html"
+    },
+     {
         "title": "Getting Over It",
         "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
         "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRNw9ye_URmWBYf9z2z-VH3DkskFEUgU7jdyw&s",
@@ -44,6 +53,15 @@
         "tags": [],
         "featured": true,
         "url": "https://algebra.somgelida.net/resources/semag/getting-over-it/index.html"
+    },
+      {
+        "title": "Tattle Tail",
+        "description": "Laggyish",
+        "game_image_icon": "https://pbs.twimg.com/profile_images/1667643427205382148/RH2vUm6v_400x400.jpg",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://algebra.somgelida.net/resources/semag/tattletail/index.html"
     },
      {
         "title": "Deltarune",
@@ -81,6 +99,15 @@
         "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/amanda-the-adventurer/index.html"
     },
+    {
+        "title": "Temple Run 2",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://upload.wikimedia.org/wikipedia/en/9/98/Temple_Run_2.png",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://algebra.somgelida.net/resources/semag/templerun2/index.html"
+    },
      {
         "title": "Draw Climber",
         "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
@@ -96,7 +123,7 @@
         "game_image_icon": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ytimg.com%2Fvi%2FA5NWYfzjvtk%2Fmaxresdefault.jpg&f=1&nofb=1&ipt=dfed9dc9eb788fd41c0ff1b101153bdec0b377900d9c2b5fda05261ad8c351a0",
         "category": "Arcade",
         "tags": [],
-        "featured": true,
+        "featured": false,
         "url": "https://www.solarsystemscope.com/iframe"
     },
      {
@@ -136,7 +163,15 @@
         "featured": false,
         "url": "https://algebra.somgelida.net/resources/semag/undertale/index.html"
     },
-
+ {
+        "title": "Undertale Yellow",
+        "description": "If it fails to load, just refresh like 5 times, and it will load, takes a bit tho",
+        "game_image_icon": "https://i.redd.it/whats-everyones-thoughts-on-undertale-yellow-v0-ug6i7m4ru6pe1.png?width=640&format=png&auto=webp&s=190128290f6d077c32716b499db1b991e57b0b71",
+        "category": "Arcade",
+        "tags": [],
+        "featured": false,
+        "url": "https://algebra.somgelida.net/resources/semag/undertale-yellow/index.html"
+    },
      {
         "title": "People Playground",
         "description": "WARNING: This is a 2D Semi-Realistic Game that has Blood",
@@ -608,9 +643,9 @@
         "url": "https://algebra.somgelida.net/resources/semag/badicecream3/index.html"
     },
     {
-        "title": "Bad Time Simulator",
+        "title": "Sans Full Battle",
         "description": "No description available yet.",
-        "game_image_icon": "https://algebra.somgelida.net/resources/semag/badtimesimulator/icon-114.png",
+        "game_image_icon": "https://images.steamusercontent.com/ugc/792001355753856761/587AF4DFDF97B4788BF5B65B3B9C56D305F928D9/?imw=1024&imh=1024&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true",
         "category": "Arcade",
         "tags": [],
         "featured": false,
