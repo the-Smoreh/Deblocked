@@ -139,6 +139,9 @@ body.bg-mode-image .sidebar::before{
 }
 .brand h1{margin:0;font:900 16px/1 Outfit,Inter;letter-spacing:.2px}
 .nav{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.category-nav{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.category-nav button{width:100%;text-align:left;border:1px solid var(--line);background:#0f1724;color:#cfe3f8;border-radius:10px;padding:8px 10px;cursor:pointer;transition:var(--speed)}
+.category-nav button.active,.category-nav button:hover{background:rgba(255,255,255,.08)}
 .nav a{
   display:flex;align-items:center;gap:12px;padding:10px 12px;margin:6px 0;border-radius:12px;
   color:var(--fg);opacity:.9;transition:var(--speed);text-decoration:none!important
@@ -367,16 +370,20 @@ body.card-icon .card .small{
   .news{position:static;width:auto;margin:12px}
 }
 
-/* === Disable hover video previews globally (no fade-to-black) === */
+/* === Hover previews use image/gif layer (no video) === */
 .card .thumb .vid,
 .slide .thumb .vid {
-  display: none !important;       /* never show the video layer */
-  opacity: 0 !important;
+  opacity: 0;
 }
 
 .card:hover .thumb .img,
 .slide:hover .thumb .img {
-  opacity: 1 !important;          /* keep the image fully visible on hover */
+  opacity: 0;
+}
+
+.card:hover .thumb .vid,
+.slide:hover .thumb .vid {
+  opacity: 1;
 }
 
 /* (optional) keep a tiny pop without fading media */
@@ -2120,16 +2127,17 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 4.84 5.34.78-3.86 3.76.91 5.32L12 14.77 6.22 16.7l.91-5.32L3.27 7.62l5.34-.78L12 2z"/></svg>
         <span>Featured</span><span class="badge">New</span>
       </a>
-      <a href="#proxies" data-filter="proxies">
+ <a href="#proxies" data-filter="proxies">
   <svg viewBox="0 0 24 24" fill="currentColor">
     <path d="M4 4h16v4H4V4zm0 6h16v4H4v-4zm0 6h16v4H4v-4z"/>
   </svg>
   <span>Proxies</span>
 </a>
  <a href="#" data-filter="hacks"><i class="icon">⚙️</i> Tools </a>
+      <div class="sep"></div>
+      <div id="categoryNav" class="category-nav"></div>
       
      
-      <div class="sep"></div>
       <a href="#links"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 13.41a1.98 1.98 0 0 1 0-2.82l2-2a2 2 0 1 1 2.82 2.83l-1.17 1.17 1.41 1.41 1.17-1.17a4 4 0 0 0-5.66-5.66l-2 2a4 4 0 0 0 0 5.66l.61.61 1.41-1.41-.59-.62zM7 17l2-2 2 2-2 2-2-2z"/></svg><span>Links</span></a>
      
 
@@ -2246,20 +2254,6 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
         </div>
       </section>
       
-
-
-      <!-- Category dock -->
-      <div class="cat-dock" id="catDock">
-      <button data-cat="all" class="cat-btn active">All</button>
-        <button data-cat="action">🎯 Action</button>
-        <button data-cat="puzzle">🧩 Puzzle</button>
-        <button data-cat="racing">🚗 Racing</button>
-        <button data-cat="io">🌐 .io</button>
-        <button data-cat="2p">🎮 2 Player</button>
-        <button data-cat="casual">☕ Casual</button>
-        <button data-cat="sandbox">🧱 Sandbox</button>
-      </div>
-      
       <!-- INLINE GAME PANEL (starts hidden) -->
 <section id="gamePanel" class="hidden"></section>
 
@@ -2322,14 +2316,6 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
         <p class="soft small">We’ll remember your recent games here </p>
         <div class="grid small-cards" id="gridContinue"></div>
       </section>
-
-      <!-- New -->
-      <section class="section" id="new">
-        <h2>Recently added</h2>
-        <div class="grid" id="gridNew"></div>
-      </section>
-
-     
 
       <footer class="footer" id="siteFooter">
   © 2025 Deblocked — If you dont see all 700+ Games, Type anything in the Search, then Backspace, and they should Appear
@@ -2609,25 +2595,41 @@ fetch('embeddedgames.json')
   })
   .then(data => {
     console.log("📦 JSON loaded successfully:", data.length);
-    GAMES = data.map(g => ({
-      id: g.title.toLowerCase().replace(/\s+/g, '-'),
-      name: g.title,
-      tags: [
+    GAMES = data.map(g => {
+      const tags = [
         ...(g.tags || []),
         g.featured ? "featured" : "",
         g.trending ? "trending" : "",
         g.new ? "new" : ""
-      ].filter(Boolean),
-      featured: g.featured === true,
-      cover: g.game_image_icon,
-      thumb: g.game_image_icon,
-      preview: g.game_preview_image || g.game_image_icon,
+      ].filter(Boolean).map(t => String(t).toLowerCase());
 
-      vid: "",
-      desc: g.description || "No description provided.",
-      url: g.url,
-      added: g.added || new Date().toISOString().split('T')[0]
-    }));
+      const categories = Array.isArray(g.categories)
+        ? g.categories
+        : (g.category ? [g.category] : []);
+
+      const sourceHost = (() => {
+        try { return new URL(g.url).hostname.toLowerCase(); }
+        catch { return "unknown-host"; }
+      })();
+
+      return {
+        id: g.title.toLowerCase().replace(/\s+/g, '-'),
+        name: g.title,
+        tags,
+        categories,
+        sourceHost,
+        featured: g.featured === true,
+        cover: g.game_image_icon,
+        thumb: g.game_image_icon,
+        detailBackground: g.game_detail_background || g.game_image_icon,
+        hoverImage: g.game_hover_image || g.game_image_icon,
+        preview: g.game_preview_image || g.game_image_icon,
+        vid: "",
+        desc: g.description || "No description provided.",
+        url: g.url,
+        added: g.added || new Date().toISOString().split('T')[0]
+      };
+    });
 
     console.log("✅ Loaded games:", GAMES.length);
     console.log("⭐ Featured games found:", GAMES.filter(g => g.featured).map(g => g.title));
@@ -2635,9 +2637,8 @@ fetch('embeddedgames.json')
     const featuredGames = GAMES.filter(g => g.featured);
 
     // Render everything else first
+    buildCategoryNav();
     renderAll();
-    
-    
 
 // ✅ Apply hero rotation AFTER rendering — with small delay to ensure DOM ready
 setTimeout(() => {
@@ -2926,7 +2927,7 @@ function initHeroRotation() {
 function slideHTML(g){return`
 <article class="slide">
   <span class="pill-tag">${g.tags.includes("new")?"New":g.tags.includes("hot")?"Hot":"Featured"}</span>
-  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"></div>
+  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"><img class="vid" src="${g.hoverImage || g.thumb}" alt="${g.name} hover preview"></div>
   <div class="meta"><div class="name">${g.name}</div><span class="small soft">· ${since(g.added)}</span></div>
 </article>`;}
 function renderCarousel(tag){
@@ -2941,7 +2942,7 @@ function cardHTML(g){
   const badge=g.tags.includes("hot")?"hot":g.tags.includes("new")?"new":"";
   return`
 <article class="card" data-id="${g.id}" style="--card-bg-image:url('${g.thumb}')">
-  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"></div>
+  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"><img class="vid" src="${g.hoverImage || g.thumb}" alt="${g.name} hover preview"></div>
   <div class="body">
     <div class="name">${g.name}</div>
     <div class="tags">
@@ -3021,72 +3022,54 @@ $("#searchInput").addEventListener("input",e=>{
   currentQuery=e.target.value.trim();
   renderAll();
 });
-/* ---------- Categories with keyword maps ---------- */
-const CATEGORY_KEYWORDS = {
-  all: [],
+/* ---------- Categories from embeddedgames.json ---------- */
+let currentCategory = null;
+let categoryOrder = [];
 
-  action: [
-    "fight","battle","pvp","1v1","arena","combat","war","soldier","gun","defense","box","physics",
-    "gladihoppers","shoot","tank","warfare","sniper","stick","brawl","rage","assault","hunter",
-    "knife","army","weapon","bullet","ninja","platformer","clash"
-  ],
+function normalizeCategoryName(value) {
+  return String(value || "").trim().toLowerCase();
+}
 
-  puzzle: [
-    "crossy","road","mario","run","runner","duck","life","island","connect","cut","rope","fireboy",
-    "watergirl","flappy","geo","gear","escape","hobo","lol","legend","riddle","maze","block","logic",
-    "brain","smart","think","portal","tile","stack","slide","match"
-  ],
+function buildCategoryNav() {
+  const nav = $("#categoryNav");
+  if (!nav) return;
 
-  racing: [
-    "rocket","league","rush","drive","drift","king","earn","die","funny","mad","truck","gta","car",
-    "hill","climb","madalin","kart","mario","race","moto","poly","track","racer","turbo","dash",
-    "pako","parking","runway","speed","bike","quad"
-  ],
+  const counts = new Map();
+  for (const game of GAMES) {
+    const cats = Array.isArray(game.categories) ? game.categories : [];
+    for (const cat of cats) {
+      const key = normalizeCategoryName(cat);
+      if (!key) continue;
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+  }
 
-  io: [
-    "io","i.o","online","multiplayer","balls","sim","craft","eagler","minecraft","metroid","recoil",
-    "rooftop","league","lol","yoh","battle","agar","worm","diep","slither","paper","zombs","gun",
-    "fight","arena"
-  ],
+  const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  categoryOrder = ["favorites", ...sorted.map(([key]) => key)];
 
-  "2 player": [
-    "2","3","4","5","6","7","duo","friends","friend","team","league","lol","squad","shoot","1v1",
-    "pvp","coop","battle","versus","multi","play","pair","pong"
-  ],
+  nav.innerHTML = categoryOrder.map((key, idx) => {
+    const label = key === "favorites"
+      ? "⭐ Favorites"
+      : `${key.replace(/\b\w/g, c => c.toUpperCase())} (${counts.get(key) || 0})`;
+    return `<button data-category="${key}">${label}</button>`;
+  }).join("");
 
-  casual: [
-    "drift","sim","dance","ice","fire","fireboy","watergirl","spiderman","among","basketball","stars",
-    "fnaf","craft","mine","minecraft","clicker","fun","idle","relax","simple","tap","casual","chill",
-    "easy","cute","paint","draw","memory"
-  ],
+  currentCategory = null;
 
-  sandbox: [
-    "mario","sonic","minecraft","eagler","gta","lol","escape","flee","poly","slope","skibidi","toilet",
-    "legend","shooter","simulator","doom","free","creative","build","craft","sandbox","world","map",
-    "editor","physics","test","funny"
-  ]
-};
-
-let currentCategory = "all";
-
-$("#catDock").addEventListener("click", (e) => {
-  const btn = e.target.closest("button[data-cat]");
-  if (!btn) return;
-
-  $$("#catDock button").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  
-  currentCategory = btn.dataset.cat;
-  renderAll();
-});
+  nav.querySelectorAll("button[data-category]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      nav.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentCategory = btn.dataset.category;
+      renderAll();
+    });
+  });
+}
 
 function applyCategory(list) {
-  if (currentCategory === "all") return list;
-  const keywords = CATEGORY_KEYWORDS[currentCategory] || [];
-  return list.filter(g => {
-    const n = (g.name + " " + g.tags.join(" ")).toLowerCase();
-    return keywords.some(k => n.includes(k));
-  });
+  if (!currentCategory) return list;
+  if (currentCategory === "favorites") return list.filter(g => favorites.has(g.id));
+  return list.filter(g => (g.categories || []).some(cat => normalizeCategoryName(cat) === currentCategory));
 }
 
 /* ---------- Controls ---------- */
@@ -3120,7 +3103,8 @@ function renderAll() {
 
   // 🧮 Update stats
   setText("#gameCount", visibleGames.length);
-  const mostRecent = visibleGames.reduce((a, b) => (a.added > b.added ? a : b)).added;
+  const statBase = visibleGames.length ? visibleGames : GAMES;
+  const mostRecent = statBase.reduce((a, b) => (a.added > b.added ? a : b)).added;
   setText("#lastUpdated", since(mostRecent));
   setText("#statUpdated", since(mostRecent));
 
@@ -3131,12 +3115,6 @@ function renderAll() {
 
   // 🧱 Render grids with the filtered list
   renderGrid("#gridTrending", g => visibleGames.includes(g) && g.tags.includes("trending"));
-  renderGrid("#gridNew", g =>
-    visibleGames.includes(g) &&
-    (g.tags.includes("new") ||
-      since(g.added) === "today" ||
-      since(g.added).includes("day"))
-  );
   renderContinue();
 
   renderGrid("#gridFavs", g => favorites.has(g.id) && visibleGames.includes(g));
@@ -3194,9 +3172,7 @@ function hideHomeSections() {
   $("#featured")?.classList.add("hidden");
   $("#trending")?.classList.add("hidden");
   $("#continue")?.classList.add("hidden");
-  $("#new")?.classList.add("hidden");
   $("#favorites")?.classList.add("hidden");
-  $("#catDock")?.classList.add("hidden");   // 🟢 NEW — hides category bar
   document.querySelector('.social')?.classList.add('hidden');
 }
 
@@ -3207,10 +3183,8 @@ function showHomeSections() {
   $("#featured")?.classList.remove("hidden");
   $("#trending")?.classList.remove("hidden");
   $("#continue")?.classList.remove("hidden");
-  $("#new")?.classList.remove("hidden");
   const favs = $("#gridFavs");
   $("#favorites")?.classList.toggle("hidden", !favs || !favs.children.length);
-  $("#catDock")?.classList.remove("hidden"); // 🟢 NEW — shows category bar again
   document.querySelector('.social')?.classList.remove('hidden');
 }
 
@@ -3222,7 +3196,7 @@ function renderGamePanel(game) {
 
   // 🔧 Build game info and preview layout
  panel.innerHTML = `
-  <div class="detail-card" style="--detail-bg:url('${game.thumb}')">
+  <div class="detail-card" style="--detail-bg:url('${game.detailBackground || game.thumb}')">
       <button class="inline-exit-btn" id="closeGamePanel" title="Exit">✕</button>
 
       <div class="detail-content">
@@ -3355,7 +3329,7 @@ window.addEventListener("hashchange", () => {
   else showPanelForGame(g);
 
   // 🔄 Rebind overlay click events after switching back
-  if (document.querySelector("#gridTrending") || document.querySelector("#gridNew")) {
+  if (document.querySelector("#gridTrending")) {
     document.querySelectorAll(".card .thumb").forEach(card => {
       card.onclick = () => {
         const id = card.closest(".card").dataset.id;
@@ -4069,7 +4043,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!proxySection) return; // if you haven't added the section yet, exit
 
   // Keep these sections visible when not in Proxies
-  const HOME_SECTIONS = ["#hero","#featured","#trending","#favorites","#continue","#new","#catDock"];
+  const HOME_SECTIONS = ["#hero","#featured","#trending","#favorites","#continue"];
 
   const gamePanel = document.getElementById("gamePanel");
 if (gamePanel) gamePanel.classList.add("hidden-temp");
