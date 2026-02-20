@@ -328,16 +328,28 @@ body.card-icon .card .small{
 /* ---------- SETTINGS MODAL ---------- */
 #settingsOverlay{position:fixed;inset:0;z-index:10;background:rgba(3,8,14,.55);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center}
 #settingsOverlay[aria-hidden="false"] #settingsPanel{animation:zoomIn .4s cubic-bezier(.2,.8,.3,1.2) both}
-#settingsPanel{width:min(940px,96vw);border-radius:22px;background:var(--panel-solid);border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.5);padding:18px;max-height:86vh;overflow:auto}
+#settingsPanel{width:min(1060px,96vw);border-radius:22px;background:linear-gradient(160deg,rgba(7,16,23,.98),rgba(7,13,22,.96));border:1px solid rgba(255,255,255,.08);box-shadow:0 30px 70px rgba(0,0,0,.58);padding:20px;max-height:88vh;overflow:auto}
 @keyframes zoomIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 .set-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.set-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-.opt{display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);background:#0e1520;padding:12px;border-radius:14px}
+.set-grid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px;align-items:start}
+.settings-sidebar{display:flex;flex-direction:column;gap:10px;padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.02)}
+.settings-nav-pill{font-size:12px;font-weight:700;letter-spacing:.1em;color:#8db6da;text-transform:uppercase;margin:2px 4px}
+.settings-sidebar button{padding:10px 12px;text-align:left;border-radius:10px;border:1px solid transparent;background:transparent;color:#cfe3f8;font-weight:700;cursor:pointer;transition:.2s}
+.settings-sidebar button:hover,.settings-sidebar button.active{background:rgba(255,255,255,.09);border-color:rgba(137,201,255,.34)}
+.settings-content{display:flex;flex-direction:column;gap:14px}
+.settings-pane{display:none;gap:14px;flex-direction:column}
+.settings-pane.active{display:flex}
+.settings-section{border:1px solid rgba(255,255,255,.08);background:rgba(12,21,34,.76);padding:14px;border-radius:14px;display:flex;flex-direction:column;gap:10px}
+.settings-section h3{margin:0;font:800 13px/1.2 Outfit,Inter;text-transform:uppercase;letter-spacing:.11em;color:#8bd4ff}
+.settings-section .section-note{margin:0;color:#8ea8c3;font-size:12px;line-height:1.5}
+.opt{display:flex;flex-direction:column;gap:10px;border:1px solid rgba(255,255,255,.08);background:#0e1520;padding:12px;border-radius:12px}
+.setting-label{display:block;margin-bottom:6px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#9ab8d2;font-weight:700}
 .swatch{display:flex;gap:8px;flex-wrap:wrap}
 .swatch button{width:34px;height:34px;border-radius:999px;border:2px solid rgba(255,255,255,.12)}
 .inline{display:flex;gap:8px;flex-wrap:wrap}
 .control-btn{border:1px solid var(--line);background:#0f1724;color:#cfe3f8;border-radius:10px;padding:8px 12px;transition:var(--speed)}
 .control-btn.active{outline:2px solid #0cf8}
+@media (max-width:880px){.set-grid{grid-template-columns:1fr}.settings-sidebar{flex-direction:row;overflow:auto}.settings-sidebar button{white-space:nowrap;min-width:max-content}}
 
 /* ---------- CURSOR GLOW ---------- */
 .cursorGlow{
@@ -2423,132 +2435,148 @@ document.addEventListener("DOMContentLoaded", () => {
 <div id="settingsOverlay" aria-hidden="true">
   <div id="settingsPanel">
     <div class="set-header">
-      <h2 style="margin:0;font:900 20px/1 Outfit,Inter">Settings</h2>
+      <h2 style="margin:0;font:900 22px/1 Outfit,Inter">Settings</h2>
       <button class="icon-btn" id="closeSettings" title="Close">✕</button>
     </div>
     <div class="set-grid">
-      <div class="opt">
-        <b>Theme</b>
-        <div class="inline">
-          <button class="control-btn" data-theme="dark">Dark</button>
-          <button class="control-btn" data-theme="light">Dont click this used to be Light Mode </button>
-        </div>
-        <span class="soft small">Light mode is fully functional(Or is it? Might Absolutly not work)</span>
-      </div>
-<!-- 🧩 Site Identity -->
-<section class="setting-group" id="siteIdentityGroup">
-  <h3 class="setting-title">Site Identity</h3>
+      <aside class="settings-sidebar">
+        <div class="settings-nav-pill">Categories</div>
+        <button class="settings-tab-btn active" data-settings-tab="appearance">Appearance</button>
+        <button class="settings-tab-btn" data-settings-tab="layout">Layout & Cards</button>
+        <button class="settings-tab-btn" data-settings-tab="privacy">Privacy & Launch</button>
+      </aside>
 
-  <div class="setting-row" style="display:flex;flex-direction:column;gap:14px;">
+      <div class="settings-content">
+        <section class="settings-pane active" data-settings-pane="appearance">
+          <div class="settings-section">
+            <h3>Display</h3>
+            <p class="section-note">Core visual style and atmosphere settings for the full site.</p>
+            <div class="opt">
+              <label class="setting-label">Theme Mode</label>
+              <div class="inline">
+                <button class="control-btn" data-theme="dark">Dark</button>
+                <button class="control-btn" data-theme="light">Experimental Light</button>
+              </div>
+              <span class="soft small">Dark mode is polished. Light mode is available as a beta option.</span>
+            </div>
+            <div class="opt">
+              <label class="setting-label">Accent Color</label>
+              <div class="swatch">
+                <button data-accent="#00d0ff,#a040ff" style="background:linear-gradient(90deg,#00d0ff,#a040ff)"></button>
+                <button data-accent="#6a5cff,#ff3df0" style="background:linear-gradient(90deg,#6a5cff,#ff3df0)"></button>
+                <button data-accent="#FFD000,#FF4D6D" style="background:linear-gradient(90deg,#FFD000,#FF4D6D)"></button>
+                <button data-accent="#7CFF00,#00D1FF" style="background:linear-gradient(90deg,#7CFF00,#00D1FF)"></button>
+              </div>
+              <span class="soft small">Used across titles, highlights, buttons, and badges.</span>
+            </div>
+          </div>
 
-    <!-- Title input -->
-    <div class="setting-subrow">
-      <label class="setting-label" for="customTabName">Tab Title</label>
-      <input id="customTabName" class="setting-input"
-             placeholder="Enter custom tab name..."
-             style="width:100%;padding:8px 12px;border-radius:10px;
-                    border:1px solid var(--line);
-                    background:var(--ui-bg);
-                    color:var(--textColor);
-                    transition:0.25s;">
-    </div>
+          <div class="settings-section">
+            <h3>Background</h3>
+            <div class="opt">
+              <label class="setting-label">Environment Style</label>
+              <div class="inline">
+                <button class="control-btn" data-bg="stars">Stars</button>
+                <button class="control-btn" data-bg="gradient">Gradient</button>
+                <button class="control-btn" data-bg="image">Image</button>
+              </div>
+              <div class="inline" style="margin-top:8px;">
+                <button class="control-btn" id="toggleGlass">Toggle Frosted Glass</button>
+              </div>
+              <span class="soft small">Frosted glass works best when paired with a custom background.</span>
 
-    <!-- Preset icons -->
-    <div class="preset-icons" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;">
-      <button class="icon-choice" data-icon="icon1.png" title="Deblocked">
-        <img src="icon1.png" alt="Deblocked">
-      </button>
-      <button class="icon-choice" data-icon="icon.png" title="Sign In">
-        <img src="icon.png" alt="Skyward">
-      </button>
-      <button class="icon-choice" data-icon="icon2.png" title="Google Classroom">
-        <img src="icon2.png" alt="Classroom">
-      </button>
-      <button class="icon-choice" data-icon="icon20.png" title="My Apps">
-        <img src="icon20.png" alt="My Apps">
-      </button>
-      <button class="icon-choice" data-icon="icon15.png" title="Google Drive">
-        <img src="icon15.png" alt="Drive">
-      </button>
+              <div id="customImageControls" style="display:none;flex-direction:column;gap:8px;margin-top:10px;">
+                <input type="text" id="customImageURL" placeholder="Enter image URL" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);">
+                <label class="soft small">or upload</label>
+                <input type="file" id="customImageUpload" accept="image/*" style="font-size:13px;">
+                <button id="applyCustomImage" class="control-btn" style="width:max-content;">Apply</button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-      <!-- Upload your own -->
-      <label class="icon-choice upload-choice" for="customIconUpload" title="Upload your own">
-        <input type="file" id="customIconUpload" accept="image/*" hidden>
-        <div class="upload-placeholder">＋</div>
-      </label>
-    </div>
+        <section class="settings-pane" data-settings-pane="layout">
+          <div class="settings-section" id="siteIdentityGroup">
+            <h3>Site Identity</h3>
+            <p class="section-note">Mask tab details quickly with a custom title and icon.</p>
+            <div class="opt">
+              <div class="setting-subrow">
+                <label class="setting-label" for="customTabName">Tab Title</label>
+                <input id="customTabName" class="setting-input" placeholder="Enter custom tab name..." style="width:100%;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--ui-bg);color:var(--textColor);transition:0.25s;">
+              </div>
 
-    <!-- Apply button -->
-    <button id="applyIdentityBtn" class="btn primary" style="margin-top:8px;align-self:flex-start;">
-      Apply Changes
-    </button>
-  </div>
-</section>
+              <div class="preset-icons" style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;">
+                <button class="icon-choice" data-icon="icon1.png" title="Deblocked">
+                  <img src="icon1.png" alt="Deblocked">
+                </button>
+                <button class="icon-choice" data-icon="icon.png" title="Sign In">
+                  <img src="icon.png" alt="Skyward">
+                </button>
+                <button class="icon-choice" data-icon="icon2.png" title="Google Classroom">
+                  <img src="icon2.png" alt="Classroom">
+                </button>
+                <button class="icon-choice" data-icon="icon20.png" title="My Apps">
+                  <img src="icon20.png" alt="My Apps">
+                </button>
+                <button class="icon-choice" data-icon="icon15.png" title="Google Drive">
+                  <img src="icon15.png" alt="Drive">
+                </button>
 
+                <label class="icon-choice upload-choice" for="customIconUpload" title="Upload your own">
+                  <input type="file" id="customIconUpload" accept="image/*" hidden>
+                  <div class="upload-placeholder">＋</div>
+                </label>
+              </div>
 
-      <div class="opt">
-        <b>Accent</b>
-        <div class="swatch">
-          <button data-accent="#00d0ff,#a040ff" style="background:linear-gradient(90deg,#00d0ff,#a040ff)"></button>
-          <button data-accent="#6a5cff,#ff3df0" style="background:linear-gradient(90deg,#6a5cff,#ff3df0)"></button>
-          <button data-accent="#FFD000,#FF4D6D" style="background:linear-gradient(90deg,#FFD000,#FF4D6D)"></button>
-          <button data-accent="#7CFF00,#00D1FF" style="background:linear-gradient(90deg,#7CFF00,#00D1FF)"></button>
-        </div>
-        <span class="soft small">Used in titles, buttons, and badges.</span>
-      </div>
-      <div class="opt">
-  <b>Background</b>
-  <div class="inline">
-    <button class="control-btn" data-bg="stars">Stars</button>
-    <button class="control-btn" data-bg="gradient">Gradient</button>
-    <button class="control-btn" data-bg="image">Image</button>
-  </div>
-  <div class="inline" style="margin-top:8px;">
-  <button class="control-btn" id="toggleGlass">Toggle Frosted Glass</button>
-</div>
-<span class="soft small">(Works best with a Custom Background for Contrast)</span>
+              <button id="applyIdentityBtn" class="btn primary" style="margin-top:8px;align-self:flex-start;">Apply Changes</button>
+            </div>
+          </div>
 
-  <!-- Custom image input (hidden unless bg=image) -->
-  <div id="customImageControls" style="display:none;flex-direction:column;gap:8px;margin-top:10px;">
-    <input type="text" id="customImageURL" placeholder="Enter image URL" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--fg);">
-    <label class="soft small">or upload</label>
-    <input type="file" id="customImageUpload" accept="image/*" style="font-size:13px;">
-    <button id="applyCustomImage" class="control-btn" style="width:max-content;">Apply</button>
-  </div>
+          <div class="settings-section">
+            <h3>Interface Layout</h3>
+            <div class="opt">
+              <label class="setting-label">Layout Density</label>
+              <div class="inline">
+                <button class="control-btn" data-density="cozy">Cozy</button>
+                <button class="control-btn" data-density="compact">Compact</button>
+              </div>
+              <span class="soft small">Adjusts spacing and card sizing across browse pages.</span>
+            </div>
+            <div class="opt">
+              <label class="setting-label">Card Style</label>
+              <div class="inline">
+                <button class="control-btn" data-style="flat">Flat</button>
+                <button class="control-btn" data-style="lifted">Lifted</button>
+                <button class="control-btn" data-style="icon">Icon</button>
+              </div>
+              <span class="soft small">Choose between subtle dashboard cards or stronger 3D depth.</span>
+            </div>
+          </div>
+        </section>
 
-  <span class="soft small">All local & performant.</span>
-</div>
+        <section class="settings-pane" data-settings-pane="privacy">
+          <div class="settings-section">
+            <h3>Performance & Motion</h3>
+            <div class="opt">
+              <label class="setting-label">Home Motion</label>
+              <div class="inline">
+                <button class="control-btn" id="toggleShowcase">Disable Home Motion</button>
+              </div>
+              <span class="soft small">Turns off the hero slideshow, categories, ticker, and updates panel.</span>
+            </div>
+          </div>
 
-      <div class="opt">
-        <b>Layout Density</b>
-        <div class="inline">
-          <button class="control-btn" data-density="cozy">Cozy</button>
-          <button class="control-btn" data-density="compact">Compact</button>
-        </div>
-        <span class="soft small">Adjusts gaps & card min-size.</span>
-      </div>
-      <div class="opt">
-        <b>Card Style</b>
-        <div class="inline">
-          <button class="control-btn" data-style="flat">Flat</button>
-          <button class="control-btn" data-style="lifted">Lifted</button>
-          <button class="control-btn" data-style="icon">Icon</button>
-        </div>
-        <span class="soft small">Switch between subtle dashboard vs 3D pop.</span>
-      </div>
-      <div class="opt">
-        <b>Home Motion</b>
-        <div class="inline">
-          <button class="control-btn" id="toggleShowcase">Disable Home Motion</button>
-        </div>
-        <span class="soft small">Turns off the hero slideshow, categories, ticker, and updates panel.</span>
-      </div>
-      <div class="opt">
-        <b>Open in About:Blank</b>
-        <div class="inline">
-          <button class="control-btn" id="openAboutBlank">Open</button>
-        </div>
-        <span class="soft small">Launches Deblocked in an about:blank tab.</span>
+          <div class="settings-section">
+            <h3>Privacy Tools</h3>
+            <div class="opt">
+              <label class="setting-label">Open in about:blank</label>
+              <div class="inline">
+                <button class="control-btn" id="openAboutBlank">Open</button>
+              </div>
+              <span class="soft small">Launches Deblocked in a fresh about:blank wrapper tab.</span>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   </div>
@@ -3431,16 +3459,33 @@ document.addEventListener('click', (e) => {
   const root = document.documentElement;
   const body = document.body;
 
+  // ---------- SETTINGS TABS ----------
+  const tabButtons = $$(".settings-tab-btn");
+  const tabPanes = $$(".settings-pane");
+  const activateSettingsTab = (target) => {
+    tabButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.settingsTab === target));
+    tabPanes.forEach(pane => pane.classList.toggle("active", pane.dataset.settingsPane === target));
+  };
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => activateSettingsTab(btn.dataset.settingsTab));
+  });
+
   // ---------- THEME ----------
+  const markThemeButton = (theme) => {
+    $$("[data-theme]").forEach(btn => btn.classList.toggle("active", btn.dataset.theme === theme));
+  };
+
   $("[data-theme='dark']").onclick = () => {
     body.classList.remove("theme-light");
     body.classList.add("theme-dark");
     localStorage.setItem("deblocked:theme", "dark");
+    markThemeButton("dark");
   };
   $("[data-theme='light']").onclick = () => {
     body.classList.remove("theme-dark");
     body.classList.add("theme-light");
     localStorage.setItem("deblocked:theme", "light");
+    markThemeButton("light");
   };
 
   // ---------- ACCENT ----------
@@ -3647,6 +3692,7 @@ $$(".preset-icons .icon-choice:not(.upload-choice)").forEach(btn => {
   // ---------- INITIAL LOAD ----------
   const theme = localStorage.getItem("deblocked:theme");
   if (theme === "light") body.classList.add("theme-light");
+  markThemeButton(theme === "light" ? "light" : "dark");
 
   const accent = JSON.parse(localStorage.getItem("deblocked:accent") || "null");
   if (accent) {
