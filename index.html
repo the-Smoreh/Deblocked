@@ -367,23 +367,20 @@ body.card-icon .card .small{
   .news{position:static;width:auto;margin:12px}
 }
 
-/* === Disable hover video previews globally (no fade-to-black) === */
+/* Hover preview uses embeddedgames.json game_hover_media */
 .card .thumb .vid,
 .slide .thumb .vid {
-  display: none !important;       /* never show the video layer */
-  opacity: 0 !important;
+  opacity: 0;
 }
 
 .card:hover .thumb .img,
 .slide:hover .thumb .img {
-  opacity: 1 !important;          /* keep the image fully visible on hover */
+  opacity: 0;
 }
 
-/* (optional) keep a tiny pop without fading media */
-.card:hover,
-.slide:hover {
-  transform: var(--card-hover);
-  box-shadow: var(--card-hover-shadow);
+.card:hover .thumb .vid,
+.slide:hover .thumb .vid {
+  opacity: 1;
 }
 
 /* Fill hero visual fully with repeated pattern */
@@ -1202,11 +1199,7 @@ transition: all 0.9s cubic-bezier(0.22, 1, 0.36, 1);
   transition: filter 0.6s ease-in-out, opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
 }
 
-/* Hide Featured & Trending visually (keep for JS references) */
-#featured,
-#trending {
-  display: none !important;
-}
+/* Keep main game sections visible */
 
 /* 🌐 Site Identity styling */
 .setting-group h3 {
@@ -2248,18 +2241,6 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
       
 
 
-      <!-- Category dock -->
-      <div class="cat-dock" id="catDock">
-      <button data-cat="all" class="cat-btn active">All</button>
-        <button data-cat="action">🎯 Action</button>
-        <button data-cat="puzzle">🧩 Puzzle</button>
-        <button data-cat="racing">🚗 Racing</button>
-        <button data-cat="io">🌐 .io</button>
-        <button data-cat="2p">🎮 2 Player</button>
-        <button data-cat="casual">☕ Casual</button>
-        <button data-cat="sandbox">🧱 Sandbox</button>
-      </div>
-      
       <!-- INLINE GAME PANEL (starts hidden) -->
 <section id="gamePanel" class="hidden"></section>
 
@@ -2306,7 +2287,18 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
 
       <!-- Trending -->
       <section class="section" id="trending">
-        <h2>Trending now</h2>
+        <div class="controls">
+          <h2>Browse Games</h2>
+          <button class="control" data-quick-cat="favorites">Favorites</button>
+          <button class="control active" data-quick-cat="all">All</button>
+          <button class="control" data-quick-cat="action">🎯 Action</button>
+          <button class="control" data-quick-cat="puzzle">🧩 Puzzle</button>
+          <button class="control" data-quick-cat="racing">🚗 Racing</button>
+          <button class="control" data-quick-cat="io">🌐 .io</button>
+          <button class="control" data-quick-cat="2p">🎮 2 Player</button>
+          <button class="control" data-quick-cat="casual">☕ Casual</button>
+          <button class="control" data-quick-cat="sandbox">🧱 Sandbox</button>
+        </div>
         <div class="grid" id="gridTrending"></div>
       </section>
       
@@ -2323,13 +2315,6 @@ svg text, [id*="fps"], [id*="battery"], [id*="time"], [id*="date"], canvas, inpu
         <div class="grid small-cards" id="gridContinue"></div>
       </section>
 
-      <!-- New -->
-      <section class="section" id="new">
-        <h2>Recently added</h2>
-        <div class="grid" id="gridNew"></div>
-      </section>
-
-     
 
       <footer class="footer" id="siteFooter">
   © 2025 Deblocked — If you dont see all 700+ Games, Type anything in the Search, then Backspace, and they should Appear
@@ -2622,6 +2607,8 @@ fetch('embeddedgames.json')
       cover: g.game_image_icon,
       thumb: g.game_image_icon,
       preview: g.game_preview_image || g.game_image_icon,
+      detailBackground: g.game_details_background || g.game_image_icon,
+      hoverMedia: g.game_hover_media || g.game_image_icon,
 
       vid: "",
       desc: g.description || "No description provided.",
@@ -2926,7 +2913,7 @@ function initHeroRotation() {
 function slideHTML(g){return`
 <article class="slide">
   <span class="pill-tag">${g.tags.includes("new")?"New":g.tags.includes("hot")?"Hot":"Featured"}</span>
-  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"></div>
+  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"><img class="vid" src="${g.hoverMedia || g.thumb}" alt="${g.name} preview animation"></div>
   <div class="meta"><div class="name">${g.name}</div><span class="small soft">· ${since(g.added)}</span></div>
 </article>`;}
 function renderCarousel(tag){
@@ -2941,12 +2928,12 @@ function cardHTML(g){
   const badge=g.tags.includes("hot")?"hot":g.tags.includes("new")?"new":"";
   return`
 <article class="card" data-id="${g.id}" style="--card-bg-image:url('${g.thumb}')">
-  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"></div>
+  <div class="thumb"><img class="img" src="${g.thumb}" alt="${g.name}"><img class="vid" src="${g.hoverMedia || g.thumb}" alt="${g.name} preview animation"></div>
   <div class="body">
     <div class="name">${g.name}</div>
     <div class="tags">
       ${badge?`<span class="tag ${badge}">${badge==="hot"?"🔥 Hot":"✨ New"}</span>`:""}
-      ${g.tags.filter(t=>t!=="hot"&&t!=="new").slice(0,3).map(t=>`<span class="tag">${t}</span>`).join("")}
+      ${g.tags.filter(t=>t!=="hot"&&t!=="new"&&!t.startsWith("source:")).slice(0,3).map(t=>`<span class="tag">${t}</span>`).join("")}
     </div>
     <div class="small soft">Added ${since(g.added)}</div>
   </div>
@@ -3021,77 +3008,25 @@ $("#searchInput").addEventListener("input",e=>{
   currentQuery=e.target.value.trim();
   renderAll();
 });
-/* ---------- Categories with keyword maps ---------- */
-const CATEGORY_KEYWORDS = {
-  all: [],
-
-  action: [
-    "fight","battle","pvp","1v1","arena","combat","war","soldier","gun","defense","box","physics",
-    "gladihoppers","shoot","tank","warfare","sniper","stick","brawl","rage","assault","hunter",
-    "knife","army","weapon","bullet","ninja","platformer","clash"
-  ],
-
-  puzzle: [
-    "crossy","road","mario","run","runner","duck","life","island","connect","cut","rope","fireboy",
-    "watergirl","flappy","geo","gear","escape","hobo","lol","legend","riddle","maze","block","logic",
-    "brain","smart","think","portal","tile","stack","slide","match"
-  ],
-
-  racing: [
-    "rocket","league","rush","drive","drift","king","earn","die","funny","mad","truck","gta","car",
-    "hill","climb","madalin","kart","mario","race","moto","poly","track","racer","turbo","dash",
-    "pako","parking","runway","speed","bike","quad"
-  ],
-
-  io: [
-    "io","i.o","online","multiplayer","balls","sim","craft","eagler","minecraft","metroid","recoil",
-    "rooftop","league","lol","yoh","battle","agar","worm","diep","slither","paper","zombs","gun",
-    "fight","arena"
-  ],
-
-  "2 player": [
-    "2","3","4","5","6","7","duo","friends","friend","team","league","lol","squad","shoot","1v1",
-    "pvp","coop","battle","versus","multi","play","pair","pong"
-  ],
-
-  casual: [
-    "drift","sim","dance","ice","fire","fireboy","watergirl","spiderman","among","basketball","stars",
-    "fnaf","craft","mine","minecraft","clicker","fun","idle","relax","simple","tap","casual","chill",
-    "easy","cute","paint","draw","memory"
-  ],
-
-  sandbox: [
-    "mario","sonic","minecraft","eagler","gta","lol","escape","flee","poly","slope","skibidi","toilet",
-    "legend","shooter","simulator","doom","free","creative","build","craft","sandbox","world","map",
-    "editor","physics","test","funny"
-  ]
-};
-
+/* ---------- Categories from embeddedgames.json tags ---------- */
 let currentCategory = "all";
 
-$("#catDock").addEventListener("click", (e) => {
-  const btn = e.target.closest("button[data-cat]");
-  if (!btn) return;
-
-  $$("#catDock button").forEach(b => b.classList.remove("active"));
+$$("button[data-quick-cat]").forEach(btn => btn.addEventListener("click", () => {
+  $$("button[data-quick-cat]").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
-  
-  currentCategory = btn.dataset.cat;
+  currentCategory = btn.dataset.quickCat;
   renderAll();
-});
+}));
 
 function applyCategory(list) {
   if (currentCategory === "all") return list;
-  const keywords = CATEGORY_KEYWORDS[currentCategory] || [];
-  return list.filter(g => {
-    const n = (g.name + " " + g.tags.join(" ")).toLowerCase();
-    return keywords.some(k => n.includes(k));
-  });
+  if (currentCategory === "favorites") return list.filter(g => favorites.has(g.id));
+  return list.filter(g => (g.tags || []).includes(currentCategory));
 }
 
 /* ---------- Controls ---------- */
-$$(".control").forEach(btn=>btn.addEventListener("click",()=>{
-  $$(".control").forEach(b=>b.classList.remove("active"));
+$$("button[data-quick]").forEach(btn=>btn.addEventListener("click",()=>{
+  $$("button[data-quick]").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   const tag=btn.dataset.quick;
   renderCarousel(tag==="all"?null:tag);
@@ -3125,18 +3060,12 @@ function renderAll() {
   setText("#statUpdated", since(mostRecent));
 
   // 🧭 Handle carousel (uses quick buttons)
-  const active = $(".control.active");
+  const active = $("button[data-quick].active");
   const tag = active ? active.dataset.quick : null;
   renderCarousel(tag && tag !== "all" ? tag : null);
 
   // 🧱 Render grids with the filtered list
-  renderGrid("#gridTrending", g => visibleGames.includes(g) && g.tags.includes("trending"));
-  renderGrid("#gridNew", g =>
-    visibleGames.includes(g) &&
-    (g.tags.includes("new") ||
-      since(g.added) === "today" ||
-      since(g.added).includes("day"))
-  );
+  renderGrid("#gridTrending", g => visibleGames.includes(g));
   renderContinue();
 
   renderGrid("#gridFavs", g => favorites.has(g.id) && visibleGames.includes(g));
@@ -3194,7 +3123,6 @@ function hideHomeSections() {
   $("#featured")?.classList.add("hidden");
   $("#trending")?.classList.add("hidden");
   $("#continue")?.classList.add("hidden");
-  $("#new")?.classList.add("hidden");
   $("#favorites")?.classList.add("hidden");
   $("#catDock")?.classList.add("hidden");   // 🟢 NEW — hides category bar
   document.querySelector('.social')?.classList.add('hidden');
@@ -3207,7 +3135,6 @@ function showHomeSections() {
   $("#featured")?.classList.remove("hidden");
   $("#trending")?.classList.remove("hidden");
   $("#continue")?.classList.remove("hidden");
-  $("#new")?.classList.remove("hidden");
   const favs = $("#gridFavs");
   $("#favorites")?.classList.toggle("hidden", !favs || !favs.children.length);
   $("#catDock")?.classList.remove("hidden"); // 🟢 NEW — shows category bar again
@@ -3222,7 +3149,7 @@ function renderGamePanel(game) {
 
   // 🔧 Build game info and preview layout
  panel.innerHTML = `
-  <div class="detail-card" style="--detail-bg:url('${game.thumb}')">
+  <div class="detail-card" style="--detail-bg:url('${game.detailBackground || game.thumb}')">
       <button class="inline-exit-btn" id="closeGamePanel" title="Exit">✕</button>
 
       <div class="detail-content">
@@ -3232,7 +3159,7 @@ function renderGamePanel(game) {
 
         <div style="flex:1;">
         <h2>${game.name}</h2>
-        <p class="soft small" style="margin:0 0 8px;">${(game.tags || []).join(" • ")}</p>
+        <p class="soft small" style="margin:0 0 8px;">${(game.tags || []).filter(t=>!t.startsWith("source:")).join(" • ")}</p>
         <p class="soft" style="margin:0 0 12px;">${game.desc || "No description provided."}</p>
 
         <!-- Action buttons -->
