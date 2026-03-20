@@ -208,6 +208,15 @@
         "featured": false,
         "url": "https://enchiladasdelicioso.gmsexpress.org/"
     },
+     {
+        "title": "EaglerCraft V1.5.2(Cloudfront)",
+        "description": "A fun platformer where you guide a character through challenging levels!",
+        "game_image_icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrxDOd2r4dtzbAg7CwPvmTbbJO0WjELPqp9Q&s",
+        "category": "Arcade",
+        "tags": [],
+        "featured": true,
+        "url": "https://eaglercraft-unblocked.neocities.org/112/"
+    },
     {
         "title": "EaglerCraft V1.12.2(neocities)",
         "description": "A fun platformer where you guide a character through challenging levels!",
