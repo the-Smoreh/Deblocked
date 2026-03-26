@@ -974,6 +974,12 @@ body.ui-frosted #featured .carousel {
   display:flex;
   gap:10px;
   z-index:5;
+  padding:8px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(10,16,26,0.92);
+  box-shadow:0 20px 50px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04);
+  backdrop-filter:var(--blur);
 }
 
 #gamePanel .game-toolbar button{
@@ -981,7 +987,7 @@ body.ui-frosted #featured .carousel {
   height:42px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,0.1);
-  background:rgba(8,12,20,0.65);
+  background:rgba(8,12,20,0.45);
   color:#fff;
   font-size:18px;
   display:flex;
@@ -999,6 +1005,10 @@ body.ui-frosted #featured .carousel {
 
 #gamePanel .game-toolbar button:active{
   transform:scale(0.94);
+}
+
+#gamePanel .fullscreen-game:fullscreen .game-toolbar{
+  z-index:9999;
 }
 
 body.playing-game #hudTop,
@@ -3348,7 +3358,15 @@ function showGameOnly(game) {
     const iframe = $("#gameIframe");
     if (iframe.src) iframe.src = iframe.src;
   };
-  $("#iframeFsBtn").onclick = () => $("#gameIframe").requestFullscreen?.();
+  $("#iframeFsBtn").onclick = () => {
+    const shell = panel.querySelector(".fullscreen-game");
+    if (!shell) return;
+    if (document.fullscreenElement === shell) {
+      document.exitFullscreen?.();
+      return;
+    }
+    shell.requestFullscreen?.();
+  };
 
   startGameHud();
 }
